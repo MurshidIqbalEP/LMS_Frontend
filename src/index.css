@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+.container{
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: auto;
+}
+
+.card_wrapper{
+    position: relative;
+}
+.card{
+    position: relative;
+}
+.card_image{
+    width: 630px;
+    height: 630px;
+    background-image: url(./poster.png);
+    background-position: 0%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-top-left-radius: 3rem;
+    border-bottom-right-radius: 3rem;
+    position: relative;
+}
+
+/*mask image */
+.card_image{
+    -webkit-mask: url("../public/leftshape.svg") center / contain no-repeat,url("../public/topcurve.svg") center / contain no-repeat,  linear-gradient(#000000 0 0);
+    mask-size: 10rem;
+    mask-position:bottom left,top right;
+    mask-composite: exclude;
+    
+}
