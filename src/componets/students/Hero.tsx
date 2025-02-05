@@ -1,19 +1,19 @@
 import { BsArrowUpRight } from "react-icons/bs";
 import { RxGlobe } from "react-icons/rx";
 import CountUp from "react-countup";
-import { TextGenerateEffect } from "../ui/text-generate-effect";
+import Typewriter from "../ui/text-generate-effect";
 
 export default function Hero() {
   return (
-    <div className="flex  mt-[10px] w-full h-[670px] gap-4">
-      <div className="w-[55%] flex flex-col justify-end ">
+    <div className="md:flex  mt-[10px] w-full h-[670px] gap-4">
+
+      {/* left side */}
+      <div className="w-full md:w-[55%] flex flex-col md:justify-end">
         <div className="h-[60%]">
-          <h1 className="text-8xl mt-1 md:text-9xl text-right  font-black  -tracking-normal leading-28 ">
-            <TextGenerateEffect
-              words={"Learn Better."}
-            />
-          </h1>
-          <p className="text-right text-2xl mt-10">
+          <Typewriter text="Learn" speed={200} />
+          <Typewriter text="Better." speed={200} />
+
+          <p className="text-right md:text-2xl mt-7 md:mt-10">
             Empower your learning journey with
             <br /> interactive courses, personalized
             <br /> assessments, and real-time progress tracking.
@@ -27,7 +27,7 @@ export default function Hero() {
               <p className="text-4xl font-black italic">
                 +<CountUp delay={1} duration={5} end={250} />K
               </p>
-              <p className="font-sans mt-1 text-center text-gray-600 max-w-[350px] break-words">
+              <p className="font-sans mt-1 text-center text-gray-600 max-w-[300px] md:max-w-[350px] break-words">
                 skilled educators represent a diverse group of experts,
                 committed to providing quality education and fostering student
                 success.
@@ -37,7 +37,7 @@ export default function Hero() {
               <p className="text-4xl font-black italic">
                 +<CountUp delay={1} duration={5} end={800} />K
               </p>
-              <p className="font-sans mt-1 text-center text-gray-600 max-w-[350px] break-words">
+              <p className="font-sans mt-1 text-center text-gray-600 max-w-[300px] md:max-w-[350px] break-words">
                 courses encompass a wide range of subjects, designed to equip
                 learners with valuable skills and knowledge for success.
               </p>
@@ -46,7 +46,9 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="container w-[45%] ">
+      {/* right side */}
+
+      <div className="container w-full md:w-[45%] ">
         <div className="card_Wrapper">
           <div className="card">
             <div className="card_image"></div>
