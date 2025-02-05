@@ -26,6 +26,7 @@ const Cards: React.FC<CardProps> = ({ title, description, index }) => {
           <img
             src={`/card${index + 1}.jpg`}
             alt={`Image for card ${index + 1}`}
+            className="object-cover"
           />
         </div>
       </div>
