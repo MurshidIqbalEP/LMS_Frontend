@@ -1,4 +1,3 @@
-import React from "react";
 import Cards from "../students/Cards";
 import { useRef } from "react";
 import gsap from "gsap";
