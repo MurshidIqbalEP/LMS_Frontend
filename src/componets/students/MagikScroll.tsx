@@ -5,7 +5,7 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/all";
 import { ReactLenis } from "@studio-freight/react-lenis";
 
-gsap.registerPlugin(useGSAP);
+
 gsap.registerPlugin(ScrollTrigger);
 
 function StickyCard() {

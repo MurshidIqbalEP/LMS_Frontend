@@ -3,19 +3,18 @@ interface TopcoursesProps {
   name: string;
 }
 
-const Topcourses: React.FC<TopcoursesProps> = ({ image, name }) => {
+const TopcoursesCard: React.FC<TopcoursesProps> = ({ image, name }) => {
   return (
-    <section className="sticky-cards ">
-      <div className=" bg-amber-300 w-[400px]  h-auto flex flex-col justify-center  absolute top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 will-change-transform">
-        <div className=" ">
-          <img className="w-full h-full object-cover" src={image} alt={name} />
-        </div>
-        <div className="">
-          <p>{name}</p>
-        </div>
-      </div>
-    </section>
+    <div className="stack-card bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col gap-4 justify-between absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 will-change-transform w-80 h-96 p-4 transition-all hover:scale-x-95">
+    <div className="h-[70%] bg-gray-100 rounded-md overflow-hidden">
+      <img className="w-full h-full object-cover" src={image} alt={name} />
+    </div>
+    <div className="text-center">
+      <p className="text-lg font-semibold text-gray-700">{name}</p>
+    </div>
+  </div>
+   
   );
 };
 
-export default Topcourses;
+export default TopcoursesCard;
