@@ -24,6 +24,26 @@ const Topcourses = () => {
 
     gsap.ticker.lagSmoothing(0);
 
+    gsap.fromTo(
+      ".heading-animate",
+      {
+        y: 100,
+        opacity: 0,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: ".stack-cards",
+          start: "top center",
+          end: "top 20%",
+          scrub: 1,
+        },
+      }
+    );
+
     const cards = gsap.utils.toArray(".stack-card") as HTMLElement[];
     const rotation = [-12, 10, -5, 5];
 
@@ -88,8 +108,8 @@ const Topcourses = () => {
   return (
     <>
       <section className="stack-cards bg-black relative w-full h-[900px] overflow-hidden">
-        <section className="starting relative bg-black text-white w-full h-[100px] overflow-hidden flex justify-center items-center text-6xl font-bold">
-          <h1>TOP COURSES</h1>
+        <section className="starting relative bg-black text-white w-full h-[100px] overflow-hidden flex justify-center items-center ">
+          <h1 className="heading-animate text-6xl font-bold">TOP COURSES</h1>
         </section>
 
         {data.map(({ name, image }, index) => (
