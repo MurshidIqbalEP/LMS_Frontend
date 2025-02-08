@@ -1,5 +1,24 @@
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&family=Poppins:wght@100..900&display=swap');
+
+:root {
+  --font-kode-mono: "Kode Mono", serif;
+  --font-poppins: "Poppins", sans-serif;
+}
+
+.kode-mono {
+  font-family: var(--font-kode-mono);
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.text-shadow-lean {
+    text-shadow: 5px 3px 3px rgba(0, 0, 0, 0.3);
+  }
+
+
 .container{
     background-color: #fff;
     display: flex;
@@ -45,7 +64,7 @@
 .intro {
     position: relative;
     width: 100%;
-    height: 70vh;
+    height: 100vh;
     padding: 2rem;
     display: flex;
     align-items: flex-start;

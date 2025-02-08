@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/all";
 import { ReactLenis } from "@studio-freight/react-lenis";
 
 
+
 gsap.registerPlugin(ScrollTrigger);
 
 function StickyCard() {
@@ -37,6 +38,38 @@ function StickyCard() {
 
   useGSAP(
     () => {
+
+      gsap.fromTo(
+        ".intro h1",
+        {
+          x: -100,
+          opacity: 0,
+        },
+        {
+          x: 0,
+          opacity: 1,
+          duration: 1.5,
+          ease: "power2.out",
+          stagger: 0.1,
+        }
+      );
+  
+      // Animation for the span emphasis
+      gsap.fromTo(
+        ".intro span",
+        {
+          scale: 0.8,
+          color: "#ffffff",
+        },
+        {
+          scale: 1.2,
+          color: "#f8ad40",
+          duration: 1,
+          delay: 1.2,
+          ease: "elastic.out(1, 0.5)",
+        }
+      );
+
       const cards = gsap.utils.toArray(".card");
 
       ScrollTrigger.create({

@@ -12,6 +12,7 @@ const Topcourses = () => {
     { name: "JavaScript", image: "poster.png" },
     { name: "JavaScript", image: "poster.png" },
     { name: "JavaScript", image: "poster.png" },
+  
   ];
 
   useEffect(() => {
@@ -33,7 +34,9 @@ const Topcourses = () => {
       {
         y: 0,
         opacity: 1,
-        duration: 1,
+        duration: 5,
+        delay: 10,
+        stagger: 0.2,
         ease: "power2.out",
         scrollTrigger: {
           trigger: ".stack-cards",
@@ -45,15 +48,16 @@ const Topcourses = () => {
     );
 
     const cards = gsap.utils.toArray(".stack-card") as HTMLElement[];
-    const rotation = [-12, 10, -5, 5];
+    const rotation =  [-8, 12, -6, 10];
 
     cards.forEach((card, index) => {
       gsap.set(card, {
         y: window.innerHeight,
+        x: index * 180, 
         rotate: rotation[index],
       });
     });
-
+    
     ScrollTrigger.create({
       trigger: ".stack-cards",
       start: "top top",
@@ -65,37 +69,35 @@ const Topcourses = () => {
         const progress = self.progress;
         const totalCards = cards.length;
         const progressPerCard = 1 / totalCards;
-
+    
         cards.forEach((card, index) => {
           const cardStart = index * progressPerCard;
           let cardProgress = (progress - cardStart) / progressPerCard;
           cardProgress = Math.min(Math.max(cardProgress, 0), 1);
-
+    
           let yPos = window.innerHeight * (1 - cardProgress);
-          let xPos = 0;
-
+          let xPos = index * 130; 
+    
           if (cardProgress === 1 && index < totalCards - 1) {
             const remainingProgress =
               (progress - (cardStart + progressPerCard)) /
               (1 - (cardStart + progressPerCard));
-
+    
             if (remainingProgress > 0) {
               const distanceMultiplier = 1 - index * 0.3;
               xPos =
-                -window.innerWidth *
-                0.5 *
-                distanceMultiplier *
-                remainingProgress;
+                (-window.innerWidth * 0.5 + card.offsetWidth / 2) *
+                  distanceMultiplier *
+                  remainingProgress +
+                index * 180;
+    
               yPos =
-                -window.innerHeight *
-                0.1 *
-                distanceMultiplier *
-                remainingProgress;
+                -window.innerHeight * 0.1 * distanceMultiplier * remainingProgress;
             }
           }
-
+    
           gsap.to(card, {
-            y: yPos,
+            y: yPos + 30,
             x: xPos,
             duration: 0,
             ease: "none",
@@ -103,20 +105,23 @@ const Topcourses = () => {
         });
       },
     });
+    
   }, []);
 
   return (
     <>
-      <section className="stack-cards bg-black relative w-full h-[900px] overflow-hidden">
+      <section className="stack-cards bg-black relative flex justify-center items-center w-full h-screen overflow-hidden">
         <section className="starting relative bg-black text-white w-full h-[100px] overflow-hidden flex justify-center items-center ">
-          <h1 className="heading-animate text-6xl font-bold">TOP COURSES</h1>
+          <h1 className="heading-animate text-8xl kode-mono z-50 text-shadow-lean">
+            TOP COURSES
+          </h1>
         </section>
-
-        {data.map(({ name, image }, index) => (
-          <TopcoursesCard key={index} name={name} image={image} />
-        ))}
+        <div>
+          {data.map(({ name, image }, index) => (
+            <TopcoursesCard key={index} name={name} image={image} />
+          ))}
+        </div>
       </section>
-
     </>
   );
 };
