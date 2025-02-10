@@ -121,6 +121,7 @@ const Topcourses = () => {
             <TopcoursesCard key={index} name={name} image={image} />
           ))}
         </div>
+        
       </section>
     </>
   );

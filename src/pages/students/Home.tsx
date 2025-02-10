@@ -8,6 +8,7 @@ function Home() {
         <Hero />
         <MagikScroll />
         <Topcourses />
+        
     </div>
   )
 }
