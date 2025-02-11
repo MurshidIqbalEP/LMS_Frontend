@@ -133,6 +133,8 @@ const LoginPage: React.FC = () => {
           >
             Don’t have an account? <span className="text-blue-600">Create one now!</span>
           </p>
+
+          <p onClick={()=>axios.get("http://localhost:5000/test")}>test</p>
         </div>
       </div>
     </div>
