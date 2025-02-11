@@ -1,12 +1,14 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Studentslayouts from "../layouts/studentslayouts";
 import Home from "../pages/students/Home";
-import LoginPage from "../componets/students/Login";
+import LoginPage from "../pages/students/Login";
+import Register from "../pages/students/Register";
 
 function studentRoute() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<Register />} />
       
       <Route path="/" element={<Studentslayouts />}>
         <Route index element={<Home />} />
