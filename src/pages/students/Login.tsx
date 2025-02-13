@@ -24,7 +24,10 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [formData, setFormData] = useState<FormData>({ email: "", password: "" });
+  const [formData, setFormData] = useState<FormData>({
+    email: "",
+    password: "",
+  });
   const [errors, setErrors] = useState<FormErrors>({});
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +48,7 @@ const LoginPage: React.FC = () => {
       newErrors.password = "Password is required";
     }
 
-    if(formData.password.length < 6){
+    if (formData.password.length < 6) {
       newErrors.password = "6 digit Password is required";
     }
 
@@ -53,15 +56,15 @@ const LoginPage: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async(e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validate()) {
-         let res = await login(formData.email,formData.password)
-         if(res?.data){
-          dispatch(setCredentials(res?.data));
-          toast.success(res.data.message)
-          navigate("/")
-        }
+      let res = await login(formData.email, formData.password);
+      if (res?.data) {
+        dispatch(setCredentials(res?.data));
+        toast.success(res.data.message);
+        navigate("/");
+      }
     }
   };
 
@@ -73,7 +76,7 @@ const LoginPage: React.FC = () => {
         );
 
         console.log("User Info:", userInfo.data);
-        alert(userInfo.data)
+        alert(userInfo.data);
         // Save user info or send it to the backend for JWT creation
       } catch (error) {
         console.error("Error fetching user info:", error);
@@ -134,7 +137,7 @@ const LoginPage: React.FC = () => {
           <button
             className="w-[70%] bg-white text-gray-700 border border-gray-300 flex items-center justify-center space-x-2 py-2 rounded-md shadow-md hover:bg-gray-100"
             type="button"
-            onClick={()=>handleGoogleLogin()}
+            onClick={() => handleGoogleLogin()}
           >
             <FcGoogle size={22} />
             <span>Continue with Google</span>
@@ -145,9 +148,9 @@ const LoginPage: React.FC = () => {
             className="text-black mt-2 text-center text-[11px] font-medium hover:underline cursor-pointer"
             onClick={() => navigate("/register")}
           >
-            Don’t have an account? <span className="text-blue-600">Create one now!</span>
+            Don’t have an account?{" "}
+            <span className="text-blue-600">Create one now!</span>
           </p>
-
         </div>
       </div>
     </div>

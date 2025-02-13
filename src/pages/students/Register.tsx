@@ -4,11 +4,9 @@ import TextField from "@mui/material/TextField";
 import { FcGoogle } from "react-icons/fc";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-import { register } from "../../api/studentsApi";
+import { register, googleRegistratiion } from "../../api/studentsApi";
 const GOOGLE_USERINFO_URL = import.meta.env.VITE_GOOGLE_USERINFO_URL;
-import {  toast } from 'sonner';
-
-
+import { toast } from "sonner";
 
 interface FormData {
   name: string;
@@ -57,13 +55,17 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async(e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validate()) {
-      let res = await register(formData.name,formData.email,formData.password)
-      if(res?.data){
-        toast.success(res.data.message)
-        navigate("/login")
+      let res = await register(
+        formData.name,
+        formData.email,
+        formData.password
+      );
+      if (res?.data) {
+        toast.success(res.data.message);
+        navigate("/login");
       }
     }
   };
@@ -75,9 +77,14 @@ const Register = () => {
           `${GOOGLE_USERINFO_URL}?access_token=${tokenResponse.access_token}`
         );
 
-        console.log("User Info:", userInfo.data);
-        alert(userInfo.data)
-        // Save user info or send it to the backend for JWT creation
+        let res = await googleRegistratiion(
+          userInfo.data.name,
+          userInfo.data.email
+        );
+        if (res?.data) {
+          toast.success(res.data.message);
+          navigate("/login");
+        }
       } catch (error) {
         console.error("Error fetching user info:", error);
       }
