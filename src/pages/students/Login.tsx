@@ -5,6 +5,10 @@ import { FcGoogle } from "react-icons/fc";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 const GOOGLE_USERINFO_URL = import.meta.env.VITE_GOOGLE_USERINFO_URL;
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../../redux/slices/authslice";
+import { login } from "../../api/studentsApi";
+import { toast } from "sonner";
 
 interface FormData {
   email: string;
@@ -18,6 +22,8 @@ interface FormErrors {
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [formData, setFormData] = useState<FormData>({ email: "", password: "" });
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -39,6 +45,10 @@ const LoginPage: React.FC = () => {
       newErrors.password = "Password is required";
     }
 
+    if(formData.password.length < 6){
+      newErrors.password = "6 digit Password is required";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -46,9 +56,12 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async(e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validate()) {
-      console.log("Form submitted successfully", formData);
-      
-      
+         let res = await login(formData.email,formData.password)
+         if(res?.data){
+          dispatch(setCredentials(res?.data));
+          toast.success(res.data.message)
+          navigate("/")
+        }
     }
   };
 

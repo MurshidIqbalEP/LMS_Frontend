@@ -1,6 +1,6 @@
 function Navbar() {
     return (
-      <div className="mt-2 mb-1 w-screen h-[45px] border-t-2 border-b-2 border-gray-300 flex items-center justify-between px-4">
+      <div className="mt-2 mb-1 w-full h-[45px] border-t-2 border-b-2 border-gray-300 flex items-center justify-between px-4">
         {/* Logo Section */}
         <div> 
           <img src="/logo.png" alt="LOGO" className="h-full w-[137px] cursor-pointer" />

@@ -6,8 +6,8 @@ import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { register } from "../../api/studentsApi";
 const GOOGLE_USERINFO_URL = import.meta.env.VITE_GOOGLE_USERINFO_URL;
-import { useDispatch } from "react-redux";
-import { setCredentials } from "../../redux/slices/authslice";
+import {  toast } from 'sonner';
+
 
 
 interface FormData {
@@ -26,7 +26,6 @@ interface FormErrors {
 
 const Register = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -62,8 +61,10 @@ const Register = () => {
     e.preventDefault();
     if (validate()) {
       let res = await register(formData.name,formData.email,formData.password)
-      dispatch(setCredentials(res?.data));
-      navigate("/login")
+      if(res?.data){
+        toast.success(res.data.message)
+        navigate("/login")
+      }
     }
   };
 
