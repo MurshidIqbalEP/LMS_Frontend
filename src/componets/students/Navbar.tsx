@@ -29,6 +29,7 @@ function Navbar() {
               alt="User GIF" 
               className="w-7 h-7 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             />
+            
           </span>
         </>
         

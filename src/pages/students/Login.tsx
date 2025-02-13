@@ -7,7 +7,7 @@ import axios from "axios";
 const GOOGLE_USERINFO_URL = import.meta.env.VITE_GOOGLE_USERINFO_URL;
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../redux/slices/authslice";
-import { login } from "../../api/studentsApi";
+import { login,googleLogin } from "../../api/studentsApi";
 import { toast } from "sonner";
 
 interface FormData {
@@ -74,10 +74,12 @@ const LoginPage: React.FC = () => {
         const userInfo = await axios.get(
           `${GOOGLE_USERINFO_URL}?access_token=${tokenResponse.access_token}`
         );
-
-        console.log("User Info:", userInfo.data);
-        alert(userInfo.data);
-        // Save user info or send it to the backend for JWT creation
+        let res = await googleLogin(userInfo.data.email);
+        if (res?.data) {
+          dispatch(setCredentials(res?.data));
+          toast.success(res.data.message);
+          navigate("/");
+        }
       } catch (error) {
         console.error("Error fetching user info:", error);
       }
