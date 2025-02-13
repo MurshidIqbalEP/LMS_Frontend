@@ -4,7 +4,10 @@ import TextField from "@mui/material/TextField";
 import { FcGoogle } from "react-icons/fc";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import { register } from "../../api/studentsApi";
 const GOOGLE_USERINFO_URL = import.meta.env.VITE_GOOGLE_USERINFO_URL;
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../../redux/slices/authslice";
 
 
 interface FormData {
@@ -23,6 +26,7 @@ interface FormErrors {
 
 const Register = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -54,11 +58,12 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validate()) {
-      console.log("Form submitted successfully", formData);
-      //   navigate("/dashboard");
+      let res = await register(formData.name,formData.email,formData.password)
+      dispatch(setCredentials(res?.data));
+      navigate("/login")
     }
   };
 

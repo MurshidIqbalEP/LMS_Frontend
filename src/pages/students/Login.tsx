@@ -43,11 +43,12 @@ const LoginPage: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validate()) {
       console.log("Form submitted successfully", formData);
-      // navigate("/dashboard");
+      
+      
     }
   };
 
@@ -134,7 +135,6 @@ const LoginPage: React.FC = () => {
             Don’t have an account? <span className="text-blue-600">Create one now!</span>
           </p>
 
-          <p onClick={()=>axios.get("http://localhost:5000/test")}>test</p>
         </div>
       </div>
     </div>
