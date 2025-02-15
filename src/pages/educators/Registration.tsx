@@ -1,13 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
-import { FcGoogle } from "react-icons/fc";
-import { useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
-import { FaArrowCircleRight } from "react-icons/fa";
-import { FaArrowCircleLeft } from "react-icons/fa";
-// import { register, googleRegistratiion } from "../../api/studentsApi";
-const GOOGLE_USERINFO_URL = import.meta.env.VITE_GOOGLE_USERINFO_URL;
+import { FaArrowCircleRight, FaArrowCircleLeft } from "react-icons/fa";
 import { toast } from "sonner";
 
 interface FormData {
@@ -15,6 +9,10 @@ interface FormData {
   email: string;
   password: string;
   confirmPassword: string;
+  subjectExpertise: string;
+  qualification: string;
+  profilePicture: File | null;
+  governmentId: File | null;
 }
 
 interface FormErrors {
@@ -32,7 +30,7 @@ const Register = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
     password: "",
@@ -48,14 +46,20 @@ const Register = () => {
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
+    // Clear error when user starts typing
+    if (errors[id as keyof FormErrors]) {
+      setErrors({ ...errors, [id]: undefined });
+    }
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { id } = e.target;
-    setFormData({ ...formData, [id]: e.target.files[0] });
+    const { id, files } = e.target;
+    if (files && files.length > 0) {
+      setFormData({ ...formData, [id]: files[0] });
+    }
   };
 
-  const validate = (): boolean => {
+  const validateFirstStep = (): boolean => {
     let newErrors: FormErrors = {};
     if (!formData.name) newErrors.name = "Name is required";
     if (!formData.email) {
@@ -71,59 +75,50 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const validateSecondStep = (): boolean => {
+    let newErrors: FormErrors = {};
+    if (!formData.subjectExpertise) newErrors.subjectExpertise = "Subject expertise is required";
+    if (!formData.qualification) newErrors.qualification = "Qualification is required";
+    if (!formData.profilePicture) newErrors.profilePicture = "Profile picture is required";
+    if (!formData.governmentId) newErrors.governmentId = "Government ID is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (validate()) {
-      //   let res = await register(
-      //     formData.name,
-      //     formData.email,
-      //     formData.password
-      //   );
-      //   if (res?.data) {
-      //     toast.success(res.data.message);
-      //     navigate("/login");
-      //   }
+    if (currentStep === 2 && validateSecondStep()) {
+      try {
+        // Add your registration logic here
+        toast.success("Registration successful!");
+        navigate("/login");
+      } catch (error) {
+        toast.error("Registration failed. Please try again.");
+      }
     }
   };
 
-  const handleGoogleRegistration = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      try {
-        const userInfo = await axios.get(
-          `${GOOGLE_USERINFO_URL}?access_token=${tokenResponse.access_token}`
-        );
+  const handleNext = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault(); 
+    if (validateFirstStep()) {
+      setCurrentStep(2);
+    }
+  };
 
-        // let res = await googleRegistratiion(
-        //   userInfo.data.name,
-        //   userInfo.data.email
-        // );
-        // if (res?.data) {
-        //   toast.success(res.data.message);
-        //   navigate("/login");
-        // }
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-      }
-    },
-    onError: () => {
-      console.error("Login Failed");
-    },
-  });
+  const handleBack = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault(); 
+    setCurrentStep(1);
+  };
 
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-black">
       <div className="w-[55%] h-[70%] rounded-2xl flex">
-        <div className="w-[45%] rounded-l-2xl bg-[url('/educater.jpg')] bg-cover  bg-red-400"></div>
+        <div className="w-[45%] rounded-l-2xl bg-[url('/educater.jpg')] bg-cover bg-red-400"></div>
 
         <div className="w-[55%] rounded-r-2xl flex flex-col bg-white justify-center items-center">
           <img className="w-[300px] mb-[3px]" src="/logo.png" alt="logo" />
 
-          {/* Multi-Step Form */}
-          <form
-            className="w-[70%] max-w-sm space-y-1 flex flex-col"
-            onSubmit={handleSubmit}
-          >
-            {/* Step 1: Initial Details */}
+          <form onSubmit={handleSubmit} className="w-[70%] max-w-sm space-y-1 flex flex-col">
             {currentStep === 1 && (
               <>
                 <TextField
@@ -168,7 +163,6 @@ const Register = () => {
               </>
             )}
 
-            {/* Step 2: Professional Details */}
             {currentStep === 2 && (
               <>
                 <TextField
@@ -177,6 +171,8 @@ const Register = () => {
                   variant="standard"
                   value={formData.subjectExpertise}
                   onChange={handleInputChange}
+                  error={!!errors.subjectExpertise}
+                  helperText={errors.subjectExpertise}
                 />
                 <TextField
                   id="qualification"
@@ -184,48 +180,48 @@ const Register = () => {
                   variant="standard"
                   value={formData.qualification}
                   onChange={handleInputChange}
+                  error={!!errors.qualification}
+                  helperText={errors.qualification}
                 />
 
                 <div>
-                  <label className="text-gray-700 text-xs font-medium ">
-                    Profile Picture
-                  </label>
+                  <label className="text-gray-700 text-xs font-medium">Profile Picture</label>
                   <input
                     id="profilePicture"
                     type="file"
                     accept="image/*"
-                    className="border-b pb-1 text-gray-700 text-left "
+                    className="border-b pb-1 text-gray-700 text-left w-full"
                     onChange={handleFileChange}
                   />
+                  {errors.profilePicture && (
+                    <p className="text-red-500 text-xs">{errors.profilePicture}</p>
+                  )}
                 </div>
 
                 <div>
-                  <label className="text-gray-700 text-xs font-medium ">
+                  <label className="text-gray-700 text-xs font-medium">
                     Government ID (Aadhar, Passport, etc.)
                   </label>
                   <input
                     id="governmentId"
                     type="file"
                     accept="image/*,application/pdf"
-                    placeholder="Profile Picture"
-                    className="border-b pb-1  text-gray-700 text-left"
+                    className="border-b pb-1 text-gray-700 text-left w-full"
                     onChange={handleFileChange}
                   />
+                  {errors.governmentId && (
+                    <p className="text-red-500 text-xs">{errors.governmentId}</p>
+                  )}
                 </div>
               </>
             )}
 
-            {/* Navigation Buttons */}
-            <div
-              className={`flex mt-1 ${
-                currentStep === 1 ? "justify-end" : "justify-between"
-              }`}
-            >
+            <div className={`flex mt-1 ${currentStep === 1 ? "justify-end" : "justify-between"}`}>
               {currentStep > 1 && (
                 <button
                   type="button"
                   className="bg-gray-400 text-black px-4 py-2 rounded-md flex items-center gap-2"
-                  onClick={() => setCurrentStep(currentStep - 1)}
+                  onClick={handleBack}
                 >
                   <FaArrowCircleLeft />
                   Back
@@ -235,7 +231,7 @@ const Register = () => {
                 <button
                   type="button"
                   className="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center gap-2"
-                  onClick={() => setCurrentStep(currentStep + 1)}
+                  onClick={handleNext}
                 >
                   Next
                   <FaArrowCircleRight />
@@ -251,14 +247,11 @@ const Register = () => {
             </div>
           </form>
 
-
-          {/* Redirect to Login */}
           <p
             className="text-black mt-2 text-center text-[11px] font-medium hover:underline cursor-pointer"
             onClick={() => navigate("/login")}
           >
-            Already have an account?{" "}
-            <span className="text-blue-600">Log in here!</span>
+            Already have an account? <span className="text-blue-600">Log in here!</span>
           </p>
         </div>
       </div>
