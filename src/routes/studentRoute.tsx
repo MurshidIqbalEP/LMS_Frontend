@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Studentslayouts from "../layouts/studentslayouts";
 import Home from "../pages/students/Home";
 import LoginPage from "../pages/students/Login";
-import Register from "../pages/students/Register";
+import Register from "../pages/students/Registration";
 
 function studentRoute() {
   return (
