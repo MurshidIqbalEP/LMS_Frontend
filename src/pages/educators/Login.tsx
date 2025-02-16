@@ -6,8 +6,8 @@ import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 const GOOGLE_USERINFO_URL = import.meta.env.VITE_GOOGLE_USERINFO_URL;
 import { useDispatch } from "react-redux";
-import { setCredentials } from "../../redux/slices/authslice";
-import { login,googleLogin } from "../../api/studentsApi";
+import { setCredentials } from "../../redux/slices/authSlice";
+import { login } from "../../api/educatorApi";
 import { toast } from "sonner";
 
 interface FormData {
@@ -63,39 +63,19 @@ const LoginPage: React.FC = () => {
       if (res?.data) {
         dispatch(setCredentials(res?.data));
         toast.success(res.data.message);
-        navigate("/");
+        navigate("/educator");
       }
     }
   };
 
-  const handleGoogleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      try {
-        const userInfo = await axios.get(
-          `${GOOGLE_USERINFO_URL}?access_token=${tokenResponse.access_token}`
-        );
-        let res = await googleLogin(userInfo.data.email);
-        if (res?.data) {
-          dispatch(setCredentials(res?.data));
-          toast.success(res.data.message);
-          navigate("/");
-        }
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-      }
-    },
-    onError: () => {
-      console.error("Login Failed");
-    },
-  });
 
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-black">
       <div className="w-[55%] h-[70%] rounded-2xl flex">
-        <div className="w-[45%] rounded-l-2xl bg-[url('/login.jpg')] bg-cover bg-red-400"></div>
+        <div className="w-[45%] rounded-l-2xl bg-[url('/educater.jpg')] bg-cover bg-red-400"></div>
 
         <div className="w-[55%] rounded-r-2xl flex flex-col bg-white justify-center items-center">
-          <img className="w-[300px] mb-[10px]" src="logo.png" alt="logo" />
+          <img className="w-[300px] mb-[10px]" src="/logo.png" alt="logo" />
 
           <form
             className="w-[70%] max-w-sm space-y-5 flex flex-col "
@@ -135,20 +115,12 @@ const LoginPage: React.FC = () => {
           {/* Divider */}
           <div className="my-2 text-gray-500 text-center">or</div>
 
-          {/* Google Login Button */}
-          <button
-            className="w-[70%] bg-white text-gray-700 border border-gray-300 flex items-center justify-center space-x-2 py-2 rounded-md shadow-md hover:bg-gray-100"
-            type="button"
-            onClick={() => handleGoogleLogin()}
-          >
-            <FcGoogle size={22} />
-            <span>Continue with Google</span>
-          </button>
+          
 
           {/* Redirect to Register */}
           <p
             className="text-black mt-2 text-center text-[11px] font-medium hover:underline cursor-pointer"
-            onClick={() => navigate("/register")}
+            onClick={() => navigate("/educator/register")}
           >
             Don’t have an account?{" "}
             <span className="text-blue-600">Create one now!</span>

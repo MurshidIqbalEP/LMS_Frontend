@@ -95,7 +95,7 @@ const LoginPage: React.FC = () => {
         <div className="w-[45%] rounded-l-2xl bg-[url('/login.jpg')] bg-cover bg-red-400"></div>
 
         <div className="w-[55%] rounded-r-2xl flex flex-col bg-white justify-center items-center">
-          <img className="w-[300px] mb-[10px]" src="logo.png" alt="logo" />
+          <img className="w-[300px] mb-[10px]" src="/logo.png" alt="logo" />
 
           <form
             className="w-[70%] max-w-sm space-y-5 flex flex-col "

@@ -1,5 +1,6 @@
 const educatorRoutes = {
     register:'/educator/register',
+    login:'/educator/login',
 
 }
 
