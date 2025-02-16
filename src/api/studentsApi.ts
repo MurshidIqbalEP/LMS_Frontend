@@ -1,6 +1,6 @@
 import errorHandle from "./error";
 import Api from "../services/axios";
-import studentsRoutes from "../services/endpoints/educatorEndpoints";
+import studentsRoutes from "../services/endpoints/studentsEndpoints";
 
 // For registration of user
 export const register = async(name:string,email: string, password: string)=>{

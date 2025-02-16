@@ -1,10 +1,6 @@
-import { googleLogin } from "../../api/studentsApi";
+const educatorRoutes = {
+    register:'/educator/register',
 
-const studentsRoutes = {
-    register:'/students/register',
-    login:'/students/login',
-    googleRegistration:"/students/googleregister",
-    googleLogin:"/students/googlelogin"
 }
 
-export default studentsRoutes; 
+export default educatorRoutes; 
