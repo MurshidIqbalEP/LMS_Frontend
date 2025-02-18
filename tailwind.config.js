@@ -7,7 +7,12 @@ module.exports = {
     "./node_modules/@heroui/theme/dist/components/(input|form).js",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        kodeMono: ['Kode Mono', 'monospace'],
+        poppins: ['Poppins', 'sans-serif'],
+      },
+    },
   },
   darkMode: "class",
   plugins: [heroui()],

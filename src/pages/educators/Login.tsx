@@ -68,7 +68,6 @@ const LoginPage: React.FC = () => {
     }
   };
 
-
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-black">
       <div className="w-[55%] h-[70%] rounded-2xl flex">
@@ -114,8 +113,6 @@ const LoginPage: React.FC = () => {
 
           {/* Divider */}
           <div className="my-2 text-gray-500 text-center">or</div>
-
-          
 
           {/* Redirect to Register */}
           <p
