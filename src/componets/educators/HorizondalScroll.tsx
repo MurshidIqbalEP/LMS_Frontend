@@ -17,7 +17,7 @@ const HorizondalScroll = () => {
     { top: "20%", left: "50%" },
     { top: "60%", left: "10%" },
     { top: "20%", left: "40%" },
-    { top: "44%", left: "55%" },
+    { top: "44%", left: "58%" },
   ];
     const titlesContainer = document.querySelector(".titlescontainer");
     const moveDistance = window.innerWidth * 3;
@@ -123,47 +123,47 @@ const HorizondalScroll = () => {
       <section className="horizondalscrool relative  w-full h-[100vh] overflow-hidden bg-[#fffef8]">
         <div className="titlescontainer absolute  top-[0%] left-[0%] w-[400vw] h-[100vh] flex will-change-transform ">
           <div className="threetitle relative flex-1 flex justify-center items-center">
-            <h1 className="firsttitle font-kodeMono absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold text-[100px]  will-change-transform text-[#dafa6c]">
-              showcase hub
+            <h1 className="firsttitle  font-kodeMono absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold text-7xl  will-change-transform text-[#dafa6c]">
+            Share Your Knowledge
             </h1>
-            <h1 className="secondtitle font-kodeMono absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold  text-[100px]  will-change-transform text-[#10d0f4]">
-              showcase hub
+            <h1 className="secondtitle  font-kodeMono absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold  text-7xl  will-change-transform text-[#10d0f4]">
+            Share Your Knowledge
             </h1>
-            <h1 className="thirdtitle font-kodeMono absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold text-[100px]   will-change-transform text-black">
-              showcase hub
-            </h1>
-          </div>
-          <div className="title relative flex-1 flex justify-center items-center">
-            <h1 className="firsttitle absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold font-poppins  text-[100px] will-change-transform text-[#dafa6c]">
-              showcase hub
-            </h1>
-            <h1 className="secondtitle absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold font-poppins text-[100px] will-change-transform text-[#10d0f4]">
-              showcase hub
-            </h1>
-            <h1 className="thirdtitle absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold font-poppins text-[100px] will-change-transform text-black">
-              showcase hub
+            <h1 className="thirdtitle   font-kodeMono absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold text-7xl   will-change-transform text-black">
+            Share Your Knowledge 
             </h1>
           </div>
           <div className="title relative flex-1 flex justify-center items-center">
-            <h1 className="firsttitle absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold italic  text-[100px] will-change-transform text-[#dafa6c]">
-              libsoem cac
+            <h1 className="firsttitle  absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold font-poppins  text-7xl will-change-transform text-[#dafa6c]">
+            Reach and Inspire Students Worldwide
             </h1>
-            <h1 className="secondtitle absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold italic text-[100px] will-change-transform text-[#10d0f4]">
-              libsoem cac
+            <h1 className="secondtitle  absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold font-poppins text-7xl will-change-transform text-[#10d0f4]">
+            Reach and Inspire Students Worldwide
             </h1>
-            <h1 className="thirdtitle absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold italic text-[100px] will-change-transform text-black">
-              libsoem cac
+            <h1 className="thirdtitle absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold font-poppins text-7xl will-change-transform text-black">
+            Reach and Inspire Students Worldwide
             </h1>
           </div>
           <div className="title relative flex-1 flex justify-center items-center">
-            <h1 className="firsttitle absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold italic text-[100px] will-change-transform text-[#dafa6c]">
-              leonal messi
+            <h1 className="firsttitle absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold italic  text-7xl will-change-transform text-[#dafa6c]">
+            Transform Learning with Engaging Courses
             </h1>
-            <h1 className="secondtitle absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold italic text-[100px] will-change-transform text-[#10d0f4]">
-              leonal messi
+            <h1 className="secondtitle  absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold italic text-7xl will-change-transform text-[#10d0f4]">
+            Transform Learning with Engaging Courses
             </h1>
-            <h1 className="thirdtitle absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold italic text-[100px] will-change-transform text-black">
-              leonal messi
+            <h1 className="thirdtitle  absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold italic text-7xl will-change-transform text-black">
+            Transform Learning with Engaging Courses
+            </h1>
+          </div>
+          <div className="title relative flex-1 flex justify-center items-center">
+            <h1 className="firsttitle  absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold italic text-7xl will-change-transform text-[#dafa6c]">
+            Educate with Impact
+            </h1>
+            <h1 className="secondtitle  absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold italic text-7xl will-change-transform text-[#10d0f4]">
+            Educate with Impact
+            </h1>
+            <h1 className="thirdtitle   absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 font-bold italic text-7xl will-change-transform text-black">
+            Educate with Impact
             </h1>
           </div>
         </div>
