@@ -3,6 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ReactLenis } from "@studio-freight/react-lenis";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from 'sonner';
+import {HeroUIProvider} from "@heroui/react";
 
 function App() {
   return (
@@ -10,7 +11,9 @@ function App() {
       <ReactLenis root>
         <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
         <Toaster position="top-right" richColors closeButton />
-          <AppRoute />
+        <HeroUIProvider>
+           <AppRoute />
+        </HeroUIProvider>
         </GoogleOAuthProvider>
       </ReactLenis>
     </BrowserRouter>
