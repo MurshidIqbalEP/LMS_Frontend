@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { Link } from "react-router-dom";
 
 function Navbar() {
   const user = useSelector((state: RootState) => state.auth.userInfo); 
@@ -21,7 +22,7 @@ function Navbar() {
         <div className="flex space-x-4">
         {user ? (
           <>
-          <a href="#" className="text-gray-500 hover:text-black">Logout</a>
+          <a className="text-gray-500 hover:text-black">Logout</a>
           <span className="text-gray-500 flex items-center space-x-2 group">
             Welcome, {user?.name}
             <img 
@@ -35,8 +36,8 @@ function Navbar() {
         
         ) : (
           <>
-          <a href="#" className="text-gray-500 hover:text-black">Login</a>
-          <a href="#" className="text-gray-500 hover:text-black">Register</a>
+          <Link to="login" className="text-gray-500 hover:text-black">Login</Link>
+          <Link to="register" className="text-gray-500 hover:text-black">Register</Link>
           </>
 
         )}

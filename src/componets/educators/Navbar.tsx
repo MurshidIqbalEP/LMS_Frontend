@@ -1,4 +1,10 @@
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+
 function Navbar() {
+  const educatorInfo = useSelector((state: RootState) => state.educatorSlice.educatorInfo);
+  console.log(educatorInfo)
     return (
       <div className="mt-2 w-full h-[45px] border-t-2 border-b-2 border-gray-300 flex items-center justify-between px-4">
         {/* Logo Section */}
@@ -8,16 +14,35 @@ function Navbar() {
   
         {/* Navigation Links */}
         <nav className="hidden md:flex space-x-12">
-          <a href="#" className="text-gray-500 hover:text-black">Home</a>
-          <a href="#" className="text-gray-500 hover:text-black">Cources</a>
-          <a href="#" className="text-gray-500 hover:text-black">MyCources</a>
+        <Link to="addcourse" className="text-gray-500 hover:text-black">Add Course</Link>
+
+          
         </nav>
   
         {/* Actions Section */}
         <div className="flex space-x-4">
-          <a href="#" className="text-gray-500 hover:text-black">LogOut</a>
-          <a href="#" className="text-gray-500 hover:text-black">Logo</a>
-        </div>
+        {educatorInfo ? (
+          <>
+          <a className="text-gray-500 hover:text-black">Logout</a>
+          <span className="text-gray-500 flex items-center space-x-2 group">
+            {/* Welcome, {educatorInfo?.name} */}
+            <img 
+              src="/icons8-user.gif" 
+              alt="User GIF" 
+              className="w-7 h-7 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            />
+            
+          </span>
+        </>
+        
+        ) : (
+          <>
+          <Link to="login" className="text-gray-500 hover:text-black">Login</Link>
+          <Link to="register" className="text-gray-500 hover:text-black">Register</Link>
+          </>
+
+        )}
+      </div>
       </div>
     );
   }

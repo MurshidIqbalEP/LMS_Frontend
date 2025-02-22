@@ -7,7 +7,7 @@ import axios from "axios";
 const cloudinaryURL = import.meta.env.VITE_CLOUDINARY_URL;
 const preset = import.meta.env.VITE_PRESET_NAME;
 import Lottie from "lottie-react";
-import animationData from "../../../public/loading.json";
+const animationData = "/loading.json";
 import { register } from "../../api/educatorApi";
 
 interface FormData {

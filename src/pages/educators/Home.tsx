@@ -4,7 +4,6 @@ import HorizondalScroll from "../../componets/educators/HorizondalScroll"
 function Home() {
   return (
     <>
-    
     <Hero />
     <HorizondalScroll />
     </>

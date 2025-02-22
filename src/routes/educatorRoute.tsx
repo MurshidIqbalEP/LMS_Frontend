@@ -3,20 +3,24 @@ import Educatorlayouts from "../layouts/educatorlayouts";
 import Home from "../pages/educators/Home";
 import LoginPage from "../pages/educators/Login";
 import Register from "../pages/educators/Registration";
+import Addcourse from "../pages/educators/Addcourse";
 
-function educatorRoute() {
+function EducatorRoute() {
   return (
     <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<Register />} />
+      <Route path="login" element={<LoginPage />} />
+      <Route path="register" element={<Register />} />
 
-      <Route element={<Educatorlayouts />}>
-        <Route path="/" element={<Home />} />
+      {/* Nested Routes inside EducatorLayout */}
+      <Route path="/" element={<Educatorlayouts />}>
+        <Route index element={<Home />} />
+        <Route path="addcourse" element={<Addcourse />} />
       </Route>
 
-      <Route path="*" element={<Navigate to="/educator" />} />
+      {/* Redirect unknown routes */}
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 }
 
-export default educatorRoute;
+export default EducatorRoute;

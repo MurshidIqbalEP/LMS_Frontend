@@ -1,10 +1,12 @@
 import {configureStore} from '@reduxjs/toolkit'
-import authSlice from './slices/authslice'
+import authSlice from './slices/authSlice'
+import educatorSlice from './slices/educatorSlice'
 
 
 const store=configureStore({
     reducer:{
         auth:authSlice,
+        educatorSlice
     }
 })
 

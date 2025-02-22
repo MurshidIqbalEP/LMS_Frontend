@@ -1,12 +1,8 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
-import { FcGoogle } from "react-icons/fc";
-import { useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
-const GOOGLE_USERINFO_URL = import.meta.env.VITE_GOOGLE_USERINFO_URL;
 import { useDispatch } from "react-redux";
-import { setCredentials } from "../../redux/slices/authSlice";
+import { setCredentials } from "../../redux/slices/educatorSlice";
 import { login } from "../../api/educatorApi";
 import { toast } from "sonner";
 
