@@ -1,12 +1,26 @@
 import TextField from "@mui/material/TextField";
 import { LuGrip } from "react-icons/lu";
-import { CiCirclePlus, CiSquarePlus } from "react-icons/ci";
+import { CiCirclePlus } from "react-icons/ci";
 import { IoIosArrowDropdown, IoIosArrowDropup } from "react-icons/io";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { IoTrash } from "react-icons/io5";
-import { useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
+
+interface BasicData {
+  title: string;
+  description: string;
+  category: string;
+  price: number;
+}
 
 function AddCourse() {
+  const [basicData,setBasicData] = useState<BasicData>({
+    title:"",
+    description:"",
+    category:"",
+    price:0
+  })
+
   const [chapters, setChapters] = useState([
     {
       id: "1",
@@ -16,22 +30,26 @@ function AddCourse() {
     },
   ]);
 
-  const [selectedThumbnailFile, setSelectedThumbnailFile] =
-    useState<File | null>(null);
+  const [selectedThumbnailFile, setSelectedThumbnailFile] =useState<File | null>(null);
   const [previewThumbnailUrl, setPreviewThumbnailUrl] = useState<string>();
-  const [selectedResourceFile, setSelectedResourcelFile] =
-    useState<File | null>(null);
+  const [selectedResourceFile, setSelectedResourcelFile] =useState<File | null>(null);
   const [previewResourceUrl, setPreviewResourceUrl] = useState<string>();
 
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
   const addChapter = (event: Event) => {
     event.preventDefault();
+
+    const lastChapterId = chapters.length > 0 
+    ? parseInt(chapters[chapters.length - 1].id) 
+    : 0;
+
+
     const newChapter = {
-      id: `${Date.now()}`,
+      id: (lastChapterId + 1).toString(),
       name: "",
       isExpanded: true,
-      lectures: [{ id: `${Date.now()}-1`, name: "", url: "" }],
+      lectures: [{ id: "0", name: "", url: "" }],
     };
     setChapters([...chapters, newChapter]);
   };
@@ -50,9 +68,27 @@ function AddCourse() {
   const removeChapter = (chapterId: string, event: Event) => {
     event.preventDefault();
     if (chapters.length > 1) {
-      setChapters(chapters.filter((chapter) => chapter.id !== chapterId));
+      // First, filter out the chapter to be removed
+      const filteredChapters = chapters.filter((chapter) => chapter.id !== chapterId);
+      
+      // Then, renumber the remaining chapters and their lectures to maintain sequential order
+      const reorderedChapters = filteredChapters.map((chapter, index) => {
+        const newChapterId = (index + 1).toString();
+        
+        return {
+          ...chapter,
+          id: newChapterId,
+        };
+      });
+      
+      setChapters(reorderedChapters);
     }
   };
+
+  const handleBasicDataChange = (e: ChangeEvent<HTMLInputElement>) => {
+      const { id, value } = e.target;
+      setBasicData({ ...basicData, [id]: value });
+    };
 
   const addLecture = (chapterId: string, event: Event) => {
     event.preventDefault();
@@ -125,6 +161,14 @@ function AddCourse() {
     }
   };
 
+  const handleSubmit = async()=>{
+    // console.log(basicData);
+    console.log(chapters);
+    // console.log(selectedThumbnailFile);
+    // console.log(selectedResourceFile);
+    
+  }
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row gap-6 p-10 bg-gray-100">
       {/* Left Section */}
@@ -133,12 +177,14 @@ function AddCourse() {
           <div className="flex flex-col gap-3">
             <TextField
               label="Title"
+              id="title"
               variant="outlined"
               size="small"
               fullWidth
             />
             <TextField
               label="Description"
+              id="description"
               variant="outlined"
               size="small"
               fullWidth
@@ -146,12 +192,14 @@ function AddCourse() {
             <div className="flex gap-4">
               <TextField
                 label="Category"
+                id="category"
                 size="small"
                 variant="outlined"
                 fullWidth
               />
               <TextField
                 label="Price"
+                id="price"
                 size="small"
                 type="number"
                 variant="outlined"
@@ -279,14 +327,6 @@ function AddCourse() {
             onChange={handleThumbnailChange}
           />
         </label>
-        <label className="mt-4 flex flex-col items-center w-full py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition">
-          Select Note
-          <input
-            type="file"
-            className="hidden"
-            onChange={handleResourceChange}
-          />
-        </label>
 
         {selectedResourceFile ? (
           selectedResourceFile.type.startsWith("image/") ? (
@@ -296,7 +336,7 @@ function AddCourse() {
               alt="Preview"
             />
           ) : selectedResourceFile.type === "application/pdf" ? (
-            <div className="w-full h-52 relative">
+            <div className="w-full h-52 mb-4  relative">
               <iframe
                 className="w-full mt-4 h-52 rounded-lg border"
                 src={previewResourceUrl!}
@@ -306,7 +346,7 @@ function AddCourse() {
 
               {/* Fix button positioning */}
               <button
-                className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center absolute top-3 right-3 z-50"
+                className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center absolute opacity-50 top-6 left-3 z-50"
                 onClick={handleFullScreen}
               >
                 ⛶
@@ -324,6 +364,21 @@ function AddCourse() {
             alt="image preview"
           />
         )}
+
+        <label className="mt-4 flex flex-col items-center w-full py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition">
+          Select Note
+          <input
+            type="file"
+            className="hidden"
+            onChange={handleResourceChange}
+          />
+        </label>
+
+        <button className=" mt-4 flex flex-col items-center w-full py-2 bg-green-500 text-white rounded-lg cursor-pointer hover:bg-green-600 transition" onClick={handleSubmit}>
+          Submit
+        </button>
+
+        
       </div>
     </div>
   );
