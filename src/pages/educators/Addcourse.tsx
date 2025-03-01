@@ -5,6 +5,7 @@ import { IoIosArrowDropdown, IoIosArrowDropup } from "react-icons/io";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { IoTrash } from "react-icons/io5";
 import { ChangeEvent, useRef, useState } from "react";
+import PdfPreview from "../../componets/educators/PdfPreview";
 
 interface BasicData {
   title: string;
@@ -13,13 +14,36 @@ interface BasicData {
   price: number;
 }
 
+interface FormErrors {
+  title?: string;
+  description?: string;
+  price?: string;
+  category?: string;
+  thumbnail?: string;
+  resource?: string;
+  chapter?: string;
+}
+
+interface ErrMsg {
+  title?: string;
+  description?: string;
+  price?: string;
+  category?: string;
+  thumbnail?: string;
+  resource?: string;
+  chapter?: string;
+  [key: string]: string | undefined;
+}
+
 function AddCourse() {
-  const [basicData,setBasicData] = useState<BasicData>({
-    title:"",
-    description:"",
-    category:"",
-    price:0
-  })
+  const [basicData, setBasicData] = useState<BasicData>({
+    title: "",
+    description: "",
+    category: "",
+    price: 0,
+  });
+
+  const [errMsg, setErrMsg] = useState<ErrMsg>({});
 
   const [chapters, setChapters] = useState([
     {
@@ -30,20 +54,16 @@ function AddCourse() {
     },
   ]);
 
-  const [selectedThumbnailFile, setSelectedThumbnailFile] =useState<File | null>(null);
+  const [selectedThumbnailFile, setSelectedThumbnailFile] = useState<File | null>(null);
   const [previewThumbnailUrl, setPreviewThumbnailUrl] = useState<string>();
-  const [selectedResourceFile, setSelectedResourcelFile] =useState<File | null>(null);
+  const [selectedResourceFile, setSelectedResourcelFile] = useState<File | null>(null);
   const [previewResourceUrl, setPreviewResourceUrl] = useState<string>();
+  const [isOpenModal,setIsOpenModal] = useState(false)
 
-  const iframeRef = useRef<HTMLIFrameElement | null>(null);
-
-  const addChapter = (event: Event) => {
+  const addChapter = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-
-    const lastChapterId = chapters.length > 0 
-    ? parseInt(chapters[chapters.length - 1].id) 
-    : 0;
-
+    const lastChapterId =
+      chapters.length > 0 ? parseInt(chapters[chapters.length - 1].id) : 0;
 
     const newChapter = {
       id: (lastChapterId + 1).toString(),
@@ -54,7 +74,10 @@ function AddCourse() {
     setChapters([...chapters, newChapter]);
   };
 
-  const toggleChapter = (chapterId: string, event: Event) => {
+  const toggleChapter = (
+    chapterId: string,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     event.preventDefault();
     setChapters(
       chapters.map((chapter) =>
@@ -65,32 +88,58 @@ function AddCourse() {
     );
   };
 
-  const removeChapter = (chapterId: string, event: Event) => {
+  const removeChapter = (
+    chapterId: string,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     event.preventDefault();
     if (chapters.length > 1) {
-      // First, filter out the chapter to be removed
-      const filteredChapters = chapters.filter((chapter) => chapter.id !== chapterId);
-      
-      // Then, renumber the remaining chapters and their lectures to maintain sequential order
+      const filteredChapters = chapters.filter(
+        (chapter) => chapter.id !== chapterId
+      );
       const reorderedChapters = filteredChapters.map((chapter, index) => {
         const newChapterId = (index + 1).toString();
-        
+
         return {
           ...chapter,
           id: newChapterId,
         };
       });
-      
+
       setChapters(reorderedChapters);
     }
   };
 
   const handleBasicDataChange = (e: ChangeEvent<HTMLInputElement>) => {
-      const { id, value } = e.target;
-      setBasicData({ ...basicData, [id]: value });
-    };
+    const { id, value } = e.target;
+    setBasicData({ ...basicData, [id]: value });
+    setErrMsg((prev) => ({ ...prev, [id]: "" }));
+  };
 
-  const addLecture = (chapterId: string, event: Event) => {
+  const handleLectureInputChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    chapterId: string,
+    lectureId: string
+  ) => {
+    const { id, value } = event.target;
+
+    setChapters((prevChapters) =>
+      prevChapters.map((chapter) =>
+        chapter.id === chapterId
+          ? {
+              ...chapter,
+              lectures: chapter.lectures.map((lecture) =>
+                lecture.id === lectureId ? { ...lecture, [id]: value } : lecture
+              ),
+            }
+          : chapter
+      )
+    );
+  };
+  const addLecture = (
+    chapterId: string,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     event.preventDefault();
     setChapters(
       chapters.map((chapter) =>
@@ -99,7 +148,11 @@ function AddCourse() {
               ...chapter,
               lectures: [
                 ...chapter.lectures,
-                { id: `${Date.now()}`, name: "", url: "" },
+                {
+                  id: (chapter.lectures.length + 1).toString(),
+                  name: "",
+                  url: "",
+                },
               ],
             }
           : chapter
@@ -107,15 +160,23 @@ function AddCourse() {
     );
   };
 
-  const removeLecture = (chapterId: string, lectureId: string) => {
+  const removeLecture = (
+    chapterId: string,
+    lectureId: string,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
     setChapters((prevChapters) =>
       prevChapters.map((chapter) =>
         chapter.id === chapterId
           ? {
               ...chapter,
-              lectures: chapter.lectures.filter(
-                (lecture) => lecture.id !== lectureId
-              ),
+              lectures: chapter.lectures
+                .filter((lecture) => lecture.id !== lectureId)
+                .map((lecture, index) => ({
+                  ...lecture,
+                  id: (index + 1).toString(), // Reassigning IDs in order
+                })),
             }
           : chapter
       )
@@ -129,6 +190,7 @@ function AddCourse() {
     if (file) {
       setSelectedThumbnailFile(file);
       setPreviewThumbnailUrl(URL.createObjectURL(file));
+      setErrMsg((prev) => ({ ...prev, thumbnail: "" }));
     }
   };
 
@@ -144,30 +206,62 @@ function AddCourse() {
       } else {
         setPreviewThumbnailUrl("");
       }
+      setErrMsg((prev) => ({ ...prev, resource: "" }));
     }
   };
 
   const handleFullScreen = () => {
-    if (iframeRef.current) {
-      if (iframeRef.current.requestFullscreen) {
-        iframeRef.current.requestFullscreen();
-      } else if ((iframeRef.current as any).webkitRequestFullscreen) {
-        (iframeRef.current as any).webkitRequestFullscreen();
-      } else if ((iframeRef.current as any).mozRequestFullScreen) {
-        (iframeRef.current as any).mozRequestFullScreen();
-      } else if ((iframeRef.current as any).msRequestFullscreen) {
-        (iframeRef.current as any).msRequestFullscreen();
-      }
-    }
+    setIsOpenModal(true)
   };
 
-  const handleSubmit = async()=>{
-    // console.log(basicData);
-    console.log(chapters);
-    // console.log(selectedThumbnailFile);
-    // console.log(selectedResourceFile);
-    
-  }
+  const closeModal = () => {
+    setIsOpenModal(false);
+  };
+
+  const validateForm = () => {
+    const newErr: FormErrors = {};
+
+    if (!basicData.title.trim()) newErr.title = "Title is required.";
+    if (!basicData.description.trim())
+      newErr.description = "Description is required.";
+    if (!basicData.category.trim()) newErr.category = "Category is required.";
+    if (!basicData.price || basicData.price <= 0)
+      newErr.price = "Price must be greater than 0.";
+    if (!selectedThumbnailFile)
+      newErr.thumbnail = "Course thumbnail image is required.";
+    if (!selectedResourceFile) newErr.resource = "Resource file is required.";
+    if (chapters.length === 0)
+      newErr.chapter = "At least one chapter is required.";
+
+    chapters.forEach((chapter, chapterIndex) => {
+      if (!chapter.name.trim())
+        newErr[
+          `chapter-${chapterIndex}` as keyof FormErrors
+        ] = `Chapter name is required.`;
+
+      chapter.lectures.forEach((lecture, lectureIndex) => {
+        if (!lecture.name.trim())
+          newErr[
+            `lecture-${chapterIndex}-${lectureIndex}-name` as keyof FormErrors
+          ] = `Lecture name is required`;
+        if (!lecture.url.trim())
+          newErr[
+            `lecture-${chapterIndex}-${lectureIndex}-url` as keyof FormErrors
+          ] = `Lecture URL is required `;
+      });
+    });
+
+    setErrMsg(newErr);
+    return Object.keys(newErr).length === 0;
+  };
+
+  const handleSubmit = async () => {
+    try {
+      validateForm();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row gap-6 p-10 bg-gray-100">
@@ -179,7 +273,10 @@ function AddCourse() {
               label="Title"
               id="title"
               variant="outlined"
+              onChange={handleBasicDataChange}
               size="small"
+              error={!!errMsg.title}
+              helperText={errMsg.title}
               fullWidth
             />
             <TextField
@@ -187,6 +284,9 @@ function AddCourse() {
               id="description"
               variant="outlined"
               size="small"
+              onChange={handleBasicDataChange}
+              error={!!errMsg.description}
+              helperText={errMsg.description}
               fullWidth
             />
             <div className="flex gap-4">
@@ -195,6 +295,9 @@ function AddCourse() {
                 id="category"
                 size="small"
                 variant="outlined"
+                onChange={handleBasicDataChange}
+                error={!!errMsg.category}
+                helperText={errMsg.category}
                 fullWidth
               />
               <TextField
@@ -203,12 +306,15 @@ function AddCourse() {
                 size="small"
                 type="number"
                 variant="outlined"
+                onChange={handleBasicDataChange}
+                error={!!errMsg.price}
+                helperText={errMsg.price}
                 fullWidth
               />
             </div>
           </div>
 
-          {chapters.map((chapter) => (
+          {chapters.map((chapter, chapterIndex) => (
             <div
               key={chapter.id}
               className="p-4 border  rounded-md bg-gray-100"
@@ -216,21 +322,28 @@ function AddCourse() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 w-full">
                   <LuGrip className="text-black" size={20} />
-                  <input
-                    type="text"
-                    placeholder="Chapter Name"
-                    value={chapter.name}
-                    onChange={(e) => {
-                      setChapters(
-                        chapters.map((c) =>
-                          c.id === chapter.id
-                            ? { ...c, name: e.target.value }
-                            : c
-                        )
-                      );
-                    }}
-                    className="w-full  border-b text-md border-gray-300 focus:outline-none focus:border-blue-500 px-2 py-1"
-                  />
+                  <div className="flex flex-col w-full">
+                    <input
+                      type="text"
+                      placeholder="Chapter Name"
+                      value={chapter.name}
+                      onChange={(e) => {
+                        setChapters(
+                          chapters.map((c) =>
+                            c.id === chapter.id
+                              ? { ...c, name: e.target.value }
+                              : c
+                          )
+                        );
+                      }}
+                      className="w-full  border-b text-md border-gray-300 focus:outline-none focus:border-blue-500 px-2 py-1"
+                    />
+                    {errMsg[`chapter-${chapterIndex}`] && (
+                      <p className="text-[#d32f2f] text-xs mt-1 pl-[15px] ">
+                        {errMsg[`chapter-${chapterIndex}`]}
+                      </p>
+                    )}
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <button onClick={(e) => toggleChapter(chapter.id, e)}>
@@ -250,27 +363,63 @@ function AddCourse() {
               </div>
               {chapter.isExpanded && (
                 <div className="mt-4 space-y-3">
-                  {chapter.lectures.map((lecture) => (
+                  {chapter.lectures.map((lecture, lectureIndex) => (
                     <div
                       key={lecture.id}
                       className="flex gap-3 ml-[100px] justify-end items-center"
                     >
                       <TextField
                         label="Lecture Name"
+                        id="name"
                         value={lecture.name}
                         size="small"
                         variant="outlined"
+                        error={
+                          !!errMsg[
+                            `lecture-${chapterIndex}-${lectureIndex}-name`
+                          ]
+                        }
+                        helperText={
+                          errMsg[`lecture-${chapterIndex}-${lectureIndex}-name`]
+                        }
                         fullWidth
+                        onChange={(event) =>
+                          handleLectureInputChange(
+                            event,
+                            chapter.id,
+                            lecture.id
+                          )
+                        }
                       />
+
                       <TextField
                         label="Lecture Url"
+                        id="url"
                         value={lecture.url}
                         size="small"
                         variant="outlined"
+                        error={
+                          !!errMsg[
+                            `lecture-${chapterIndex}-${lectureIndex}-url`
+                          ]
+                        }
+                        helperText={
+                          errMsg[`lecture-${chapterIndex}-${lectureIndex}-url`]
+                        }
                         fullWidth
+                        onChange={(event) =>
+                          handleLectureInputChange(
+                            event,
+                            chapter.id,
+                            lecture.id
+                          )
+                        }
                       />
+
                       <button
-                        onClick={() => removeLecture(chapter.id, lecture.id)}
+                        onClick={(e) =>
+                          removeLecture(chapter.id, lecture.id, e)
+                        }
                         disabled={chapter.lectures.length === 1}
                       >
                         <IoTrash size={20} />
@@ -318,6 +467,11 @@ function AddCourse() {
           />
         )}
 
+        {/* Error Message for Thumbnail */}
+        {errMsg.thumbnail && (
+          <p className="text-[#d32f2f] text-xs mt-1">{errMsg.thumbnail}</p>
+        )}
+
         <label className="mt-4 flex flex-col items-center w-full py-2 bg-yellow-500 text-white rounded-lg cursor-pointer hover:bg-yellow-600 transition">
           Select a Thumbnail
           <input
@@ -353,9 +507,7 @@ function AddCourse() {
               </button>
             </div>
           ) : (
-            <p className="text-gray-500">
-              Selected file: {previewResourceUrl.name}
-            </p>
+            <p className="text-gray-500">Selected file:</p>
           )
         ) : (
           <img
@@ -363,6 +515,10 @@ function AddCourse() {
             src="/image-placeholder.svg"
             alt="image preview"
           />
+        )}
+
+        {errMsg.resource && (
+          <p className="text-[#d32f2f] text-xs mt-1 ">{errMsg.resource}</p>
         )}
 
         <label className="mt-4 flex flex-col items-center w-full py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition">
@@ -374,13 +530,23 @@ function AddCourse() {
           />
         </label>
 
-        <button className=" mt-4 flex flex-col items-center w-full py-2 bg-green-500 text-white rounded-lg cursor-pointer hover:bg-green-600 transition" onClick={handleSubmit}>
+        <button
+          className=" mt-4 flex flex-col items-center w-full py-2 bg-green-500 text-white rounded-lg cursor-pointer hover:bg-green-600 transition"
+          onClick={handleSubmit}
+        >
           Submit
         </button>
-
-        
       </div>
+
+       {/* Modal for fullscreen preview */}
+       {isOpenModal && previewResourceUrl && selectedResourceFile && selectedResourceFile.type === "application/pdf" && (
+        <PdfPreview 
+        previewResourceUrl={previewResourceUrl} 
+        closeModal={closeModal} 
+      />
+      )}
     </div>
+  
   );
 }
 
