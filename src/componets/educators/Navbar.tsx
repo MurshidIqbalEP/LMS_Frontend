@@ -15,6 +15,7 @@ function Navbar() {
         {/* Navigation Links */}
         <nav className="hidden md:flex space-x-12">
         <Link to="addcourse" className="text-gray-500 hover:text-black">Add Course</Link>
+        <Link to="mycourses" className="text-gray-500 hover:text-black">MyCourses</Link>
 
           
         </nav>

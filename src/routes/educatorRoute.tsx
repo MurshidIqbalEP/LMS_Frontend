@@ -4,6 +4,7 @@ import Home from "../pages/educators/Home";
 import LoginPage from "../pages/educators/Login";
 import Register from "../pages/educators/Registration";
 import Addcourse from "../pages/educators/Addcourse";
+import Mycourses from "../pages/educators/Mycourses";
 
 function EducatorRoute() {
   return (
@@ -15,6 +16,7 @@ function EducatorRoute() {
       <Route path="/" element={<Educatorlayouts />}>
         <Route index element={<Home />} />
         <Route path="addcourse" element={<Addcourse />} />
+        <Route path="mycourses" element={<Mycourses />} />
       </Route>
 
       {/* Redirect unknown routes */}

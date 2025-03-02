@@ -4,8 +4,18 @@ import { CiCirclePlus } from "react-icons/ci";
 import { IoIosArrowDropdown, IoIosArrowDropup } from "react-icons/io";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { IoTrash } from "react-icons/io5";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import PdfPreview from "../../componets/educators/PdfPreview";
+import axios from "axios";
+import { postCourse } from "../../api/educatorApi";
+const cloudinaryURL = import.meta.env.VITE_CLOUDINARY_URL;
+const preset = import.meta.env.VITE_PRESET_NAME;
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { toast } from "sonner";
+import Lottie from "lottie-react";
+import animationData from "../../assets/loading.json";
+import { useNavigate } from "react-router-dom";
 
 interface BasicData {
   title: string;
@@ -36,6 +46,10 @@ interface ErrMsg {
 }
 
 function AddCourse() {
+  const navigate = useNavigate();
+  const educatorInfo = useSelector(
+    (state: RootState) => state.educatorSlice.educatorInfo
+  );
   const [basicData, setBasicData] = useState<BasicData>({
     title: "",
     description: "",
@@ -54,11 +68,14 @@ function AddCourse() {
     },
   ]);
 
-  const [selectedThumbnailFile, setSelectedThumbnailFile] = useState<File | null>(null);
+  const [selectedThumbnailFile, setSelectedThumbnailFile] =
+    useState<File | null>(null);
   const [previewThumbnailUrl, setPreviewThumbnailUrl] = useState<string>();
-  const [selectedResourceFile, setSelectedResourcelFile] = useState<File | null>(null);
+  const [selectedResourceFile, setSelectedResourcelFile] =
+    useState<File | null>(null);
   const [previewResourceUrl, setPreviewResourceUrl] = useState<string>();
-  const [isOpenModal,setIsOpenModal] = useState(false)
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const addChapter = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -119,7 +136,9 @@ function AddCourse() {
   const handleLectureInputChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     chapterId: string,
-    lectureId: string
+    lectureId: string,
+    chapterIndex: number,
+    lectureIndex: number
   ) => {
     const { id, value } = event.target;
 
@@ -135,6 +154,10 @@ function AddCourse() {
           : chapter
       )
     );
+    setErrMsg((prev) => ({
+      ...prev,
+      [`lecture-${chapterIndex}-${lectureIndex}-${id}`]: "",
+    }));
   };
   const addLecture = (
     chapterId: string,
@@ -211,7 +234,7 @@ function AddCourse() {
   };
 
   const handleFullScreen = () => {
-    setIsOpenModal(true)
+    setIsOpenModal(true);
   };
 
   const closeModal = () => {
@@ -251,19 +274,87 @@ function AddCourse() {
       });
     });
 
-    setErrMsg(newErr);
+    setErrMsg(newErr as ErrMsg);
     return Object.keys(newErr).length === 0;
+  };
+
+  const uploadToCloudinary = async (
+    formData: unknown
+  ): Promise<string | null> => {
+    try {
+      setLoading(true);
+      const { data } = await axios.post(cloudinaryURL, formData);
+      setLoading(false);
+      return data.secure_url;
+    } catch (error) {
+      console.error("Cloudinary Upload Error:", error);
+      return null;
+    }
   };
 
   const handleSubmit = async () => {
     try {
-      validateForm();
+      if (!validateForm()) return;
+
+      setLoading(true);
+      const formDataArray = [];
+
+      if (selectedThumbnailFile) {
+        const thumbnailFormData = new FormData();
+        thumbnailFormData.append("file", selectedThumbnailFile);
+        thumbnailFormData.append("upload_preset", preset);
+        formDataArray.push(uploadToCloudinary(thumbnailFormData));
+      }
+
+      if (selectedResourceFile) {
+        const resourceFormData = new FormData();
+        resourceFormData.append("file", selectedResourceFile);
+        resourceFormData.append("upload_preset", preset);
+        resourceFormData.append("resource_type", "raw");
+        formDataArray.push(uploadToCloudinary(resourceFormData));
+      }
+
+      const [thumbnailUrl, resourceUrl] = await Promise.all(formDataArray);
+      toast("got it");
+
+      if (!thumbnailUrl || !resourceUrl) {
+        setLoading(false);
+        return setErrMsg((prev) => ({
+          ...prev,
+          thumbnail: thumbnailUrl ? "" : "Thumbnail upload failed",
+          resource: resourceUrl ? "" : "Resource upload failed",
+        }));
+      }
+
+      const payload = {
+        ...basicData,
+        thumbnailUrl,
+        resourceUrl,
+        chapters,
+        educatorId: educatorInfo._id,
+      };
+
+      const res = await postCourse(payload);
+      if (res?.data) {
+        toast(res.data.message);
+        navigate("/educator/mycourses");
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  return (
+  return loading ? (
+    <div className="flex justify-center items-center w-full h-full min-h-screen">
+      <Lottie
+        animationData={animationData}
+        loop={true}
+        className="w-3/4 h-3/4 md:w-1/2 md:h-1/2 lg:w-1/3 lg:h-1/3"
+      />
+    </div>
+  ) : (
     <div className="min-h-screen flex flex-col md:flex-row gap-6 p-10 bg-gray-100">
       {/* Left Section */}
       <div className="w-full space-y-4  bg-white p-8 rounded-lg shadow-md">
@@ -335,6 +426,10 @@ function AddCourse() {
                               : c
                           )
                         );
+                        setErrMsg((prev) => ({
+                          ...prev,
+                          [`chapter-${chapterIndex}`]: "",
+                        }));
                       }}
                       className="w-full  border-b text-md border-gray-300 focus:outline-none focus:border-blue-500 px-2 py-1"
                     />
@@ -387,7 +482,9 @@ function AddCourse() {
                           handleLectureInputChange(
                             event,
                             chapter.id,
-                            lecture.id
+                            lecture.id,
+                            chapterIndex,
+                            lectureIndex
                           )
                         }
                       />
@@ -411,7 +508,9 @@ function AddCourse() {
                           handleLectureInputChange(
                             event,
                             chapter.id,
-                            lecture.id
+                            lecture.id,
+                            chapterIndex,
+                            lectureIndex
                           )
                         }
                       />
@@ -538,15 +637,17 @@ function AddCourse() {
         </button>
       </div>
 
-       {/* Modal for fullscreen preview */}
-       {isOpenModal && previewResourceUrl && selectedResourceFile && selectedResourceFile.type === "application/pdf" && (
-        <PdfPreview 
-        previewResourceUrl={previewResourceUrl} 
-        closeModal={closeModal} 
-      />
-      )}
+      {/* Modal for fullscreen preview */}
+      {isOpenModal &&
+        previewResourceUrl &&
+        selectedResourceFile &&
+        selectedResourceFile.type === "application/pdf" && (
+          <PdfPreview
+            previewResourceUrl={previewResourceUrl}
+            closeModal={closeModal}
+          />
+        )}
     </div>
-  
   );
 }
 

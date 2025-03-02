@@ -2,6 +2,30 @@ import errorHandle from "./error";
 import Api from "../services/axios";
 import educatorRoutes from "../services/endpoints/educatorEndpoints";
 
+interface Lecture {
+  id: string;
+  name: string;
+  url: string;
+}
+
+interface Chapter {
+  id: string;
+  name: string;
+  isExpanded: boolean;
+  lectures: Lecture[];
+}
+
+interface CoursePayload {
+  title: string;
+  description: string;
+  category: string;
+  price: number;
+  thumbnailUrl: string;
+  resourceUrl: string;
+  chapters: Chapter[];
+}
+
+
 // For registration of Educator
 export const register = async(name:string,email: string, password: string,subjectExpertise:string,qualification:string,profilePicture:string,governmentId:string)=>{
     try {
@@ -23,4 +47,16 @@ export const login = async(email: string, password: string,)=>{
         return errorHandle(err);
       }
 }
+
+// For Course poste
+export const postCourse = async(payload: CoursePayload)=>{
+  try {
+      let response = await Api.post(educatorRoutes.postCourse,payload );
+      return response;
+    } catch (error) {
+      const err: Error = error as Error;
+      return errorHandle(err);
+    }
+}
+
 
