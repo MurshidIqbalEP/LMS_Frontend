@@ -46,10 +46,9 @@ interface ErrMsg {
 }
 
 function AddCourse() {
+
   const navigate = useNavigate();
-  const educatorInfo = useSelector(
-    (state: RootState) => state.educatorSlice.educatorInfo
-  );
+  const educatorInfo = useSelector((state: RootState) => state.educatorSlice.educatorInfo);
   const [basicData, setBasicData] = useState<BasicData>({
     title: "",
     description: "",
@@ -58,30 +57,24 @@ function AddCourse() {
   });
 
   const [errMsg, setErrMsg] = useState<ErrMsg>({});
-
-  const [chapters, setChapters] = useState([
-    {
+  const [chapters, setChapters] = useState([{
       id: "1",
       name: "",
       isExpanded: true,
       lectures: [{ id: "1", name: "", url: "" }],
-    },
-  ]);
+     },
+   ]);
 
-  const [selectedThumbnailFile, setSelectedThumbnailFile] =
-    useState<File | null>(null);
+  const [selectedThumbnailFile, setSelectedThumbnailFile] = useState<File | null>(null);
   const [previewThumbnailUrl, setPreviewThumbnailUrl] = useState<string>();
-  const [selectedResourceFile, setSelectedResourcelFile] =
-    useState<File | null>(null);
+  const [selectedResourceFile, setSelectedResourcelFile] = useState<File | null>(null);
   const [previewResourceUrl, setPreviewResourceUrl] = useState<string>();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const addChapter = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    const lastChapterId =
-      chapters.length > 0 ? parseInt(chapters[chapters.length - 1].id) : 0;
-
+    const lastChapterId = chapters.length > 0 ? parseInt(chapters[chapters.length - 1].id) : 0;
     const newChapter = {
       id: (lastChapterId + 1).toString(),
       name: "",
@@ -91,10 +84,7 @@ function AddCourse() {
     setChapters([...chapters, newChapter]);
   };
 
-  const toggleChapter = (
-    chapterId: string,
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const toggleChapter = (chapterId: string,event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setChapters(
       chapters.map((chapter) =>
@@ -105,24 +95,17 @@ function AddCourse() {
     );
   };
 
-  const removeChapter = (
-    chapterId: string,
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const removeChapter = (chapterId: string,event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (chapters.length > 1) {
-      const filteredChapters = chapters.filter(
-        (chapter) => chapter.id !== chapterId
-      );
+      const filteredChapters = chapters.filter((chapter) => chapter.id !== chapterId);
       const reorderedChapters = filteredChapters.map((chapter, index) => {
-        const newChapterId = (index + 1).toString();
-
+      const newChapterId = (index + 1).toString();
         return {
           ...chapter,
           id: newChapterId,
         };
       });
-
       setChapters(reorderedChapters);
     }
   };
@@ -141,7 +124,6 @@ function AddCourse() {
     lectureIndex: number
   ) => {
     const { id, value } = event.target;
-
     setChapters((prevChapters) =>
       prevChapters.map((chapter) =>
         chapter.id === chapterId
@@ -159,10 +141,9 @@ function AddCourse() {
       [`lecture-${chapterIndex}-${lectureIndex}-${id}`]: "",
     }));
   };
-  const addLecture = (
-    chapterId: string,
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
+
+
+  const addLecture = (chapterId: string,event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setChapters(
       chapters.map((chapter) =>
@@ -183,11 +164,7 @@ function AddCourse() {
     );
   };
 
-  const removeLecture = (
-    chapterId: string,
-    lectureId: string,
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const removeLecture = (chapterId: string,lectureId: string,event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setChapters((prevChapters) =>
       prevChapters.map((chapter) =>
@@ -206,9 +183,7 @@ function AddCourse() {
     );
   };
 
-  const handleThumbnailChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleThumbnailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedThumbnailFile(file);
@@ -243,7 +218,6 @@ function AddCourse() {
 
   const validateForm = () => {
     const newErr: FormErrors = {};
-
     if (!basicData.title.trim()) newErr.title = "Title is required.";
     if (!basicData.description.trim())
       newErr.description = "Description is required.";
@@ -257,20 +231,11 @@ function AddCourse() {
       newErr.chapter = "At least one chapter is required.";
 
     chapters.forEach((chapter, chapterIndex) => {
-      if (!chapter.name.trim())
-        newErr[
-          `chapter-${chapterIndex}` as keyof FormErrors
-        ] = `Chapter name is required.`;
+      if (!chapter.name.trim()) newErr[`chapter-${chapterIndex}` as keyof FormErrors] = `Chapter name is required.`;
 
       chapter.lectures.forEach((lecture, lectureIndex) => {
-        if (!lecture.name.trim())
-          newErr[
-            `lecture-${chapterIndex}-${lectureIndex}-name` as keyof FormErrors
-          ] = `Lecture name is required`;
-        if (!lecture.url.trim())
-          newErr[
-            `lecture-${chapterIndex}-${lectureIndex}-url` as keyof FormErrors
-          ] = `Lecture URL is required `;
+        if (!lecture.name.trim())newErr[`lecture-${chapterIndex}-${lectureIndex}-name` as keyof FormErrors] = `Lecture name is required`;
+        if (!lecture.url.trim())newErr[`lecture-${chapterIndex}-${lectureIndex}-url` as keyof FormErrors] = `Lecture URL is required `;
       });
     });
 
@@ -295,7 +260,6 @@ function AddCourse() {
   const handleSubmit = async () => {
     try {
       if (!validateForm()) return;
-
       setLoading(true);
       const formDataArray = [];
 
@@ -526,7 +490,7 @@ function AddCourse() {
                     </div>
                   ))}
 
-                  {/* Moved the Add Lecture button inside the conditional rendering */}
+                  
                   <div className="flex mt-4 w-full justify-end items-center h-[40px]">
                     <button
                       onClick={(e) => addLecture(chapter.id, e)}
@@ -566,7 +530,6 @@ function AddCourse() {
           />
         )}
 
-        {/* Error Message for Thumbnail */}
         {errMsg.thumbnail && (
           <p className="text-[#d32f2f] text-xs mt-1">{errMsg.thumbnail}</p>
         )}
@@ -597,7 +560,6 @@ function AddCourse() {
                 title="PDF Preview"
               ></iframe>
 
-              {/* Fix button positioning */}
               <button
                 className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center absolute opacity-50 top-6 left-3 z-50"
                 onClick={handleFullScreen}
