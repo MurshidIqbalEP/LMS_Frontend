@@ -1,7 +1,16 @@
-import React, { useEffect, useRef } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
-import { FaEdit, FaTrashAlt, FaUsers } from "react-icons/fa";
+import { Popover } from "antd";
+import {
+  FaEdit,
+  FaExclamationTriangle,
+  FaTrashAlt,
+  FaUsers,
+} from "react-icons/fa";
 import { useGSAP } from "@gsap/react";
+import PopoverContent from "./PopoverContent";
+import { deleteCourse } from "../../api/educatorApi";
+import { toast } from "sonner";
 
 interface Course {
   _id: string;
@@ -13,7 +22,13 @@ interface Course {
   enrolledStudents: number;
 }
 
-const CourseCard = ({ course }: { course: Course }) => {
+const CourseCard = ({
+  course,
+  setCourses,
+}: {
+  course: Course;
+  setCourses: React.Dispatch<React.SetStateAction<Course[]>>;
+}) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
@@ -40,6 +55,16 @@ const CourseCard = ({ course }: { course: Course }) => {
     };
   }, []);
 
+  const handleDelete = async (courseId: string) => {
+    const deleted = await deleteCourse(courseId);
+    if (deleted?.data.success) {
+      setCourses((prevCourses) =>
+        prevCourses.filter((course) => course._id !== courseId)
+      );
+      toast(deleted.data.message);
+    }
+  };
+
   return (
     <div
       ref={cardRef}
@@ -55,11 +80,13 @@ const CourseCard = ({ course }: { course: Course }) => {
           alt={course.title}
           className="w-full h-48 object-cover"
         />
-        
+
         {/* Status pill */}
         <span
           className={`absolute top-3 right-3 z-20 text-xs font-medium px-3 py-1 rounded-full ${
-            course.isPublished ? "bg-green-500 text-white" : "bg-red-100 text-red-800"
+            course.isPublished
+              ? "bg-green-500 text-white"
+              : "bg-red-100 text-red-800"
           }`}
         >
           {course.isPublished ? "Published" : "Draft"}
@@ -81,14 +108,22 @@ const CourseCard = ({ course }: { course: Course }) => {
         <h3 className="font-bold text-gray-900 text-lg mb-1 line-clamp-1">
           {course.title}
         </h3>
-        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{course.description}</p>
+        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+          {course.description}
+        </p>
 
         {/* Actions */}
         <div className="flex justify-between items-center">
-          <button className="flex items-center text-red-600 hover:text-red-800 text-sm font-medium transition-colors">
-            <FaTrashAlt size={14} className="mr-1" />
-            Delete
-          </button>
+          <Popover
+            content={
+              <PopoverContent onDelete={() => handleDelete(course._id)} />
+            }
+          >
+            <button className="flex items-center text-red-600 hover:text-red-800 text-sm font-medium transition-colors">
+              <FaTrashAlt size={14} className="mr-1" />
+              Delete
+            </button>
+          </Popover>
           <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 text-sm rounded-lg transition-colors">
             <FaEdit size={14} className="mr-1" />
             Edit

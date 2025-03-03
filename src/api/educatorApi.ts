@@ -70,3 +70,15 @@ export const fetchCoursesById = async(educatorId:string)=>{
     }
 }
 
+// For Delete Course by educator ID
+export const deleteCourse = async(courseId:string)=>{
+  try {
+      let response = await Api.delete(`${educatorRoutes.deleteCourse}?courseId=${courseId}`);
+      return response;
+    } catch (error) {
+      const err: Error = error as Error;
+      return errorHandle(err);
+    }
+}
+
+
