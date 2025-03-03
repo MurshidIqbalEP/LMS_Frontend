@@ -59,4 +59,14 @@ export const postCourse = async(payload: CoursePayload)=>{
     }
 }
 
+// For fetching courses by educatorId
+export const fetchCoursesById = async(educatorId:string)=>{
+  try {
+      let response = await Api.get(`${educatorRoutes.fetchCourses}?educatorId=${educatorId}`);
+      return response;
+    } catch (error) {
+      const err: Error = error as Error;
+      return errorHandle(err);
+    }
+}
 
