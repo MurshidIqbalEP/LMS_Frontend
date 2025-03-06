@@ -1,7 +1,7 @@
 import TextField from "@mui/material/TextField";
 import { LuGrip } from "react-icons/lu";
 import { CiCirclePlus } from "react-icons/ci";
-import { IoIosArrowDropdown, IoIosArrowDropup } from "react-icons/io";
+import { IoIosArrowDropdown, IoIosArrowDropup, IoMdQrScanner } from "react-icons/io";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { IoTrash } from "react-icons/io5";
 import { ChangeEvent, useState } from "react";
@@ -279,8 +279,6 @@ function AddCourse() {
       }
 
       const [thumbnailUrl, resourceUrl] = await Promise.all(formDataArray);
-      toast("got it");
-
       if (!thumbnailUrl || !resourceUrl) {
         setLoading(false);
         return setErrMsg((prev) => ({
@@ -318,7 +316,7 @@ function AddCourse() {
         className="w-3/4 h-3/4 md:w-1/2 md:h-1/2 lg:w-1/3 lg:h-1/3"
       />
     </div>
-  ) : (
+   ) : (
     <div className="min-h-screen flex flex-col md:flex-row gap-6 p-10 bg-gray-100">
       {/* Left Section */}
       <div className="w-full space-y-4  bg-white p-8 rounded-lg shadow-md">
@@ -560,11 +558,12 @@ function AddCourse() {
                 title="PDF Preview"
               ></iframe>
 
+
               <button
                 className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center absolute opacity-50 top-6 left-3 z-50"
                 onClick={handleFullScreen}
               >
-                ⛶
+                <IoMdQrScanner size={20}  className="text-white"/>
               </button>
             </div>
           ) : (

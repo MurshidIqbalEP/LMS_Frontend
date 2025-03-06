@@ -50,7 +50,7 @@ function Mycourses() {
   }, [courses]);
 
   return (
-    <div ref={containerRef} className="w-full min-h-screen bg-amber-400 p-4">
+    <div ref={containerRef} className="w-full min-h-screen bg-[#F2F0EF] p-4">
       <h1 className="text-2xl ml-[10px] font-bold text-black mb-4">My Courses</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-screen">

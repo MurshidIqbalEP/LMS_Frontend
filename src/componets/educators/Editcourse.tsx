@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
 import { fetchCourseByCourseId, updateCourse } from "../../api/educatorApi";
 import {
@@ -73,8 +72,13 @@ interface ErrMsg {
   [key: string]: string | undefined;
 }
 
-function Editcourse() {
-  const { courseId } = useParams();
+function Editcourse({
+  courseId,
+  onClose,
+}: {
+  courseId: string;
+  onClose: () => void;
+}) {
   const educatorInfo = useSelector(
     (state: RootState) => state.educatorSlice.educatorInfo
   );
@@ -95,10 +99,16 @@ function Editcourse() {
     resourse: false,
   });
 
+  const handleBasicDataChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setBasicData({ ...basicData, [id]: value });
+    setErrMsg((prev) => ({ ...prev, [id]: "" }));
+  };
+
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
-        let res = await fetchCourseByCourseId(courseId as string);
+        let res = await fetchCourseByCourseId(courseId);
         const course = res?.data.course;
         console.log(course);
 
@@ -135,12 +145,6 @@ function Editcourse() {
     };
     fetchCourseData();
   }, [courseId]);
-
-  const handleBasicDataChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    setBasicData({ ...basicData, [id]: value });
-    setErrMsg((prev) => ({ ...prev, [id]: "" }));
-  };
 
   const toggleChapter = (
     chapterId: string,
@@ -395,6 +399,7 @@ function Editcourse() {
       const res = await updateCourse(payload);
       if (res?.data) {
         toast(res.data.message);
+        onClose();
       }
     } catch (error) {
       console.error("Error:", error);
@@ -404,81 +409,69 @@ function Editcourse() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row gap-6 p-10 bg-gray-100">
-      {/* Left Section */}
-     <div className="w-full space-y-4  bg-white p-8 rounded-lg shadow-md">
-        <form className="space-y-6">
-          <div className="flex flex-col gap-3">
-            <div className="mb-4">
-              <label className="block font-medium">Title:</label>
+    <div className="fixed inset-0 flex items-center justify-center bg-opacity-50">
+      <div className="w-[700px] bg-white p-6 rounded-lg shadow-lg max-h-[80vh] overflow-y-auto">
+        {/* <div className="flex justify-between items-center">
+      <h1 className="text-2xl">Edit Course</h1>
+      <button className="p-2 rounded-md hover:bg-gray-200" onClick={onClose}>
+        <IoIosCloseCircleOutline size={24} />
+      </button>
+    </div> */}
+
+        <form>
+          {/* <div className="mb-4">
+            <label className="block font-medium">Title:</label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value={basicData?.title}
+              onChange={handleBasicDataChange}
+              className="w-full px-3 py-2 border rounded-md"
+              required
+            />
+            {errMsg.title && <p className="text-[#d32f2f] text-xs mt-1 pl-[15px]">{errMsg.title}</p>}
+          </div> */}
+          {/* <div className="mb-4">
+            <label className="block font-medium">Description:</label>
+            <input
+              name="description"
+              id="description"
+              value={basicData?.description}
+              onChange={handleBasicDataChange}
+              className="w-full px-3 py-2 border rounded-md"
+              required
+            />
+            {errMsg.description && <p className="text-[#d32f2f] text-xs mt-1 pl-[15px]">{errMsg.description}</p>}
+          </div> */}
+          {/* <div className="mb-4 w-full flex gap-2">
+            <div className=" w-[50%]">
+              <label className="block font-medium">Category:</label>
               <input
                 type="text"
-                id="title"
-                name="title"
-                value={basicData?.title}
+                id="category"
+                name="category"
+                value={basicData?.category}
                 onChange={handleBasicDataChange}
                 className="w-full px-3 py-2 border rounded-md"
                 required
               />
-              {errMsg.title && (
-                <p className="text-[#d32f2f] text-xs mt-1 pl-[15px]">
-                  {errMsg.title}
-                </p>
-              )}
+              {errMsg.category && <p className="text-[#d32f2f] text-xs mt-1 pl-[15px]">{errMsg.category}</p>}
             </div>
-            <div className="mb-4">
-              <label className="block font-medium">Description:</label>
+            <div className=" w-[50%]">
+              <label className="block font-medium">Price:</label>
               <input
-                name="description"
-                id="description"
-                value={basicData?.description}
+                type="number"
+                name="price"
+                id="price"
+                value={basicData?.price}
                 onChange={handleBasicDataChange}
                 className="w-full px-3 py-2 border rounded-md"
                 required
               />
-              {errMsg.description && (
-                <p className="text-[#d32f2f] text-xs mt-1 pl-[15px]">
-                  {errMsg.description}
-                </p>
-              )}
+              {errMsg.price && <p className="text-[#d32f2f] text-xs mt-1 pl-[15px]">{errMsg.price}</p>}
             </div>
-            <div className="mb-4 w-full flex gap-2">
-              <div className=" w-[50%]">
-                <label className="block font-medium">Category:</label>
-                <input
-                  type="text"
-                  id="category"
-                  name="category"
-                  value={basicData?.category}
-                  onChange={handleBasicDataChange}
-                  className="w-full px-3 py-2 border rounded-md"
-                  required
-                />
-                {errMsg.category && (
-                  <p className="text-[#d32f2f] text-xs mt-1 pl-[15px]">
-                    {errMsg.category}
-                  </p>
-                )}
-              </div>
-              <div className=" w-[50%]">
-                <label className="block font-medium">Price:</label>
-                <input
-                  type="number"
-                  name="price"
-                  id="price"
-                  value={basicData?.price}
-                  onChange={handleBasicDataChange}
-                  className="w-full px-3 py-2 border rounded-md"
-                  required
-                />
-                {errMsg.price && (
-                  <p className="text-[#d32f2f] text-xs mt-1 pl-[15px]">
-                    {errMsg.price}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
+          </div> */}
 
           {chapters?.map((chapter, chapterIndex) => (
             <div
@@ -628,18 +621,16 @@ function Editcourse() {
             </div>
           ))}
 
-          <button
-            onClick={addChapter}
-            className="w-full flex items-center justify-center gap-2 py-2 px-4 border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white rounded-md transition"
-          >
-            <CiCirclePlus className="text-black" size={25} /> Add Chapter
-          </button>
-        </form>
-     </div>
+          <div className="mt-3.5">
+            <button
+              onClick={addChapter}
+              className=" w-full flex items-center justify-center gap-2 py-2 px-4 border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white rounded-md transition"
+            >
+              <CiCirclePlus className="text-black" size={25} /> Add Chapter
+            </button>
+          </div>
 
-     {/* Right Section */}
-     <div className="w-full  md:w-1/3 flex flex-col items-center bg-white p-8 rounded-lg shadow-md">
-        <div className="flex flex-col w-full gap-4 mt-2">
+          <div className="flex w-full gap-4 mt-2">
             {/* Thumbnail Section */}
             <div className="w-[50%] flex flex-col items-center gap-0">
               {previewThumbnailUrl ? (
@@ -701,19 +692,37 @@ function Editcourse() {
                   onChange={handleResourceChange}
                 />
               </label>
+            </div>
+          </div>
 
-              <button
+          <div className="flex justify-end space-x-4 mt-2 gap-2">
+            <button
               type="submit"
               className="bg-amber-300 hover:bg-amber-500 text-white px-4 py-2 rounded-md"
               onClick={handleSubmit}
             >
               Save Changes
             </button>
-            
-            </div>
           </div>
-       </div>
+        </form>
+      </div>
     </div>
+
+    // <div className="fixed inset-0 flex items-center justify-center  bg-opacity-50">
+    //   <div className="w-[700px] bg-white p-6 rounded-lg shadow-lg">
+    //     <div className="flex justify-between items-center">
+    //       <h1 className="text-2xl">Edit Course</h1>
+    //       <button
+    //         className="p-2 rounded-md hover:bg-gray-200"
+    //         onClick={onClose}
+    //       >
+    //         <IoIosCloseCircleOutline size={24} />
+    //       </button>
+    //     </div>
+
+    //   </div>
+
+    // </div>
   );
 }
 

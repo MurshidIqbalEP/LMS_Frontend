@@ -81,4 +81,27 @@ export const deleteCourse = async(courseId:string)=>{
     }
 }
 
+// For fetching Course Data
+export const fetchCourseByCourseId = async (courseId:string)=>{
+  try {
+    let response = await Api.get(`${educatorRoutes.fetchCourseById}/${courseId}`);
+    return response;
+  } catch (error) {
+    const err: Error = error as Error;
+    return errorHandle(err);
+  }
+}
+
+// For updating course 
+export const updateCourse = async (payload: unknown)=>{
+  try {
+    let response = await Api.patch(educatorRoutes.updateCourse,payload);
+    return response;
+  } catch (error) {
+    const err: Error = error as Error;
+    return errorHandle(err);
+  }
+}
+
+
 
