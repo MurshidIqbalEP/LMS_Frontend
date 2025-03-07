@@ -43,7 +43,7 @@ const CourseCard = ({ course,setCourses,
   return (
     <>
       <div
-        className="bg-white rounded-xl shadow-md overflow-hidden w-full h-[320px] max-w-sm transition-all duration-300 hover:shadow-xl border border-gray-300 hover:scale-[1.05]"
+        className="course-card bg-white rounded-xl shadow-md overflow-hidden w-full h-[320px] max-w-sm transition-all duration-300 hover:shadow-xl border border-gray-300 hover:scale-[1.05]"
       >
         {/* Card content */}
         <div className="relative">

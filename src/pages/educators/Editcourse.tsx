@@ -78,7 +78,7 @@ interface ErrMsg {
 function Editcourse() {
   const { courseId } = useParams();
   const educatorInfo = useSelector(
-    (state: RootState) => state.educatorSlice.educatorInfo
+    (state: RootState) => state.educator.educatorInfo
   );
   const navigate = useNavigate()
   const [basicData, setBasicData] = useState<BasicData>();

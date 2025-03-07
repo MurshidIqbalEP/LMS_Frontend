@@ -3,8 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 
 function Navbar() {
-  const educatorInfo = useSelector((state: RootState) => state.educatorSlice.educatorInfo);
-  console.log(educatorInfo)
+  const educatorInfo = useSelector((state: RootState) => state.educator.educatorInfo);
     return (
       <div className="mt-2 w-full h-[45px] border-t-2 border-b-2 border-gray-300 flex items-center justify-between px-4">
         {/* Logo Section */}

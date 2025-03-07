@@ -48,7 +48,7 @@ interface ErrMsg {
 function AddCourse() {
 
   const navigate = useNavigate();
-  const educatorInfo = useSelector((state: RootState) => state.educatorSlice.educatorInfo);
+  const educatorInfo = useSelector((state: RootState) => state.educator.educatorInfo);
   const [basicData, setBasicData] = useState<BasicData>({
     title: "",
     description: "",
