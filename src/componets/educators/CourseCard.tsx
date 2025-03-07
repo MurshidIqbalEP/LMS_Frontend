@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
+
 import { Modal, Popover } from "antd";
 import {
   FaEdit,
@@ -7,12 +7,9 @@ import {
   FaTrashAlt,
   FaUsers,
 } from "react-icons/fa";
-import { useGSAP } from "@gsap/react";
 import PopoverContent from "./PopoverContent";
 import { deleteCourse } from "../../api/educatorApi";
 import { toast } from "sonner";
-import Editcourse from "./Editcourse";
-import Test from "./test";
 import { useNavigate } from "react-router-dom";
 
 
@@ -32,42 +29,6 @@ const CourseCard = ({ course,setCourses,
   setCourses: React.Dispatch<React.SetStateAction<Course[]>>;
 }) => {
   const navigate = useNavigate()
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [isModalOpen,setIsModalOpen] = useState(false)
-
-  useGSAP(() => {
-    // Hover animation
-    const card = cardRef.current;
-    if (!card) return;
-
-    gsap.set(card, { scale: 1 });
-
-    const hoverAnimation = gsap.to(card, {
-      scale: 1.05,
-      boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.15)",
-      duration: 0.3,
-      paused: true,
-      ease: "power3.out",
-    });
-
-    card.addEventListener("mouseenter", () => hoverAnimation.play());
-    card.addEventListener("mouseleave", () => hoverAnimation.reverse());
-
-    return () => {
-      card.removeEventListener("mouseenter", () => hoverAnimation.play());
-      card.removeEventListener("mouseleave", () => hoverAnimation.reverse());
-    };
-  }, []);
-
-  useEffect(() => {
-    if (isModalOpen) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
-  
-    return () => document.body.classList.remove("overflow-hidden");
-  }, [isModalOpen]);
 
   const handleDelete = async (courseId: string) => {
     const deleted = await deleteCourse(courseId);
@@ -82,7 +43,6 @@ const CourseCard = ({ course,setCourses,
   return (
     <>
       <div
-        ref={cardRef}
         className="bg-white rounded-xl shadow-md overflow-hidden w-full h-[320px] max-w-sm transition-all duration-300 hover:shadow-xl border border-gray-300 hover:scale-[1.05]"
       >
         {/* Card content */}
@@ -141,7 +101,6 @@ const CourseCard = ({ course,setCourses,
             </Popover>
             <button
               className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-medium  cursor-pointer py-2 px-4 text-sm rounded-lg transition-colors"
-              // onClick={() => setIsModalOpen(true)}
               onClick={() => navigate(`/educator/editCourse/${course._id}`)}
             >
               <FaEdit size={14} className="mr-1" />
@@ -150,14 +109,6 @@ const CourseCard = ({ course,setCourses,
           </div>
         </div>
       </div>
-  
-     
-      {isModalOpen && (
-        <Editcourse courseId={course._id} onClose={() => setIsModalOpen(false)} />
-      )}
-
-
-
     </>
   );
 };

@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
 import { fetchCourseByCourseId, updateCourse } from "../../api/educatorApi";
 import {
@@ -16,6 +16,8 @@ import { RootState } from "../../redux/store";
 import { toast } from "sonner";
 const cloudinaryURL = import.meta.env.VITE_CLOUDINARY_URL;
 const preset = import.meta.env.VITE_PRESET_NAME;
+import Lottie from "lottie-react";
+import animationData from "../../assets/loading.json";
 
 interface BasicData {
   id?: string;
@@ -78,6 +80,7 @@ function Editcourse() {
   const educatorInfo = useSelector(
     (state: RootState) => state.educatorSlice.educatorInfo
   );
+  const navigate = useNavigate()
   const [basicData, setBasicData] = useState<BasicData>();
   const [chapters, setChapters] = useState<Chapter[]>();
   const [img, setImg] = useState();
@@ -395,15 +398,25 @@ function Editcourse() {
       const res = await updateCourse(payload);
       if (res?.data) {
         toast(res.data.message);
+       
+        navigate("/educator/mycourses");
       }
     } catch (error) {
       console.error("Error:", error);
-    } finally {
+    } finally{
       setLoading(false);
     }
   };
 
-  return (
+  return loading ?(
+    <div className="flex justify-center items-center w-full h-full min-h-screen">
+    <Lottie
+      animationData={animationData}
+      loop={true}
+      className="w-3/4 h-3/4 md:w-1/2 md:h-1/2 lg:w-1/3 lg:h-1/3"
+    />
+  </div>
+  ) :(
     <div className="min-h-screen flex flex-col md:flex-row gap-6 p-10 bg-gray-100">
       {/* Left Section */}
      <div className="w-full space-y-4  bg-white p-8 rounded-lg shadow-md">
@@ -641,7 +654,7 @@ function Editcourse() {
      <div className="w-full  md:w-1/3 flex flex-col items-center bg-white p-8 rounded-lg shadow-md">
         <div className="flex flex-col w-full gap-4 mt-2">
             {/* Thumbnail Section */}
-            <div className="w-[50%] flex flex-col items-center gap-0">
+            <div className=" flex flex-col items-center gap-0">
               {previewThumbnailUrl ? (
                 <img
                   src={previewThumbnailUrl}
@@ -667,7 +680,7 @@ function Editcourse() {
             </div>
 
             {/* PDF Section */}
-            <div className="w-[50%] flex flex-col gap-0 items-center">
+            <div className=" flex flex-col gap-3 items-center">
               <div className="w-full h-52  relative border rounded-lg overflow-hidden">
                 {previewResourceUrl ? (
                   <iframe
@@ -704,7 +717,7 @@ function Editcourse() {
 
               <button
               type="submit"
-              className="bg-amber-300 hover:bg-amber-500 text-white px-4 py-2 rounded-md"
+              className="bg-green-500 w-full  hover:bg-green-600 !text-white px-4 py-2 rounded-md"
               onClick={handleSubmit}
             >
               Save Changes
