@@ -58,6 +58,7 @@ const LoginPage: React.FC = () => {
       let res = await login(formData.email, formData.password);
       if (res?.data) {
         dispatch(setCredentials(res?.data));
+        localStorage.setItem("token", res.data.token);
         toast.success(res.data.message);
         navigate("/educator");
       }

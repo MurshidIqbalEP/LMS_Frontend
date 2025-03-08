@@ -6,6 +6,7 @@ import Register from "../pages/educators/Registration";
 import Addcourse from "../pages/educators/Addcourse";
 import Mycourses from "../pages/educators/Mycourses";
 import Editcourse from "../pages/educators/Editcourse";
+import EducatorProtected from "./educatorprotectedRoute";
 
 
 function EducatorRoute() {
@@ -17,9 +18,13 @@ function EducatorRoute() {
       {/* Nested Routes inside EducatorLayout */}
       <Route path="/" element={<Educatorlayouts />}>
         <Route index element={<Home />} />
-        <Route path="addcourse" element={<Addcourse />} />
-        <Route path="mycourses" element={<Mycourses />} />
-        <Route path="editcourse/:courseId" element={<Editcourse />} />
+         
+         <Route element={<EducatorProtected />}>
+               <Route path="addcourse" element={<Addcourse />} />
+               <Route path="mycourses" element={<Mycourses />} />
+               <Route path="editcourse/:courseId" element={<Editcourse />} />
+         </Route>
+        
       </Route>
 
       {/* Redirect unknown routes */}
