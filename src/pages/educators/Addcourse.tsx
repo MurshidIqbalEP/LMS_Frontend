@@ -1,13 +1,17 @@
 import TextField from "@mui/material/TextField";
 import { LuGrip } from "react-icons/lu";
 import { CiCirclePlus } from "react-icons/ci";
-import { IoIosArrowDropdown, IoIosArrowDropup, IoMdQrScanner } from "react-icons/io";
+import {
+  IoIosArrowDropdown,
+  IoIosArrowDropup,
+  IoMdQrScanner,
+} from "react-icons/io";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { IoTrash } from "react-icons/io5";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import PdfPreview from "../../componets/educators/PdfPreview";
 import axios from "axios";
-import { postCourse } from "../../api/educatorApi";
+import { postCourse, fetchCategory } from "../../api/educatorApi";
 const cloudinaryURL = import.meta.env.VITE_CLOUDINARY_URL;
 const preset = import.meta.env.VITE_PRESET_NAME;
 import { useSelector } from "react-redux";
@@ -16,6 +20,14 @@ import { toast } from "sonner";
 import Lottie from "lottie-react";
 import animationData from "../../assets/loading.json";
 import { useNavigate } from "react-router-dom";
+import {
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent
+} from "@mui/material";
 
 interface BasicData {
   title: string;
@@ -46,9 +58,18 @@ interface ErrMsg {
 }
 
 function AddCourse() {
+  useEffect(() => {
+    const fetchAllCategory = async () => {
+      const response = await fetchCategory();
+      setCategories(response?.data.categoryNames);
+    };
+    fetchAllCategory();
+  }, []);
 
   const navigate = useNavigate();
-  const educatorInfo = useSelector((state: RootState) => state.educator.educatorInfo);
+  const educatorInfo = useSelector(
+    (state: RootState) => state.educator.educatorInfo
+  );
   const [basicData, setBasicData] = useState<BasicData>({
     title: "",
     description: "",
@@ -57,24 +78,28 @@ function AddCourse() {
   });
 
   const [errMsg, setErrMsg] = useState<ErrMsg>({});
-  const [chapters, setChapters] = useState([{
+  const [chapters, setChapters] = useState([
+    {
       id: "1",
       name: "",
       isExpanded: true,
       lectures: [{ id: "1", name: "", url: "" }],
-     },
-   ]);
-
-  const [selectedThumbnailFile, setSelectedThumbnailFile] = useState<File | null>(null);
+    },
+  ]);
+  const [categories, setCategories] = useState([]);
+  const [selectedThumbnailFile, setSelectedThumbnailFile] =
+    useState<File | null>(null);
   const [previewThumbnailUrl, setPreviewThumbnailUrl] = useState<string>();
-  const [selectedResourceFile, setSelectedResourcelFile] = useState<File | null>(null);
+  const [selectedResourceFile, setSelectedResourcelFile] =
+    useState<File | null>(null);
   const [previewResourceUrl, setPreviewResourceUrl] = useState<string>();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const addChapter = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    const lastChapterId = chapters.length > 0 ? parseInt(chapters[chapters.length - 1].id) : 0;
+    const lastChapterId =
+      chapters.length > 0 ? parseInt(chapters[chapters.length - 1].id) : 0;
     const newChapter = {
       id: (lastChapterId + 1).toString(),
       name: "",
@@ -84,7 +109,10 @@ function AddCourse() {
     setChapters([...chapters, newChapter]);
   };
 
-  const toggleChapter = (chapterId: string,event: React.MouseEvent<HTMLButtonElement>) => {
+  const toggleChapter = (
+    chapterId: string,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     event.preventDefault();
     setChapters(
       chapters.map((chapter) =>
@@ -95,12 +123,17 @@ function AddCourse() {
     );
   };
 
-  const removeChapter = (chapterId: string,event: React.MouseEvent<HTMLButtonElement>) => {
+  const removeChapter = (
+    chapterId: string,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     event.preventDefault();
     if (chapters.length > 1) {
-      const filteredChapters = chapters.filter((chapter) => chapter.id !== chapterId);
+      const filteredChapters = chapters.filter(
+        (chapter) => chapter.id !== chapterId
+      );
       const reorderedChapters = filteredChapters.map((chapter, index) => {
-      const newChapterId = (index + 1).toString();
+        const newChapterId = (index + 1).toString();
         return {
           ...chapter,
           id: newChapterId,
@@ -114,6 +147,12 @@ function AddCourse() {
     const { id, value } = e.target;
     setBasicData({ ...basicData, [id]: value });
     setErrMsg((prev) => ({ ...prev, [id]: "" }));
+  };
+
+  const handleSelectChange = (e: SelectChangeEvent) => {
+    const { value } = e.target;
+    setBasicData({ ...basicData, category: value });
+    setErrMsg((prev) => ({ ...prev, category: "" }));
   };
 
   const handleLectureInputChange = (
@@ -142,8 +181,10 @@ function AddCourse() {
     }));
   };
 
-
-  const addLecture = (chapterId: string,event: React.MouseEvent<HTMLButtonElement>) => {
+  const addLecture = (
+    chapterId: string,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     event.preventDefault();
     setChapters(
       chapters.map((chapter) =>
@@ -164,7 +205,11 @@ function AddCourse() {
     );
   };
 
-  const removeLecture = (chapterId: string,lectureId: string,event: React.MouseEvent<HTMLButtonElement>) => {
+  const removeLecture = (
+    chapterId: string,
+    lectureId: string,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     event.preventDefault();
     setChapters((prevChapters) =>
       prevChapters.map((chapter) =>
@@ -183,7 +228,9 @@ function AddCourse() {
     );
   };
 
-  const handleThumbnailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleThumbnailChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedThumbnailFile(file);
@@ -231,11 +278,20 @@ function AddCourse() {
       newErr.chapter = "At least one chapter is required.";
 
     chapters.forEach((chapter, chapterIndex) => {
-      if (!chapter.name.trim()) newErr[`chapter-${chapterIndex}` as keyof FormErrors] = `Chapter name is required.`;
+      if (!chapter.name.trim())
+        newErr[
+          `chapter-${chapterIndex}` as keyof FormErrors
+        ] = `Chapter name is required.`;
 
       chapter.lectures.forEach((lecture, lectureIndex) => {
-        if (!lecture.name.trim())newErr[`lecture-${chapterIndex}-${lectureIndex}-name` as keyof FormErrors] = `Lecture name is required`;
-        if (!lecture.url.trim())newErr[`lecture-${chapterIndex}-${lectureIndex}-url` as keyof FormErrors] = `Lecture URL is required `;
+        if (!lecture.name.trim())
+          newErr[
+            `lecture-${chapterIndex}-${lectureIndex}-name` as keyof FormErrors
+          ] = `Lecture name is required`;
+        if (!lecture.url.trim())
+          newErr[
+            `lecture-${chapterIndex}-${lectureIndex}-url` as keyof FormErrors
+          ] = `Lecture URL is required `;
       });
     });
 
@@ -316,7 +372,7 @@ function AddCourse() {
         className="w-3/4 h-3/4 md:w-1/2 md:h-1/2 lg:w-1/3 lg:h-1/3"
       />
     </div>
-   ) : (
+  ) : (
     <div className="min-h-screen flex flex-col md:flex-row gap-6 p-10 bg-gray-100">
       {/* Left Section */}
       <div className="w-full space-y-4  bg-white p-8 rounded-lg shadow-md">
@@ -343,28 +399,43 @@ function AddCourse() {
               fullWidth
             />
             <div className="flex gap-4">
-              <TextField
-                label="Category"
-                id="category"
-                size="small"
-                variant="outlined"
-                onChange={handleBasicDataChange}
-                error={!!errMsg.category}
-                helperText={errMsg.category}
-                fullWidth
-              />
-              <TextField
-                label="Price"
-                id="price"
-                size="small"
-                type="number"
-                variant="outlined"
-                onChange={handleBasicDataChange}
-                error={!!errMsg.price}
-                helperText={errMsg.price}
-                fullWidth
-              />
-            </div>
+  <FormControl className="w-1/2">
+    <InputLabel id="category-label">Category</InputLabel>
+    <Select
+      labelId="category-label"
+      id="category"
+      variant="outlined"
+      label="Category"
+      size="small"
+      onChange={handleSelectChange}
+      error={!!errMsg.category}
+      fullWidth
+    >
+      <MenuItem value="">
+        <em>None</em>
+      </MenuItem>
+      {categories.map((category) => (
+        <MenuItem key={category} value={category}>
+          {category}
+        </MenuItem>
+      ))}
+    </Select>
+    <FormHelperText error className="text-[#d32f2f] text-xs mt-1  ">{errMsg.category}</FormHelperText>
+  </FormControl>
+
+  <TextField
+    label="Price"
+    id="price"
+    size="small"
+    type="number"
+    variant="outlined"
+    onChange={handleBasicDataChange}
+    error={!!errMsg.price}
+    helperText={errMsg.price}
+    className="w-1/2"
+  />
+</div>
+
           </div>
 
           {chapters.map((chapter, chapterIndex) => (
@@ -488,7 +559,6 @@ function AddCourse() {
                     </div>
                   ))}
 
-                  
                   <div className="flex mt-4 w-full justify-end items-center h-[40px]">
                     <button
                       onClick={(e) => addLecture(chapter.id, e)}
@@ -558,12 +628,11 @@ function AddCourse() {
                 title="PDF Preview"
               ></iframe>
 
-
               <button
                 className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center absolute opacity-50 top-6 left-3 z-50"
                 onClick={handleFullScreen}
               >
-                <IoMdQrScanner size={20}  className="text-white"/>
+                <IoMdQrScanner size={20} className="text-white" />
               </button>
             </div>
           ) : (

@@ -5,7 +5,8 @@ const educatorRoutes = {
     fetchCourses:'educator/fetchCoursesById',
     deleteCourse:'educator/deleteCourse',
     fetchCourseById:'educator/fetchCourseByCourseid',
-    updateCourse:'educator/updateCourse'
+    updateCourse:'educator/updateCourse',
+    fetchCategory:'educator/fetchCategory'
 
 }
 

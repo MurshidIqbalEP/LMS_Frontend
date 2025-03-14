@@ -20,14 +20,10 @@ interface Course {
   category: string;
   thumbnail: string;
   isPublished: boolean;
-  enrolledStudents: number;
+  enrolledStudents: string[];
 }
 
-const CourseCard = ({ course,setCourses,
-}: {
-  course: Course;
-  setCourses: React.Dispatch<React.SetStateAction<Course[]>>;
-}) => {
+const CourseCard = ({ course,setCourses,}: {course: Course;setCourses: React.Dispatch<React.SetStateAction<Course[]>>;}) => {
   const navigate = useNavigate()
 
   const handleDelete = async (courseId: string) => {
@@ -72,7 +68,7 @@ const CourseCard = ({ course,setCourses,
             <div className="flex items-center space-x-3">
               <div className="flex items-center bg-black/40 backdrop-blur-sm text-white px-2 py-1 rounded-full">
                 <FaUsers size={14} className="mr-1" />
-                <span className="text-xs">{course.enrolledStudents}</span>
+                <span className="text-xs">{course.enrolledStudents.length-1}</span>
               </div>
             </div>
           </div>

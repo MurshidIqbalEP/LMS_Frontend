@@ -13,9 +13,9 @@ function Navbar() {
   
         {/* Navigation Links */}
         <nav className="hidden md:flex space-x-12">
-          <a href="#" className="text-gray-500 hover:text-black">Home</a>
-          <a href="#" className="text-gray-500 hover:text-black">Cources</a>
-          <a href="#" className="text-gray-500 hover:text-black">MyCources</a>
+          <Link to={"/"} className="text-gray-500 hover:text-black ">Home</Link>
+          <Link to={"/allcourses"} className="text-gray-500 hover:text-black ">Courses</Link>
+          <Link to={"/"} className="text-gray-500 hover:text-black ">MyCources</Link>
         </nav>
   
         {/* Actions Section */}

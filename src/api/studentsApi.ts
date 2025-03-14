@@ -45,3 +45,26 @@ export const googleLogin = async(email: string)=>{
       return errorHandle(err);
     }
 }
+
+// Fetch all Course
+export const fetchAllCourse = async()=>{
+  try {
+      let response = await Api.get(studentsRoutes.fetchAllCourse);
+      return response;
+    } catch (error) {
+      const err: Error = error as Error;
+      return errorHandle(err);
+    }
+}
+
+// Fetch All Categories
+export const fetchAllCategory = async()=>{
+  try {
+      let response = await Api.get(studentsRoutes.fetchAllCategory);
+      return response;
+    } catch (error) {
+      const err: Error = error as Error;
+      return errorHandle(err);
+    }
+}
+

@@ -48,6 +48,17 @@ export const login = async(email: string, password: string,)=>{
       }
 }
 
+// For fetch all Category
+export const fetchCategory = async ()=>{
+  try {
+    let response = await Api.get(educatorRoutes.fetchCategory);
+    return response;
+  } catch (error) {
+    const err: Error = error as Error;
+    return errorHandle(err);
+  }
+}
+
 // For Course poste
 export const postCourse = async(payload: CoursePayload)=>{
   try {

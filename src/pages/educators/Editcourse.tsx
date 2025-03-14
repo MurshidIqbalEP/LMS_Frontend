@@ -1,6 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
-import { fetchCourseByCourseId, updateCourse } from "../../api/educatorApi";
+import {
+  fetchCategory,
+  fetchCourseByCourseId,
+  updateCourse,
+} from "../../api/educatorApi";
 import {
   IoIosArrowDropdown,
   IoIosArrowDropup,
@@ -18,6 +22,15 @@ const cloudinaryURL = import.meta.env.VITE_CLOUDINARY_URL;
 const preset = import.meta.env.VITE_PRESET_NAME;
 import Lottie from "lottie-react";
 import animationData from "../../assets/loading.json";
+import {
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  NativeSelect,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
 
 interface BasicData {
   id?: string;
@@ -80,7 +93,8 @@ function Editcourse() {
   const educatorInfo = useSelector(
     (state: RootState) => state.educator.educatorInfo
   );
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
   const [basicData, setBasicData] = useState<BasicData>();
   const [chapters, setChapters] = useState<Chapter[]>();
   const [img, setImg] = useState();
@@ -137,6 +151,11 @@ function Editcourse() {
       }
     };
     fetchCourseData();
+    const fetchAllCategory = async () => {
+      const response = await fetchCategory();
+      setCategories(response?.data.categoryNames);
+    };
+    fetchAllCategory();
   }, [courseId]);
 
   const handleBasicDataChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -144,6 +163,12 @@ function Editcourse() {
     setBasicData({ ...basicData, [id]: value });
     setErrMsg((prev) => ({ ...prev, [id]: "" }));
   };
+
+   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+      const { value } = e.target;
+      setBasicData({ ...basicData, category: value });
+      setErrMsg((prev) => ({ ...prev, category: "" }));
+    };
 
   const toggleChapter = (
     chapterId: string,
@@ -398,28 +423,28 @@ function Editcourse() {
       const res = await updateCourse(payload);
       if (res?.data) {
         toast(res.data.message);
-       
+
         navigate("/educator/mycourses");
       }
     } catch (error) {
       console.error("Error:", error);
-    } finally{
+    } finally {
       setLoading(false);
     }
   };
 
-  return loading ?(
+  return loading ? (
     <div className="flex justify-center items-center w-full h-full min-h-screen">
-    <Lottie
-      animationData={animationData}
-      loop={true}
-      className="w-3/4 h-3/4 md:w-1/2 md:h-1/2 lg:w-1/3 lg:h-1/3"
-    />
-  </div>
-  ) :(
+      <Lottie
+        animationData={animationData}
+        loop={true}
+        className="w-3/4 h-3/4 md:w-1/2 md:h-1/2 lg:w-1/3 lg:h-1/3"
+      />
+    </div>
+  ) : (
     <div className="min-h-screen flex flex-col md:flex-row gap-6 p-10 bg-gray-100">
       {/* Left Section */}
-     <div className="w-full space-y-4  bg-white p-8 rounded-lg shadow-md">
+      <div className="w-full space-y-4  bg-white p-8 rounded-lg shadow-md">
         <form className="space-y-6">
           <div className="flex flex-col gap-3">
             <div className="mb-4">
@@ -456,25 +481,33 @@ function Editcourse() {
               )}
             </div>
             <div className="mb-4 w-full flex gap-2">
-              <div className=" w-[50%]">
-                <label className="block font-medium">Category:</label>
-                <input
-                  type="text"
-                  id="category"
-                  name="category"
-                  value={basicData?.category}
-                  onChange={handleBasicDataChange}
-                  className="w-full px-3 py-2 border rounded-md"
-                  required
-                />
-                {errMsg.category && (
-                  <p className="text-[#d32f2f] text-xs mt-1 pl-[15px]">
+              {/* Category */}
+              <div className="w-1/2">
+                <label className="block font-medium mb-1">Category:</label>
+
+                <FormControl className="w-full">
+                  <NativeSelect
+                  
+                    inputProps={{ "aria-label": "Without label" }}
+                    className="h-[36px] pl-3 border rounded-sm text-black"
+                    defaultValue={basicData?.category}
+                    onChange={handleSelectChange}
+                    error={!!errMsg.category}
+                  >
+                    {categories.map((category) => (
+
+                      <option value={category}>{category}</option>
+                    ))}
+                  </NativeSelect>
+                  <FormHelperText error className="text-[#d32f2f] text-xs mt-1">
                     {errMsg.category}
-                  </p>
-                )}
+                  </FormHelperText>
+                </FormControl>
               </div>
-              <div className=" w-[50%]">
-                <label className="block font-medium">Price:</label>
+
+              {/* Price */}
+              <div className="w-1/2">
+                <label className="block font-medium mb-1">Price:</label>
                 <input
                   type="number"
                   name="price"
@@ -485,9 +518,7 @@ function Editcourse() {
                   required
                 />
                 {errMsg.price && (
-                  <p className="text-[#d32f2f] text-xs mt-1 pl-[15px]">
-                    {errMsg.price}
-                  </p>
+                  <p className="text-[#d32f2f] text-xs mt-1">{errMsg.price}</p>
                 )}
               </div>
             </div>
@@ -648,84 +679,83 @@ function Editcourse() {
             <CiCirclePlus className="text-black" size={25} /> Add Chapter
           </button>
         </form>
-     </div>
+      </div>
 
-     {/* Right Section */}
-     <div className="w-full  md:w-1/3 flex flex-col items-center bg-white p-8 rounded-lg shadow-md">
+      {/* Right Section */}
+      <div className="w-full  md:w-1/3 flex flex-col items-center bg-white p-8 rounded-lg shadow-md">
         <div className="flex flex-col w-full gap-4 mt-2">
-            {/* Thumbnail Section */}
-            <div className=" flex flex-col items-center gap-0">
-              {previewThumbnailUrl ? (
-                <img
-                  src={previewThumbnailUrl}
-                  alt="thumbnail"
-                  className="w-full h-52 rounded-lg border"
-                />
+          {/* Thumbnail Section */}
+          <div className=" flex flex-col items-center gap-0">
+            {previewThumbnailUrl ? (
+              <img
+                src={previewThumbnailUrl}
+                alt="thumbnail"
+                className="w-full h-52 rounded-lg border"
+              />
+            ) : (
+              <img
+                src={img}
+                alt="thumbnail"
+                className="w-full h-52 rounded-lg border"
+              />
+            )}
+            <label className="mt-4 flex flex-col items-center w-full py-2 bg-yellow-500 text-white rounded-lg cursor-pointer hover:bg-yellow-600 transition">
+              Change Thumbnail
+              <input
+                type="file"
+                className="hidden"
+                accept="image/*"
+                onChange={handleThumbnailChange}
+              />
+            </label>
+          </div>
+
+          {/* PDF Section */}
+          <div className=" flex flex-col gap-3 items-center">
+            <div className="w-full h-52  relative border rounded-lg overflow-hidden">
+              {previewResourceUrl ? (
+                <iframe
+                  className="w-full h-52"
+                  src={previewResourceUrl}
+                  allowFullScreen
+                  title="PDF Preview"
+                ></iframe>
               ) : (
-                <img
-                  src={img}
-                  alt="thumbnail"
-                  className="w-full h-52 rounded-lg border"
-                />
+                <iframe
+                  className="w-full h-52"
+                  src={resourse}
+                  allowFullScreen
+                  title="PDF Preview"
+                ></iframe>
               )}
-              <label className="mt-4 flex flex-col items-center w-full py-2 bg-yellow-500 text-white rounded-lg cursor-pointer hover:bg-yellow-600 transition">
-                Change Thumbnail
-                <input
-                  type="file"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleThumbnailChange}
-                />
-              </label>
-            </div>
-
-            {/* PDF Section */}
-            <div className=" flex flex-col gap-3 items-center">
-              <div className="w-full h-52  relative border rounded-lg overflow-hidden">
-                {previewResourceUrl ? (
-                  <iframe
-                    className="w-full h-52"
-                    src={previewResourceUrl}
-                    allowFullScreen
-                    title="PDF Preview"
-                  ></iframe>
-                ) : (
-                  <iframe
-                    className="w-full h-52"
-                    src={resourse}
-                    allowFullScreen
-                    title="PDF Preview"
-                  ></iframe>
-                )}
-
-                <button
-                  className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center absolute opacity-50 top-3 left-3 z-50"
-                  onClick={handleFullScreen}
-                >
-                  <IoMdQrScanner size={20} className="text-white" />
-                </button>
-              </div>
-
-              <label className="mt-4 flex flex-col items-center w-full py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition">
-                Change Note
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={handleResourceChange}
-                />
-              </label>
 
               <button
+                className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center absolute opacity-50 top-3 left-3 z-50"
+                onClick={handleFullScreen}
+              >
+                <IoMdQrScanner size={20} className="text-white" />
+              </button>
+            </div>
+
+            <label className="mt-4 flex flex-col items-center w-full py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition">
+              Change Note
+              <input
+                type="file"
+                className="hidden"
+                onChange={handleResourceChange}
+              />
+            </label>
+
+            <button
               type="submit"
               className="bg-green-500 w-full  hover:bg-green-600 !text-white px-4 py-2 rounded-md"
               onClick={handleSubmit}
             >
               Save Changes
             </button>
-            
-            </div>
           </div>
-       </div>
+        </div>
+      </div>
     </div>
   );
 }
