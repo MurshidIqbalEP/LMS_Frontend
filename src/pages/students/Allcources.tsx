@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { fetchAllCategory, fetchAllCourse } from "../../api/studentsApi";
 import CourseCard from "../../componets/students/Coursecard";
+import { Pagination } from "antd";
 
 const sortOptions = [
   { value: "titleAsc", label: "Title (A-Z)" },
@@ -12,16 +13,16 @@ const sortOptions = [
 ];
 
 interface Rating {
-  userId: string;  
+  userId: string;
   rating: number;
 }
-interface Course{
-  title:string,
-  description:string,
-  category:string,
-  price:number,
-  thumbnail:string,
-  rating:Rating[]
+interface Course {
+  title: string;
+  description: string;
+  category: string;
+  price: number;
+  thumbnail: string;
+  rating: Rating[];
 }
 
 const AllCourses = () => {
@@ -29,7 +30,7 @@ const AllCourses = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   const [search, setSearch] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [sortBy, setSortBy] = useState("titleAsc");
@@ -43,17 +44,17 @@ const AllCourses = () => {
       setLoading(true);
       try {
         // Fetch courses
-        const coursesResponse = await fetchAllCourse()
-        
+        const coursesResponse = await fetchAllCourse();
+
         // Fetch categories
-        const categoriesResponse = await fetchAllCategory()
-        
+        const categoriesResponse = await fetchAllCategory();
+
         setCourses(coursesResponse?.data);
         setCategories(categoriesResponse?.data);
         setError(null);
       } catch (err) {
         setError(err.message);
-        console.error('Error fetching data:', err);
+        console.error("Error fetching data:", err);
       } finally {
         setLoading(false);
       }
@@ -98,12 +99,14 @@ const AllCourses = () => {
       case "priceDesc":
         return b.price - a.price;
       case "ratingDesc":
-        const aAvgRating = a.rating.length > 0 
-          ? a.rating.reduce((sum, r) => sum + r.rating, 0) / a.rating.length 
-          : 0;
-        const bAvgRating = b.rating.length > 0 
-          ? b.rating.reduce((sum, r) => sum + r.rating, 0) / b.rating.length 
-          : 0;
+        const aAvgRating =
+          a.rating.length > 0
+            ? a.rating.reduce((sum, r) => sum + r.rating, 0) / a.rating.length
+            : 0;
+        const bAvgRating =
+          b.rating.length > 0
+            ? b.rating.reduce((sum, r) => sum + r.rating, 0) / b.rating.length
+            : 0;
         return bAvgRating - aAvgRating;
       case "popular":
         return b.students - a.students;
@@ -140,8 +143,8 @@ const AllCourses = () => {
       <div className="flex justify-center items-center min-h-screen">
         <div className="text-center bg-red-50 p-6 rounded-lg shadow">
           <p className="text-red-600 mb-4">Error: {error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
           >
             Try Again
@@ -154,13 +157,14 @@ const AllCourses = () => {
   return (
     <div className="flex flex-col bg-gray-200 min-h-screen">
       <div className="flex justify-center items-center pt-1 pb-0">
-  <h1 className="text-4xl md:text-5xl font-bold m-0  leading-none">Courses</h1>
-</div>
-
+        <h1 className="text-4xl md:text-5xl font-bold m-0  leading-none">
+          Courses
+        </h1>
+      </div>
 
       {/* Mobile Filter Toggle Button */}
       <div className="md:hidden px-4 mb-4">
-        <button 
+        <button
           onClick={toggleFilterSidebar}
           className="w-full py-3 bg-blue-500 text-white rounded-lg shadow flex items-center justify-center"
         >
@@ -170,12 +174,16 @@ const AllCourses = () => {
 
       <div className="w-full flex flex-col md:flex-row gap-4 p-4 md:pt-0 md:p-6  bg-gray-200">
         {/* Sidebar Container - Hidden on mobile by default */}
-        <div className={`${isFilterOpen ? 'block' : 'hidden'} md:block md:w-1/4 lg:w-1/5 transition-all duration-300`}>
+        <div
+          className={`${
+            isFilterOpen ? "block" : "hidden"
+          } md:block md:w-1/4 lg:w-1/5 transition-all duration-300`}
+        >
           {/* Sidebar (Search & Filters) */}
           <div className="bg-white rounded-lg shadow-md p-4 md:p-5 md:sticky md:top-4">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold">Filter Courses</h2>
-              <button 
+              <button
                 onClick={toggleFilterSidebar}
                 className="md:hidden text-gray-600 hover:text-gray-800"
               >
@@ -313,42 +321,13 @@ const AllCourses = () => {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex justify-center mt-8 overflow-x-auto">
-              <div className="inline-flex rounded-md shadow">
-                <button
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(prev - 1, 1))
-                  }
-                  disabled={currentPage === 1}
-                  className="relative inline-flex items-center px-2 sm:px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Previous
-                </button>
-                <div className="flex overflow-x-auto">
-                  {Array.from({ length: totalPages }, (_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentPage(index + 1)}
-                      className={`relative inline-flex items-center px-3 sm:px-4 py-2 border border-gray-300 bg-white text-sm font-medium ${
-                        currentPage === index + 1
-                          ? "bg-blue-50 text-blue-600 z-10 border-blue-500"
-                          : "text-gray-700 hover:bg-gray-50"
-                      }`}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
-                </div>
-                <button
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                  }
-                  disabled={currentPage === totalPages}
-                  className="relative inline-flex items-center px-2 sm:px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Next
-                </button>
-              </div>
+            <div className="flex justify-center mt-8">
+              <Pagination
+                current={currentPage}
+                total={sortedCourses.length}
+                pageSize={coursesPerPage}
+                onChange={(page) => setCurrentPage(page)}
+              />
             </div>
           )}
         </div>
