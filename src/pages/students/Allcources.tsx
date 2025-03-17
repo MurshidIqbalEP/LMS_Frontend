@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { fetchAllCategory, fetchAllCourse } from "../../api/studentsApi";
 import CourseCard from "../../componets/students/Coursecard";
 import { Pagination } from "antd";
@@ -9,7 +9,6 @@ const sortOptions = [
   { value: "priceAsc", label: "Price (Low to High)" },
   { value: "priceDesc", label: "Price (High to Low)" },
   { value: "ratingDesc", label: "Highest Rated" },
-  { value: "popular", label: "Most Popular" },
 ];
 
 interface Rating {
@@ -17,6 +16,7 @@ interface Rating {
   rating: number;
 }
 interface Course {
+  _id:string;
   title: string;
   description: string;
   category: string;
@@ -32,7 +32,7 @@ const AllCourses = () => {
   const [error, setError] = useState(null);
 
   const [search, setSearch] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("titleAsc");
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -53,8 +53,8 @@ const AllCourses = () => {
         setCategories(categoriesResponse?.data);
         setError(null);
       } catch (err) {
-        setError(err.message);
-        console.error("Error fetching data:", err);
+       console.log(err);
+       
       } finally {
         setLoading(false);
       }
@@ -68,7 +68,7 @@ const AllCourses = () => {
     setCurrentPage(1);
   }, [search, selectedCategories, sortBy]);
 
-  const toggleCategory = (category) => {
+  const toggleCategory = (category:string) => {
     if (selectedCategories.includes(category)) {
       setSelectedCategories(selectedCategories.filter((c) => c !== category));
     } else {
@@ -78,12 +78,8 @@ const AllCourses = () => {
 
   // Filter courses based on search and selected categories
   const filteredCourses = courses.filter((course) => {
-    const matchesSearch = course.title
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    const matchesCategory =
-      selectedCategories.length === 0 ||
-      selectedCategories.includes(course.category);
+    const matchesSearch = course.title.toLowerCase().includes(search.toLowerCase());
+    const matchesCategory =selectedCategories.length === 0 || selectedCategories.includes(course.category);
     return matchesSearch && matchesCategory;
   });
 
@@ -108,8 +104,6 @@ const AllCourses = () => {
             ? b.rating.reduce((sum, r) => sum + r.rating, 0) / b.rating.length
             : 0;
         return bAvgRating - aAvgRating;
-      case "popular":
-        return b.students - a.students;
       default:
         return 0;
     }

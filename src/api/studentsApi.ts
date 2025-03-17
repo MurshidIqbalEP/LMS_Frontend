@@ -68,3 +68,14 @@ export const fetchAllCategory = async()=>{
     }
 }
 
+// Fetch Course Data
+export const fetchCourse = async(courseId:string)=>{
+  try {
+      let response = await Api.get(`${studentsRoutes.fetchCourse}?courseId=${courseId}`);
+      return response;
+    } catch (error) {
+      const err: Error = error as Error;
+      return errorHandle(err);
+    }
+}
+

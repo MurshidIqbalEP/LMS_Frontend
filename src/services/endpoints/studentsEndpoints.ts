@@ -5,6 +5,7 @@ const studentsRoutes = {
     googleLogin:"/students/googlelogin",
     fetchAllCourse:"/students/fetchAllCourse",
     fetchAllCategory:"/students/fetchAllCategory",
+    fetchCourse:"/students/fetchCourse"
 }
 
 export default studentsRoutes; 

@@ -1,5 +1,6 @@
 // @ts-ignore
 import ReactStars from "react-rating-stars-component";
+import { useNavigate } from "react-router-dom";
 
 interface Rating {
   userId: string;
@@ -7,6 +8,7 @@ interface Rating {
 }
 
 interface Course {
+  _id:string;
   title: string;
   description: string;
   category: string;
@@ -16,6 +18,8 @@ interface Course {
 }
 
 function CourseCard({ course }: { course: Course }) {
+  
+  const navigate = useNavigate();
   // Calculate the average rating
   const averageRating =
     course.rating.length > 0
@@ -24,7 +28,8 @@ function CourseCard({ course }: { course: Course }) {
       : 0;
 
   return (
-    <div className="course-card bg-white rounded-xl shadow-md overflow-hidden w-full h-[320px] max-w-sm transition-all duration-300 hover:shadow-xl border border-gray-300 hover:scale-[1.05]">
+    <div className="course-card bg-white rounded-xl shadow-md overflow-hidden w-full h-[320px] max-w-sm transition-all duration-300 hover:shadow-xl border cursor-pointer border-gray-300 hover:scale-[1.05]"
+      onClick={()=>navigate(`/course/${course?._id}`)}>
       {/* Card content */}
       <div className="relative">
         <div className="absolute top-0 left-0 w-full h-full">
@@ -55,16 +60,18 @@ function CourseCard({ course }: { course: Course }) {
         <div className="flex justify-between items-center">
           {/* Rating */}
           <div className="flex items-center gap-1 text-yellow-500 text-sm font-semibold">
-  <ReactStars
-    count={5} 
-    value={averageRating} 
-    size={18} 
-    edit={false} 
-    isHalf={true} 
-    activeColor="#facc15" 
-  />
-  <span className="text-gray-500">({course.rating.length} reviews)</span>
-</div>
+            <ReactStars
+              count={5}
+              value={averageRating}
+              size={18}
+              edit={false}
+              isHalf={true}
+              activeColor="#facc15"
+            />
+            <span className="text-gray-500">
+              ({course.rating.length} reviews)
+            </span>
+          </div>
 
           {/* Category */}
           <span className="bg-gray-100 text-gray-700 text-xs font-semibold px-3 py-1 rounded-full">
