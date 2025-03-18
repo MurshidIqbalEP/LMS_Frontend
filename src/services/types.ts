@@ -19,6 +19,7 @@ export interface ILecture{
 }
 
 export interface IChapter{
+    _id:string;
     courseId?:string;
     title:string;
     lectures:ILecture[];
@@ -35,6 +36,11 @@ export interface ICourse{
     resources?:string[];
     chapters:IChapter[];
     isPublished?:boolean;
-    rating?:{userId:string,rating:number};
+    rating?:{userId:string,rating:number}[];
     enrolledStudents:string[]
 }
+
+export interface Rating {
+    userId: string;
+    rating: number;
+  };
