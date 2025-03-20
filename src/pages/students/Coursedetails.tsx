@@ -4,16 +4,19 @@ import { fetchCourse } from "../../api/studentsApi";
 import { IChapter, ICourse, Rating } from "../../services/types";
 // @ts-ignore
 import ReactStars from "react-rating-stars-component";
+import { FaAngleUp, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import VideoPlayer from "../../componets/students/VideoPlayer";
 
 function Coursedetails() {
   const { courseId } = useParams();
   const [loading, setLoading] = useState(false);
   const [courseData, setCourseData] = useState<ICourse>();
+  const [playPreview,setPlayPreview] = useState(false)
   const [avgRating, setAvgRating] = useState<number | null>(null);
   const [totalLectures, setTotalLectures] = useState<number | null>(null);
-  const [openChapters, setOpenChapters] = useState<{ [key: string]: boolean }>(
-    {}
-  );
+  const [expandedChapters, setExpandedChapters] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,7 +24,7 @@ function Coursedetails() {
       try {
         let res = await fetchCourse(courseId as string);
         setCourseData(res?.data.courseData);
-        console.log(res?.data.courseData.chapters);
+        console.log(res?.data.courseData.chapters[0].lectures[0].videoUrl);
 
         let avgRating = 0;
         if (res?.data.courseData.rating.length) {
@@ -49,8 +52,11 @@ function Coursedetails() {
     fetchData();
   }, [courseId]);
 
-  const toggleChapter = (id: string) => {
-    setOpenChapters((prev) => ({ ...prev, [id]: !prev[id] }));
+  const toggleChapter = (chapterId: string) => {
+    setExpandedChapters((prev) => ({
+      ...prev,
+      [chapterId]: !prev[chapterId],
+    }));
   };
 
   return (
@@ -106,98 +112,95 @@ function Coursedetails() {
 
         {/* Right Section - Course Thumbnail */}
         <div className="flex flex-col absolute w-[500px] h-[600px] top-[110px] right-24 z-50 rounded-2xl shadow-2xl border-2 border-white">
-          <img
-            src={courseData?.thumbnail}
-            alt="thumbnail"
-            className="w-full h-[330px] object-cover rounded-t-2xl"
-          />
+          <div className="w-full h-[330px] rounded-t-2xl overflow-hidden">
+            {playPreview ? (
+              <VideoPlayer
+                videoUrl={
+                  courseData?.chapters[0].lectures[0].videoUrl as string
+                }
+              />
+            ) : (
+              <img
+                src={courseData?.thumbnail}
+                alt="thumbnail"
+                className="w-full h-full object-cover rounded-t-2xl"
+              />
+            )}
+          </div>
         </div>
       </div>
 
       {/* Chapters Section */}
-      <div className="flex flex-col  w-[60%] h-[600px]">
-        <div className="flex m-2 justify-between p-4  w-full border-b-2">
+      <div className="flex flex-col w-[60%] h-[600px]">
+        <div className="flex m-2 justify-between p-4 w-full border-b-2">
           <div className="flex flex-col">
             <h1 className="text-2xl font-bold">Course Content</h1>
             <span className="text-sm font-bold">
-              {courseData?.chapters.length} Chapters . {totalLectures} Lectures
+              {courseData?.chapters.length} Chapters ·{" "}
+              {courseData?.chapters.reduce(
+                (total, chapter) => total + chapter.lectures.length,
+                0
+              )}{" "}
+              Lectures
             </span>
           </div>
-
-          <p className="self-end">Expand All</p>
+          <p className="self-end cursor-pointer">Expand All</p>
         </div>
 
         {/* Chapters List */}
-<div className="max-w-4xl border border-gray-200 rounded-lg overflow-hidden mb-8">
-  {/* Chapter heading with toggle and lecture count */}
-  <div className="flex items-center justify-between p-4 bg-gray-50 border-b border-gray-200">
-    <div className="flex items-center space-x-2">
-      <svg 
-        xmlns="http://www.w3.org/2000/svg" 
-        width="20" 
-        height="20" 
-        viewBox="0 0 24 24" 
-        fill="none" 
-        stroke="currentColor" 
-        strokeWidth="2" 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-        className="text-gray-700"
-      >
-        <polyline points="18 15 12 9 6 15"></polyline>
-      </svg>
-      <span className="font-medium text-lg text-gray-800">Chapters</span>
-    </div>
-    <span className="text-sm text-gray-600">{totalLectures} lectures</span>
-  </div>
+        <div className="max-w-4xl m-3 border border-gray-200 rounded-lg overflow-hidden mb-8">
+          {/* Chapters & Lectures */}
+          {courseData?.chapters.map((chapter) => (
+            <div
+              key={chapter._id}
+              className="border-b bg-gray-200 border-gray-200"
+            >
+              {/* Chapter Row */}
+              <div
+                className="flex items-center justify-between p-4 cursor-pointer"
+                onClick={() => toggleChapter(chapter._id)}
+              >
+                <div className="flex items-center space-x-2">
+                  {expandedChapters[chapter._id] ? (
+                    <FaChevronUp />
+                  ) : (
+                    <FaChevronDown />
+                  )}
+                  <span className="font-medium text-gray-800">
+                    {chapter.title}
+                  </span>
+                </div>
+                <span className="text-sm text-gray-600">
+                  {chapter.lectures.length}{" "}
+                  {chapter.lectures.length === 1 ? "Lecture" : "Lectures"}
+                </span>
+              </div>
 
-  {/* First chapter content with bullet points */}
-  <div className="bg-white px-6 py-3 border-b border-gray-200">
-    <ul className="list-disc pl-6 text-gray-700 space-y-2">
-      {courseData?.chapters.slice(0, 3).map((chapter, index) => (
-        <li key={index}><span className="text-gray-700">{chapter.title}</span></li>
-      ))}
-    </ul>
-  </div>
-
-  {/* Individual chapter rows */}
-  <div>
-    {courseData?.chapters.map((chapter, index) => (
-      <div 
-        key={chapter._id} 
-        className={`flex items-center justify-between p-4 ${
-          index < (courseData?.chapters.length || 0) - 1 ? 'border-b border-gray-100' : ''
-        }`}
-      >
-        <div 
-          className="flex items-center cursor-pointer" 
-          onClick={() => toggleChapter(chapter._id)}
-        >
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            width="16" 
-            height="16" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            className={`text-gray-700 mr-3 transform transition-transform duration-200 ${
-              openChapters[chapter._id] ? 'rotate-180' : ''
-            }`}
-          >
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
+              {/* Lectures List */}
+              {expandedChapters[chapter._id] && (
+                <div className="bg-gray-50 px-6 py-2">
+                  <ul className="list-disc pl-6 text-gray-700 space-y-2">
+                    {chapter.lectures.map((lecture) => (
+                      <div className="w-full flex justify-between ">
+                        <li key={lecture._id}>
+                          <span className="text-gray-700">{lecture.title}</span>
+                        </li>
+                        {chapter.position === 1 && lecture.position === 1 && (
+                          <p
+                            className="text-green-500"
+                            onClick={() => setPlayPreview(true)}
+                          >
+                            Preview
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
-        <span className="text-sm text-gray-600">
-          {chapter.lectures?.length || 0} {chapter.lectures?.length === 1 ? 'lecture' : 'lectures'}
-        </span>
-      </div>
-    ))}
-  </div>
-</div>
-
       </div>
     </div>
   );
