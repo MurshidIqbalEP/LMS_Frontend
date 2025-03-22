@@ -79,3 +79,33 @@ export const fetchCourse = async(courseId:string)=>{
     }
 }
 
+// For Razorpay Payment
+export const payment = async(amount:number,courseId:string)=>{
+  try {
+    let response = await Api.post(studentsRoutes.payment,{amount,courseId});
+      return response;
+  } catch (error) {
+    const err: Error = error as Error;
+      return errorHandle(err);
+  }
+}
+
+// For Razorpay Payment Verification
+export const paymentVerification = async (
+  response: any, // Contains Razorpay response
+  courseId: string,
+  educatorId: string
+) => {
+  try {
+    const apiResponse = await Api.post(studentsRoutes.paymentVerification, {
+      ...response,
+      courseId,
+      educatorId,
+    });
+    return apiResponse;
+  } catch (error) {
+    return errorHandle(error as Error);
+  }
+};
+
+

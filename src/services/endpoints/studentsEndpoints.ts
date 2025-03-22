@@ -1,3 +1,5 @@
+import { payment } from "../../api/studentsApi";
+
 const studentsRoutes = {
     register:'/students/register',
     login:'/students/login',
@@ -5,7 +7,9 @@ const studentsRoutes = {
     googleLogin:"/students/googlelogin",
     fetchAllCourse:"/students/fetchAllCourse",
     fetchAllCategory:"/students/fetchAllCategory",
-    fetchCourse:"/students/fetchCourse"
+    fetchCourse:"/students/fetchCourse",
+    payment:"/students/payment",
+    paymentVerification:"/students/paymentVerification",
 }
 
 export default studentsRoutes; 

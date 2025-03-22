@@ -1,22 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchCourse } from "../../api/studentsApi";
+import { fetchCourse, payment, paymentVerification } from "../../api/studentsApi";
 import { IChapter, ICourse, Rating } from "../../services/types";
 // @ts-ignore
 import ReactStars from "react-rating-stars-component";
-import { FaAngleUp, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaAngleUp, FaChevronDown, FaChevronUp, FaClock } from "react-icons/fa";
 import VideoPlayer from "../../componets/students/VideoPlayer";
+import { PiBookOpenText } from "react-icons/pi";
+import { image } from "@heroui/theme";
+import logo from "@/assets/logo.png";
 
 function Coursedetails() {
   const { courseId } = useParams();
   const [loading, setLoading] = useState(false);
   const [courseData, setCourseData] = useState<ICourse>();
-  const [playPreview,setPlayPreview] = useState(false)
+  const [playPreview, setPlayPreview] = useState(false);
   const [avgRating, setAvgRating] = useState<number | null>(null);
   const [totalLectures, setTotalLectures] = useState<number | null>(null);
   const [expandedChapters, setExpandedChapters] = useState<{
     [key: string]: boolean;
   }>({});
+  const courseFeatures = [
+    "Live sessions with expert tutors for real-time guidance",
+    "3 interactive lectures per week with Q&A sessions",
+    "Hands-on exercises to reinforce and apply concepts",
+    "Well-structured curriculum designed for progressive learning",
+    "Step-by-step learning with structured lessons",
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,7 +34,7 @@ function Coursedetails() {
       try {
         let res = await fetchCourse(courseId as string);
         setCourseData(res?.data.courseData);
-        console.log(res?.data.courseData.chapters[0].lectures[0].videoUrl);
+        console.log(res?.data.courseData);
 
         let avgRating = 0;
         if (res?.data.courseData.rating.length) {
@@ -58,6 +68,53 @@ function Coursedetails() {
       [chapterId]: !prev[chapterId],
     }));
   };
+
+  const handlePayment = async () => {
+    try {
+      const orderData = await payment(Number(courseData?.price),courseData?._id as string)
+      const order = orderData?.data.order
+        console.log(orderData?.data.order);
+        
+      if (!orderData?.data.order) {
+        alert("Error creating order");
+        return;
+      }
+  
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: order.amount,
+        currency: "INR",
+        name: "EDUVANTAGE",
+        description: `Payment for ${courseData?.title}`,
+        image: "/logo.png",
+        order_id: order.id,
+        handler: async function (response: any) {
+          // Verify Payment
+          const verifyData = await paymentVerification(response, courseId as string, courseData?.educatorId?._id as string)
+          
+          if (verifyData?.data.success) {
+            alert("Payment Successful!");
+          } else {
+            alert("Payment Verification Failed");
+          }
+        },
+        prefill: {
+          name: "Student Name",
+          email: "student@example.com",
+        },
+        theme: {
+          color: "#50C878",
+        },
+      };
+  
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  
 
   return (
     <div className="min-h-screen w-full">
@@ -111,7 +168,7 @@ function Coursedetails() {
         </div>
 
         {/* Right Section - Course Thumbnail */}
-        <div className="flex flex-col absolute w-[500px] h-[600px] top-[110px] right-24 z-50 rounded-2xl shadow-2xl border-2 border-white">
+        <div className="flex flex-col absolute w-[500px]  top-[110px] right-24 z-50 rounded-2xl shadow-2xl border-2 border-white">
           <div className="w-full h-[330px] rounded-t-2xl overflow-hidden">
             {playPreview ? (
               <VideoPlayer
@@ -126,6 +183,43 @@ function Coursedetails() {
                 className="w-full h-full object-cover rounded-t-2xl"
               />
             )}
+          </div>
+          <div className="p-6">
+            {/* Price Section */}
+            {courseData && (
+              <div className="mb-4">
+                <div className="flex items-baseline">
+                  <span className="text-3xl font-bold text-gray-900">
+                    ₹{courseData.price}
+                  </span>
+                  <span className="ml-2 text-gray-500 line-through text-sm">
+                    ₹{(courseData.price * 1.3).toFixed(0)}
+                  </span>
+                  <span className="ml-2 text-green-600 text-sm font-medium">
+                    30% off
+                  </span>
+                </div>
+              </div>
+            )}
+            {/* Enrollment Button */}
+            <button className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium transition-colors mb-3"
+            onClick={handlePayment}
+            >
+              Enroll Now
+            </button>
+
+            {/* Course Features */}
+            <div className=" pt-4">
+              <h3 className="text-lg font-bold mb-3">This course includes:</h3>
+              <ul className="space-y-3">
+                {courseFeatures.map((feature, index) => (
+                  <li key={index} className="flex items-start">
+                    <PiBookOpenText className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
+                    <span className="text-sm text-gray-700">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>

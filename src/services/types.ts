@@ -27,6 +27,7 @@ export interface IChapter{
 }
 
 export interface ICourse{
+    _id?:string,
     title:string;
     description:string;
     educatorId:{name:string,profilePicture:string,_id?:string};
