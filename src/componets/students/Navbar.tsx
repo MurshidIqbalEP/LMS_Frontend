@@ -15,7 +15,7 @@ function Navbar() {
         <nav className="hidden md:flex space-x-12">
           <Link to={"/"} className="text-gray-500 hover:text-black ">Home</Link>
           <Link to={"/allcourses"} className="text-gray-500 hover:text-black ">Courses</Link>
-          <Link to={"/myEntrollments"} className="text-gray-500 hover:text-black ">My Entrollments</Link>
+          <Link to={"/myEntrollments"} className="text-gray-500 hover:text-black ">My Enrollments</Link>
         </nav>
   
         {/* Actions Section */}

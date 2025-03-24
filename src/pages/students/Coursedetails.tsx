@@ -4,22 +4,23 @@ import { fetchCourse, payment, paymentVerification } from "../../api/studentsApi
 import { IChapter, ICourse, IUserInfo, Rating } from "../../services/types";
 // @ts-ignore
 import ReactStars from "react-rating-stars-component";
-import { FaAngleUp, FaChevronDown, FaChevronUp, FaClock } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import VideoPlayer from "../../componets/students/VideoPlayer";
 import { PiBookOpenText } from "react-icons/pi";
-import { image } from "@heroui/theme";
-import logo from "@/assets/logo.png";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 function Coursedetails() {
   const { courseId } = useParams();
   const [loading, setLoading] = useState(false);
   const [courseData, setCourseData] = useState<ICourse>();
+  const [isEnrolled,setIsEntrolled] = useState(false);
   const [playPreview, setPlayPreview] = useState(false);
   const [avgRating, setAvgRating] = useState<number | null>(null);
   const [totalLectures, setTotalLectures] = useState<number | null>(null);
+  const navigate = useNavigate();
   const [expandedChapters, setExpandedChapters] = useState<{
     [key: string]: boolean;
   }>({});
@@ -39,8 +40,9 @@ function Coursedetails() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        let res = await fetchCourse(courseId as string);
+        let res = await fetchCourse(courseId as string,studentInfo?._id as string);
         setCourseData(res?.data.courseData);
+        setIsEntrolled(res?.data.isEnrolled)
         console.log(res?.data.courseData);
 
         let avgRating = 0;
@@ -99,9 +101,10 @@ function Coursedetails() {
           const verifyData = await paymentVerification(response, courseId as string, courseData?.educatorId?._id as string,studentInfo?._id as string )
           
           if (verifyData?.data.success) {
-            alert("Payment Successful!");
+            toast("Payment Successful!");
+            navigate('/myEntrollments')
           } else {
-            alert("Payment Verification Failed");
+            toast("Payment Verification Failed");
           }
         },
         prefill: {
@@ -208,11 +211,21 @@ function Coursedetails() {
               </div>
             )}
             {/* Enrollment Button */}
-            <button className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium transition-colors mb-3"
-            onClick={handlePayment}
-            >
-              Enroll Now
-            </button>
+            {isEnrolled ? (
+  <button className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium transition-colors mb-3"
+  onClick={()=>navigate("/myEntrollments")}>
+    Already Enrolled
+  </button>
+) : (
+  <button
+    className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium transition-colors mb-3"
+    onClick={handlePayment}
+  >
+    Enroll Now
+  </button>
+)}
+
+            
 
             {/* Course Features */}
             <div className=" pt-4">

@@ -69,9 +69,9 @@ export const fetchAllCategory = async()=>{
 }
 
 // Fetch Course Data
-export const fetchCourse = async(courseId:string)=>{
+export const fetchCourse = async(courseId:string,studentId:string)=>{
   try {
-      let response = await Api.get(`${studentsRoutes.fetchCourse}?courseId=${courseId}`);
+      let response = await Api.get(`${studentsRoutes.fetchCourse}?courseId=${courseId}&studentId=${studentId}`);
       return response;
     } catch (error) {
       const err: Error = error as Error;
