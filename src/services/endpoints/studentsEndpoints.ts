@@ -10,6 +10,7 @@ const studentsRoutes = {
     fetchCourse:"/students/fetchCourse",
     payment:"/students/payment",
     paymentVerification:"/students/paymentVerification",
+    fetchMyentrollments:"/students/myEntrollments",
 }
 
 export default studentsRoutes; 

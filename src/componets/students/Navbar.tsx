@@ -15,7 +15,7 @@ function Navbar() {
         <nav className="hidden md:flex space-x-12">
           <Link to={"/"} className="text-gray-500 hover:text-black ">Home</Link>
           <Link to={"/allcourses"} className="text-gray-500 hover:text-black ">Courses</Link>
-          <Link to={"/"} className="text-gray-500 hover:text-black ">MyCources</Link>
+          <Link to={"/myEntrollments"} className="text-gray-500 hover:text-black ">My Entrollments</Link>
         </nav>
   
         {/* Actions Section */}
@@ -24,7 +24,7 @@ function Navbar() {
           <>
           <a className="text-gray-500 hover:text-black">Logout</a>
           <span className="text-gray-500 flex items-center space-x-2 group">
-            Welcome, {user?.name}
+            Welcome
             <img 
               src="/icons8-user.gif" 
               alt="User GIF" 

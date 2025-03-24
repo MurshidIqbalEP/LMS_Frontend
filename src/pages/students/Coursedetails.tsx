@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchCourse, payment, paymentVerification } from "../../api/studentsApi";
-import { IChapter, ICourse, Rating } from "../../services/types";
+import { IChapter, ICourse, IUserInfo, Rating } from "../../services/types";
 // @ts-ignore
 import ReactStars from "react-rating-stars-component";
 import { FaAngleUp, FaChevronDown, FaChevronUp, FaClock } from "react-icons/fa";
@@ -9,6 +9,9 @@ import VideoPlayer from "../../componets/students/VideoPlayer";
 import { PiBookOpenText } from "react-icons/pi";
 import { image } from "@heroui/theme";
 import logo from "@/assets/logo.png";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+
 
 function Coursedetails() {
   const { courseId } = useParams();
@@ -27,7 +30,11 @@ function Coursedetails() {
     "Well-structured curriculum designed for progressive learning",
     "Step-by-step learning with structured lessons",
   ];
+  const studentInfo = useSelector((state: RootState) => state.auth.userInfo) as IUserInfo | null;
 
+  
+
+    
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -73,7 +80,6 @@ function Coursedetails() {
     try {
       const orderData = await payment(Number(courseData?.price),courseData?._id as string)
       const order = orderData?.data.order
-        console.log(orderData?.data.order);
         
       if (!orderData?.data.order) {
         alert("Error creating order");
@@ -90,7 +96,7 @@ function Coursedetails() {
         order_id: order.id,
         handler: async function (response: any) {
           // Verify Payment
-          const verifyData = await paymentVerification(response, courseId as string, courseData?.educatorId?._id as string)
+          const verifyData = await paymentVerification(response, courseId as string, courseData?.educatorId?._id as string,studentInfo?._id as string )
           
           if (verifyData?.data.success) {
             alert("Payment Successful!");
@@ -272,7 +278,7 @@ function Coursedetails() {
 
               {/* Lectures List */}
               {expandedChapters[chapter._id] && (
-                <div className="bg-gray-50 px-6 py-2">
+                <div className="bg-gray-50 p-4 ">
                   <ul className="list-disc pl-6 text-gray-700 space-y-2">
                     {chapter.lectures.map((lecture) => (
                       <div className="w-full flex justify-between ">
@@ -292,6 +298,7 @@ function Coursedetails() {
                   </ul>
                 </div>
               )}
+
             </div>
           ))}
         </div>

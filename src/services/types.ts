@@ -45,3 +45,9 @@ export interface Rating {
     userId: string;
     rating: number;
   };
+
+  export interface IUserInfo {
+    _id: string;
+    name: string;
+    email: string;
+  }
