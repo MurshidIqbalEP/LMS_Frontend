@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchCourse, payment, paymentVerification } from "../../api/studentsApi";
+import {
+  fetchCourse,
+  payment,
+  paymentVerification,
+} from "../../api/studentsApi";
 import { IChapter, ICourse, IUserInfo, Rating } from "../../services/types";
 // @ts-ignore
 import ReactStars from "react-rating-stars-component";
@@ -16,7 +20,7 @@ function Coursedetails() {
   const { courseId } = useParams();
   const [loading, setLoading] = useState(false);
   const [courseData, setCourseData] = useState<ICourse>();
-  const [isEnrolled,setIsEntrolled] = useState(false);
+  const [isEnrolled, setIsEntrolled] = useState(false);
   const [playPreview, setPlayPreview] = useState(false);
   const [avgRating, setAvgRating] = useState<number | null>(null);
   const [totalLectures, setTotalLectures] = useState<number | null>(null);
@@ -31,18 +35,20 @@ function Coursedetails() {
     "Well-structured curriculum designed for progressive learning",
     "Step-by-step learning with structured lessons",
   ];
-  const studentInfo = useSelector((state: RootState) => state.auth.userInfo) as IUserInfo | null;
+  const studentInfo = useSelector(
+    (state: RootState) => state.auth.userInfo
+  ) as IUserInfo | null;
 
-  
-
-    
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        let res = await fetchCourse(courseId as string,studentInfo?._id as string);
+        let res = await fetchCourse(
+          courseId as string,
+          studentInfo?._id as string
+        );
         setCourseData(res?.data.courseData);
-        setIsEntrolled(res?.data.isEnrolled)
+        setIsEntrolled(res?.data.isEnrolled);
         console.log(res?.data.courseData);
 
         let avgRating = 0;
@@ -80,14 +86,17 @@ function Coursedetails() {
 
   const handlePayment = async () => {
     try {
-      const orderData = await payment(Number(courseData?.price),courseData?._id as string)
-      const order = orderData?.data.order
-        
+      const orderData = await payment(
+        Number(courseData?.price),
+        courseData?._id as string
+      );
+      const order = orderData?.data.order;
+
       if (!orderData?.data.order) {
         alert("Error creating order");
         return;
       }
-  
+
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: order.amount,
@@ -98,11 +107,16 @@ function Coursedetails() {
         order_id: order.id,
         handler: async function (response: any) {
           // Verify Payment
-          const verifyData = await paymentVerification(response, courseId as string, courseData?.educatorId?._id as string,studentInfo?._id as string )
-          
+          const verifyData = await paymentVerification(
+            response,
+            courseId as string,
+            courseData?.educatorId?._id as string,
+            studentInfo?._id as string
+          );
+
           if (verifyData?.data.success) {
             toast("Payment Successful!");
-            navigate('/myEntrollments')
+            navigate("/myEntrollments");
           } else {
             toast("Payment Verification Failed");
           }
@@ -115,15 +129,13 @@ function Coursedetails() {
           color: "#50C878",
         },
       };
-  
+
       const rzp = new (window as any).Razorpay(options);
       rzp.open();
     } catch (error) {
       console.error(error);
     }
   };
-
-  
 
   return (
     <div className="min-h-screen w-full">
@@ -212,20 +224,20 @@ function Coursedetails() {
             )}
             {/* Enrollment Button */}
             {isEnrolled ? (
-  <button className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium transition-colors mb-3"
-  onClick={()=>navigate("/myEntrollments")}>
-    Already Enrolled
-  </button>
-) : (
-  <button
-    className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium transition-colors mb-3"
-    onClick={handlePayment}
-  >
-    Enroll Now
-  </button>
-)}
-
-            
+              <button
+                className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium transition-colors mb-3"
+                onClick={() => navigate("/myEntrollments")}
+              >
+                Already Enrolled
+              </button>
+            ) : (
+              <button
+                className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium transition-colors mb-3"
+                onClick={handlePayment}
+              >
+                Enroll Now
+              </button>
+            )}
 
             {/* Course Features */}
             <div className=" pt-4">
@@ -311,7 +323,6 @@ function Coursedetails() {
                   </ul>
                 </div>
               )}
-
             </div>
           ))}
         </div>

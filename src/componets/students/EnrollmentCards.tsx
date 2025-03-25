@@ -6,7 +6,7 @@ function EntrollmentCards({ course }: { course: ICourse }) {
     const navigate = useNavigate();
   return (
     <div className="course-card bg-white rounded-xl shadow-md overflow-hidden w-full h-[320px] max-w-sm transition-all duration-300 hover:shadow-xl border cursor-pointer border-gray-300 hover:scale-[1.05]"
-          onClick={()=>navigate(`/course/${course?._id}`)}>
+          onClick={()=>navigate(`/playCourse/${course?._id}`)}>
           {/* Card content */}
           <div className="relative">
             <div className="absolute top-0 left-0 w-full h-full">

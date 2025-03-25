@@ -5,7 +5,8 @@ import LoginPage from "../pages/students/Login";
 import Register from "../pages/students/Registration";
 import Allcources from "../pages/students/Allcources";
 import Coursedetails from "../pages/students/Coursedetails";
-import EnrollmentsPage from "../pages/students/Entrollments";
+import EnrollmentsPage from "../pages/students/Enrollments";
+import CoursePlayer from "../pages/students/CoursePlayer";
 
 function studentRoute() {
   return (
@@ -18,6 +19,7 @@ function studentRoute() {
         <Route path="allcourses" element={<Allcources />} />
         <Route path="course/:courseId" element={<Coursedetails />} />
         <Route path="myEntrollments" element={<EnrollmentsPage />} />
+        <Route path="playCourse/:courseId" element={<CoursePlayer />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" />} />

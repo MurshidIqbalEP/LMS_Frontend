@@ -122,4 +122,15 @@ export const myEntrollments = async (
   }
 };
 
+// For Fetch coursedata and resourse
+export const fetchCoursePlayerData = async (studentId:string,courseId:string)=>{
+  try {
+     const response = await Api.get(`${studentsRoutes.fetchPlayerData}?courseId=${courseId}&studentId=${studentId}`);
+     return response;
+  } catch (error) {
+    const err: Error = error as Error;
+    return errorHandle(err);
+  }
+}
+
 
