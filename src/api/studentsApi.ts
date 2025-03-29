@@ -133,4 +133,26 @@ export const fetchCoursePlayerData = async (studentId:string,courseId:string)=>{
   }
 }
 
+// For Fetch Course Progress
+export const fetchCourseProgress = async (userId: string, courseId: string)=>{
+  try {
+     const response = await Api.get(`${studentsRoutes.fetchCourseProgress}?userId=${userId}&courseId=${courseId}`);
+     return response;
+  } catch (error) {
+    const err: Error = error as Error;
+    return errorHandle(err);
+  }
+}
+
+// For Mark Viewed
+export const markLectureViewed = async ( userId: string, courseId: string,chapterId: string,lectureId: string)=>{
+  try {
+     const response = await Api.post(studentsRoutes.markLectureViewed,{userId,courseId,chapterId,lectureId});
+     return response;
+  } catch (error) {
+    const err: Error = error as Error;
+    return errorHandle(err);
+  }
+}
+
 

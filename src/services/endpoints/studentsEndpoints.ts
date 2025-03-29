@@ -11,7 +11,9 @@ const studentsRoutes = {
     payment:"/students/payment",
     paymentVerification:"/students/paymentVerification",
     fetchMyentrollments:"/students/myEntrollments",
-    fetchPlayerData:"/students/fetchPlayerData"
+    fetchPlayerData:"/students/fetchPlayerData",
+    fetchCourseProgress:"/students/fetchCourseProgress",
+    markLectureViewed:"/students/markLecture"
 }
 
 export default studentsRoutes; 

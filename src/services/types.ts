@@ -51,3 +51,29 @@ export interface Rating {
     name: string;
     email: string;
   }
+
+  export interface ILectureProgress {
+    lectureId: string;
+    isCompleted: boolean;
+    completedAt: string | null;
+    _id: string;
+  }
+  
+  export interface IChapterProgress {
+    chapterId: string;
+    isCompleted: boolean;
+    completedAt: string | null;
+    lecturesProgress: ILectureProgress[];
+    _id: string;
+  }
+  
+  export interface IProgressData {
+    _id: string;
+    userId: string;
+    courseId: string;
+    isCompleted: boolean;
+    completedAt: string | null;
+    chapters: IChapterProgress[];
+    __v: number;
+  }
+  
