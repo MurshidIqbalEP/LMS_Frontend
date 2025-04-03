@@ -144,10 +144,12 @@ export const fetchCourseProgress = async (userId: string, courseId: string)=>{
   }
 }
 
-// For Mark Viewed
+// For Mark  Lecture as Viewed
 export const markLectureViewed = async ( userId: string, courseId: string,chapterId: string,lectureId: string)=>{
   try {
-     const response = await Api.post(studentsRoutes.markLectureViewed,{userId,courseId,chapterId,lectureId});
+    console.log(userId,courseId,chapterId,lectureId);
+    
+     const response = await Api.patch(studentsRoutes.markLectureViewed,{userId,courseId,chapterId,lectureId});
      return response;
   } catch (error) {
     const err: Error = error as Error;
