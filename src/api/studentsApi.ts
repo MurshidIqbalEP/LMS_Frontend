@@ -145,11 +145,20 @@ export const fetchCourseProgress = async (userId: string, courseId: string)=>{
 }
 
 // For Mark  Lecture as Viewed
-export const markLectureViewed = async ( userId: string, courseId: string,chapterId: string,lectureId: string)=>{
+export const markLectureViewed = async ( userId: string, courseId: string,chapterId: string,lectureId: string,status:string)=>{
   try {
-    console.log(userId,courseId,chapterId,lectureId);
-    
-     const response = await Api.patch(studentsRoutes.markLectureViewed,{userId,courseId,chapterId,lectureId});
+     const response = await Api.patch(studentsRoutes.markLectureViewed,{userId,courseId,chapterId,lectureId,status});
+     return response;
+  } catch (error) {
+    const err: Error = error as Error;
+    return errorHandle(err);
+  }
+}
+
+// For Fetch Question from pdf
+export const fetchQuestionsFromPdf = async ( CoursePdf:string)=>{
+  try {
+     const response = await Api.get(`${studentsRoutes.fetchQuestions}?pdfUrl=${CoursePdf}`);
      return response;
   } catch (error) {
     const err: Error = error as Error;

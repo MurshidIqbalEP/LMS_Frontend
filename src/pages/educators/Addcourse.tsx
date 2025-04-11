@@ -299,13 +299,12 @@ function AddCourse() {
     return Object.keys(newErr).length === 0;
   };
 
-  const uploadToCloudinary = async (
-    formData: unknown
-  ): Promise<string | null> => {
+  const uploadToCloudinary = async (formData: unknown): Promise<string | null> => {
     try {
       setLoading(true);
       const { data } = await axios.post(cloudinaryURL, formData);
       setLoading(false);
+      
       return data.secure_url;
     } catch (error) {
       console.error("Cloudinary Upload Error:", error);

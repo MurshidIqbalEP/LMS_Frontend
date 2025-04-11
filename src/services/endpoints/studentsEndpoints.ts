@@ -13,7 +13,8 @@ const studentsRoutes = {
     fetchMyentrollments:"/students/myEntrollments",
     fetchPlayerData:"/students/fetchPlayerData",
     fetchCourseProgress:"/students/fetchCourseProgress",
-    markLectureViewed:"/students/markLecture"
+    markLectureViewed:"/students/markLecture",
+    fetchQuestions:"/students/fetchQuestionsFromPdf",
 }
 
 export default studentsRoutes; 

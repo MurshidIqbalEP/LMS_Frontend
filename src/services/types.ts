@@ -14,6 +14,7 @@ export interface ILecture{
     title: string;
     videoUrl?: string;
     duration?: string;
+    chapterId?:string;
     ispreview?: string;
     position?:number
 }
@@ -34,7 +35,7 @@ export interface ICourse{
     category:string;
     price:number;
     thumbnail:string;
-    resources?:string[];
+    resources?:string;
     chapters:IChapter[];
     isPublished?:boolean;
     rating?:{userId:string,rating:number}[];
@@ -52,9 +53,15 @@ export interface Rating {
     email: string;
   }
 
+  export enum LectureStatus {
+    NotStarted = "not_started",
+    InProgress = "in_progress",
+    Completed = "completed"
+  }
+
   export interface ILectureProgress {
     lectureId: string;
-    isCompleted: boolean;
+    status: LectureStatus;
     completedAt: string | null;
     _id: string;
   }
