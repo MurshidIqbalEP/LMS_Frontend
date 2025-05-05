@@ -145,4 +145,32 @@
     color: white !important;
 }
 
+@layer utilities {
+    .animate-pulse-ring {
+      position: relative;
+    }
+    .animate-pulse-ring::before {
+      content: '';
+      position: absolute;
+      width: 160%;
+      height: 160%;
+      top: -30%;
+      left: -30%;
+      border-radius: 9999px;
+      border: 3px solid #fbbf24;
+      animation: ring-pulse 1.5s infinite ease-in-out;
+    }
+  
+    @keyframes ring-pulse {
+      0% {
+        transform: scale(0.8);
+        opacity: 0.7;
+      }
+      100% {
+        transform: scale(1.4);
+        opacity: 0;
+      }
+    }
+  }
+
 

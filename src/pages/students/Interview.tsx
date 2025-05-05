@@ -12,8 +12,8 @@ function Interview() {
 
   useEffect(()=>{
      const fetchQuestion = async()=>{
-        let res =  await fetchQuestionsFromPdf(pdfUrl)   
-        setQuestions(JSON.parse(res?.data.questions.replace(/\\/g, '')))
+        let res =  await fetchQuestionsFromPdf(pdfUrl)        
+        setQuestions(res?.data.questions)
      }
      fetchQuestion()
   },[])
@@ -44,7 +44,11 @@ function Interview() {
 
   return ( 
     <div>
-    <h1 className="text-3xl font-bold text-center my-4">Voice Interview</h1>
+    {questions.length === 0 && (
+      <div className="w-full h-screen flex justify-center items-center  text-lg text-gray-600 animate-pulse">
+        Preparing your interview...
+      </div>
+    )}
     {questions.length > 0 && currentIndex < questions.length && (
       <VapiAgent
         question={questions[currentIndex]}
