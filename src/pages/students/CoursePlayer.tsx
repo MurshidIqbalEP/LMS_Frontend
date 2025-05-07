@@ -48,6 +48,7 @@ const CoursePlayer = () => {
         );
 
         setCourseData(res?.data.courseData);
+        
         setSelectedLecture(res?.data.courseData.chapters[0].lectures[0]);
         setOpenChapters({ [res?.data.courseData.chapters[0]._id]: true });
 
@@ -56,7 +57,6 @@ const CoursePlayer = () => {
           studentInfo?._id as string,
           courseId as string
         );
-
         setProgressData(progressRes?.data.progress);
         setProgress(progressRes?.data.completionPercentage);
       } catch (error) {
@@ -194,8 +194,8 @@ const CoursePlayer = () => {
               </a>
             </div>
           </div>
-          {showInterview&&(
-               <div className="w-full mt-2 bg-amber-500">
+          {progressData?.isCompleted&&(
+               <div className="w-full mt-2 ">
                <button className="bg-blue-600 w-full  text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition" onClick={handleInterviewClick}>
                  AI Interview
                </button>

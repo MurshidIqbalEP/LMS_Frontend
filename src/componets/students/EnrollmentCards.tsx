@@ -25,7 +25,7 @@ function EntrollmentCards({ course }: { course: ICourse }) {
             <h3 className="font-bold text-gray-900 text-lg  line-clamp-1">
               {course.title}
             </h3>
-            <p className="text-sm text-gray-600  line-clamp-2">
+            <p className="text-sm text-gray-600  line-clamp-1">
               {course.description}
             </p>
     

@@ -1,17 +1,24 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import TopcoursesCard from "./TopcoursesCard";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
 import Lenis from "@studio-freight/lenis";
+import { fetchTopCourses } from "../../api/studentsApi";
 
 gsap.registerPlugin(ScrollTrigger);
 
+interface Course {
+  _id: string;
+  title: string;
+  thumbnail: string;
+}
+
 const Topcourses = () => {
-  const data = [
-    { name: "Node", image: "logo.png" },
-    { name: "JavaScript", image: "poster.png" },
-    { name: "JavaScript", image: "poster.png" },
-    { name: "JavaScript", image: "poster.png" },
+  let data = [
+    { name: "Node", image: "https://res.cloudinary.com/drsh8bkaf/image/upload/v1743753749/o31elnauxplbwqbyo2dy.webp" },
+    { name: "PostgreSQL", image: "https://res.cloudinary.com/drsh8bkaf/image/upload/v1741972816/nmqqk9tiziv0vti1ikvc.jpg" },
+    { name: "React", image: "https://res.cloudinary.com/drsh8bkaf/image/upload/v1744382775/xax2p1m3ws2eyhffsbun.webp" },
+    { name: "Node", image: "https://res.cloudinary.com/drsh8bkaf/image/upload/v1742453143/i7o14ttyzoq33znl7o72.png" },
   
   ];
 
@@ -108,11 +115,12 @@ const Topcourses = () => {
     
   }, []);
 
+
   return (
     <>
       <section className="stack-cards bg-black relative flex justify-center items-center w-full h-screen overflow-hidden">
         <section className="starting relative bg-black text-white w-full h-[100px] overflow-hidden flex justify-center items-center ">
-          <h1 className="heading-animate text-8xl kode-mono z-50 text-shadow-lean">
+          <h1 className="!mb-0 heading-animate text-8xl kode-mono z-50 text-shadow-lean">
             TOP COURSES
           </h1>
         </section>

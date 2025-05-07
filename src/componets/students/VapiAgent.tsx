@@ -16,7 +16,7 @@ const VapiAgent: React.FC<Props> = ({ questions }) => {
   
   const navigate = useNavigate();
   const [interviewStatus, setInterviewStatus] = useState<"preparing" | "started" | "ended">("preparing");
-  const [aiText, setAiText] = useState("");
+  const [aiText, setAiText] = useState("Say Hai");
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [aiSpeaking, setAispeeking] = useState(false);
 

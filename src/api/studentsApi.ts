@@ -166,4 +166,15 @@ export const fetchQuestionsFromPdf = async ( CoursePdf:string)=>{
   }
 }
 
+// For Fetch Top Courses
+export const fetchTopCourses = async ()=>{
+  try {
+     const response = await Api.get(studentsRoutes.fetchTopCourses);
+     return response;
+  } catch (error) {
+    const err: Error = error as Error;
+    return errorHandle(err);
+  }
+}
+
 
