@@ -34,7 +34,21 @@
 .card{
     position: relative;
 }
-.card_image{
+
+.card_image {
+  width: 400px;
+    height: 370px;
+    background-image: url(./educator.png);
+    background-position: 0%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-top-left-radius: 3rem;
+    border-bottom-right-radius: 3rem;
+    position: relative;
+}
+
+@media (min-width: 768px) {
+  .card_image{
     width: 630px;
     height: 630px;
     background-image: url(./educator.png);
@@ -45,6 +59,8 @@
     border-bottom-right-radius: 3rem;
     position: relative;
 }
+}
+
 
 /*mask image */
 .card_image{
@@ -52,7 +68,6 @@
     mask-size: 10rem;
     mask-position:bottom left,top right;
     mask-composite: exclude;
-    
 }
 
 .outro{
