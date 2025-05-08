@@ -8,6 +8,7 @@ import Coursedetails from "../pages/students/Coursedetails";
 import EnrollmentsPage from "../pages/students/Enrollments";
 import CoursePlayer from "../pages/students/CoursePlayer";
 import Interview from "../pages/students/Interview";
+import CertificateGenerator from "../pages/students/Certificate";
 
 
 function studentRoute() {
@@ -23,6 +24,7 @@ function studentRoute() {
         <Route path="myEntrollments" element={<EnrollmentsPage />} />
         <Route path="playCourse/:courseId" element={<CoursePlayer />} />
         <Route path="interview" element={<Interview />} />
+        <Route path="certificate" element={<CertificateGenerator />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" />} />

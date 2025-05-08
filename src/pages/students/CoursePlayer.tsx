@@ -1,9 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {fetchCoursePlayerData,fetchCourseProgress,markLectureViewed,} from "../../api/studentsApi"; // Import API functions
+import {
+  fetchCoursePlayerData,
+  fetchCourseProgress,
+  markLectureViewed,
+} from "../../api/studentsApi"; // Import API functions
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import {ICourse,ILecture,IProgressData,IUserInfo,} from "../../services/types";
+import {
+  ICourse,
+  ILecture,
+  IProgressData,
+  IUserInfo,
+} from "../../services/types";
 import VideoPlayer from "../../componets/students/VideoPlayer";
 import {
   BsChevronDown,
@@ -12,6 +21,7 @@ import {
 } from "react-icons/bs";
 import { GiBullseye, GiNotebook } from "react-icons/gi";
 import { LuGoal } from "react-icons/lu";
+import CertificateGenerator from "./Certificate";
 
 const CoursePlayer = () => {
   const navigate = useNavigate();
@@ -48,7 +58,7 @@ const CoursePlayer = () => {
         );
 
         setCourseData(res?.data.courseData);
-        
+
         setSelectedLecture(res?.data.courseData.chapters[0].lectures[0]);
         setOpenChapters({ [res?.data.courseData.chapters[0]._id]: true });
 
@@ -144,7 +154,7 @@ const CoursePlayer = () => {
           toggleChapter(nextChapter._id);
           handleLectureClick(firstLectureOfNextChapter, nextChapter._id);
         } else {
-          setShowInterview(true)
+          setShowInterview(true);
         }
       }
     } catch (error) {
@@ -152,9 +162,9 @@ const CoursePlayer = () => {
     }
   };
 
-  const handleInterviewClick = ()=>{
-    navigate("/interview", { state: { pdfUrl:courseData?.resources } });
-  }
+  const handleInterviewClick = () => {
+    navigate("/interview", { state: { pdfUrl: courseData?.resources } });
+  };
 
   return (
     <div className="flex flex-col lg:flex-row h-screen px-12 py-3 gap-5">
@@ -194,14 +204,21 @@ const CoursePlayer = () => {
               </a>
             </div>
           </div>
-          {progressData?.isCompleted&&(
-               <div className="w-full mt-2 ">
-               <button className="bg-blue-600 w-full  text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition" onClick={handleInterviewClick}>
-                 AI Interview
-               </button>
-             </div>
+          {progressData?.isCompleted && (
+            <div className="w-full mt-4 flex flex-col sm:flex-row gap-4">
+              <button
+                className="bg-blue-600 flex-1 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition duration-200 cursor-pointer"
+                onClick={handleInterviewClick}
+              >
+                AI Interview
+              </button>
+
+              <CertificateGenerator
+                name={studentInfo?.name as string}
+                course={courseData?.title as string}
+              />
+            </div>
           )}
-          
         </div>
       </div>
 
