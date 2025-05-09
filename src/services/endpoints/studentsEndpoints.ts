@@ -2,6 +2,7 @@ import { payment } from "../../api/studentsApi";
 
 const studentsRoutes = {
     register:'/students/register',
+    verifyOtp:'/students/verifyOtp',
     login:'/students/login',
     googleRegistration:"/students/googleregister",
     googleLogin:"/students/googlelogin",

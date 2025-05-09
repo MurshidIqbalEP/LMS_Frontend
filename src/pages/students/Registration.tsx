@@ -65,7 +65,7 @@ const Register = () => {
       );
       if (res?.data) {
         toast.success(res.data.message);
-        navigate("/login");
+        navigate('/otp', { state: { email: formData?.email } });
       }
     }
   };
@@ -151,7 +151,7 @@ const Register = () => {
 
             {/* Submit Button */}
             <button
-              className="bg-[#060050] mt-[13px] w-full h-[35px] text-white rounded-lg"
+              className="bg-[#060050] !mt-[13px] w-full h-[35px] !text-white rounded-lg"
               type="submit"
             >
               Register
@@ -173,7 +173,7 @@ const Register = () => {
 
           {/* Redirect to Login */}
           <p
-            className="text-black mt-2 text-center text-[11px] font-medium hover:underline cursor-pointer"
+            className="text-black !mt-2 text-center text-[11px] font-medium hover:underline cursor-pointer"
             onClick={() => navigate("/login")}
           >
             Already have an account?{" "}

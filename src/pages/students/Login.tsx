@@ -125,7 +125,7 @@ const LoginPage: React.FC = () => {
 
             {/* Submit Button */}
             <button
-              className="bg-[#060050] mt-[13px] w-full h-[35px] text-white rounded-lg"
+              className="bg-[#060050] !mt-[13px] w-full h-[35px] !text-white rounded-lg cursor-pointer"
               type="submit"
             >
               Login
@@ -137,7 +137,7 @@ const LoginPage: React.FC = () => {
 
           {/* Google Login Button */}
           <button
-            className="w-[70%] bg-white text-gray-700 border border-gray-300 flex items-center justify-center space-x-2 py-2 rounded-md shadow-md hover:bg-gray-100"
+            className="w-[70%] bg-white text-gray-700 border border-gray-300 flex items-center justify-center space-x-2 py-2 rounded-md shadow-md hover:bg-gray-100 cursor-pointer"
             type="button"
             onClick={() => handleGoogleLogin()}
           >
@@ -147,7 +147,7 @@ const LoginPage: React.FC = () => {
 
           {/* Redirect to Register */}
           <p
-            className="text-black mt-2 text-center text-[11px] font-medium hover:underline cursor-pointer"
+            className="!mb-0 text-black !mt-2 text-center text-[11px] font-medium hover:underline cursor-pointer"
             onClick={() => navigate("/register")}
           >
             Don’t have an account?{" "}
