@@ -1,5 +1,6 @@
 const educatorRoutes = {
     register:'/educator/register',
+    verifyOtp:'/educator/verifyOtp',
     login:'/educator/login',
     postCourse:'/educator/postCourse',
     fetchCourses:'educator/fetchCoursesById',

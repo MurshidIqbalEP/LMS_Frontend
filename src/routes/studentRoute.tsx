@@ -8,7 +8,6 @@ import Coursedetails from "../pages/students/Coursedetails";
 import EnrollmentsPage from "../pages/students/Enrollments";
 import CoursePlayer from "../pages/students/CoursePlayer";
 import Interview from "../pages/students/Interview";
-import CertificateGenerator from "../pages/students/Certificate";
 import Otp from "../pages/students/Otp";
 
 

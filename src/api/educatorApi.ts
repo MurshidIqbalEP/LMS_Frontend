@@ -37,6 +37,17 @@ export const register = async(name:string,email: string, password: string,subjec
       }
 }
 
+// verify otp
+export const otpVerify = async(otp:string,email: string)=>{
+  try {
+      let response = await Api.post(educatorRoutes.verifyOtp, {otp,email});
+      return response;
+    } catch (error) {
+      const err: Error = error as Error;
+      return errorHandle(err);
+    }
+}
+
 // For login of Educator
 export const login = async(email: string, password: string,)=>{
     try {

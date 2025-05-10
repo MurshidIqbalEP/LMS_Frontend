@@ -7,6 +7,7 @@ import Addcourse from "../pages/educators/Addcourse";
 import Mycourses from "../pages/educators/Mycourses";
 import Editcourse from "../pages/educators/Editcourse";
 import EducatorProtected from "./educatorprotectedRoute";
+import Otp from "../pages/educators/Otp";
 
 
 function EducatorRoute() {
@@ -14,6 +15,7 @@ function EducatorRoute() {
     <Routes>
       <Route path="login" element={<LoginPage />} />
       <Route path="register" element={<Register />} />
+      <Route path="otp" element={<Otp />} />
 
       {/* Nested Routes inside EducatorLayout */}
       <Route path="/" element={<Educatorlayouts />}>

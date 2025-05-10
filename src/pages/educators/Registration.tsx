@@ -156,7 +156,7 @@ const Register = () => {
         );
         if (res?.data) {
           toast.success(res.data.message);
-          navigate("/educator/login");
+          navigate('/educator/otp', { state: { email: formData?.email } });
         }
       } catch (error) {
         toast.error("Registration failed. Please try again.");
