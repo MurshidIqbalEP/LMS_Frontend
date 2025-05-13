@@ -337,7 +337,7 @@ const Register = () => {
               </form>
 
               <p
-                className="text-black mt-2 text-center text-[11px] font-medium hover:underline cursor-pointer"
+                className="!mb-0 text-black !mt-2 text-center text-[11px] font-medium hover:underline cursor-pointer"
                 onClick={() => navigate("/educator/login")}
               >
                 Already have an account?{" "}

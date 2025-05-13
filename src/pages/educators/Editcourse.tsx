@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
+import Draggable from "react-draggable";
 import { ChangeEvent, useEffect, useState } from "react";
 import {
   fetchCategory,
@@ -31,6 +32,7 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
+import ReactPlayer from "react-player";
 
 interface BasicData {
   id?: string;
@@ -111,6 +113,8 @@ function Editcourse() {
     thumbnail: false,
     resourse: false,
   });
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -164,11 +168,11 @@ function Editcourse() {
     setErrMsg((prev) => ({ ...prev, [id]: "" }));
   };
 
-   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
-      const { value } = e.target;
-      setBasicData({ ...basicData, category: value });
-      setErrMsg((prev) => ({ ...prev, category: "" }));
-    };
+  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const { value } = e.target;
+    setBasicData({ ...basicData, category: value });
+    setErrMsg((prev) => ({ ...prev, category: "" }));
+  };
 
   const toggleChapter = (
     chapterId: string,
@@ -487,7 +491,6 @@ function Editcourse() {
 
                 <FormControl className="w-full">
                   <NativeSelect
-                  
                     inputProps={{ "aria-label": "Without label" }}
                     className="h-[36px] pl-3 border rounded-sm text-black"
                     defaultValue={basicData?.category}
@@ -495,7 +498,6 @@ function Editcourse() {
                     error={!!errMsg.category}
                   >
                     {categories.map((category) => (
-
                       <option value={category}>{category}</option>
                     ))}
                   </NativeSelect>
@@ -614,7 +616,7 @@ function Editcourse() {
                       </div>
 
                       {/* Lecture URL Input */}
-                      <div className="flex flex-col">
+                      {/* <div className="flex flex-col">
                         <input
                           type="text"
                           id="url"
@@ -642,8 +644,30 @@ function Editcourse() {
                             }
                           </p>
                         )}
-                      </div>
+                      </div> */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setPreviewUrl(lecture.url);
+                          setShowModal(true);
+                        }}
+                        className="px-3 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                      >
+                        Preview Video
+                      </button>
 
+                      <label className="px-3 py-2 text-sm bg-gray-500 text-white rounded-md hover:bg-gray-600 cursor-pointer">
+                        Change Video
+                        <input
+                          type="file"
+                          accept="video/*"
+                          hidden
+                          // onChange={(e) => {
+                          //   const file = e.target.files?.[0];
+                          //   if (file) uploadNewVideo(file, chapter.id, lecture.id, chapterIndex, lectureIndex);
+                          // }}
+                        />
+                      </label>
                       {/* Remove Button */}
                       <button
                         onClick={(e) =>
@@ -756,6 +780,32 @@ function Editcourse() {
           </div>
         </div>
       </div>
+
+      
+      {showModal && previewUrl && (
+        <Draggable >
+        <div className="fixed bottom-4 right-4 z-50 w-[400px] max-w-full bg-black rounded-lg shadow-lg overflow-hidden cursor-move">
+          <div className="flex justify-between items-center px-4 py-2 border-b border-white">
+            <h2 className="text-sm font-semibold text-white">Video Preview</h2>
+            <button
+              onClick={() => setShowModal(false)}
+              className="!text-white text-sm font-bold"
+            >
+              ×
+            </button>
+          </div>
+          <div className="p-2">
+            <ReactPlayer
+              url={previewUrl}
+              controls
+              width="100%"
+              height="225px"
+            />
+          </div>
+        </div>
+        </Draggable>
+      )}
+      
     </div>
   );
 }

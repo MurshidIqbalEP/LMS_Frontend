@@ -3,12 +3,17 @@ import ReactPlayer from "react-player";
 
 type VideoPlayerProps = {
   videoUrl: string;
-  onEnded?: () => void; // 👈 Optional
+  onEnded?: () => void;
+  fullHeight?: boolean;  
 };
 
-const VideoPlayer = ({ videoUrl, onEnded }: VideoPlayerProps) => {
+const VideoPlayer = ({ videoUrl, onEnded,fullHeight = false }: VideoPlayerProps) => {
   return (
-    <div className="w-full h-full aspect-video rounded-t-2xl overflow-hidden">
+    <div
+      className={`w-full h-full rounded-t-2xl overflow-hidden ${
+        fullHeight ? "" : "aspect-video"
+      }`}
+    >
       <ReactPlayer
         url={videoUrl}
         playing

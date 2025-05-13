@@ -190,13 +190,21 @@ function Coursedetails() {
 
         {/* Right Section - Course Thumbnail */}
         <div className="flex flex-col absolute w-[500px]  top-[110px] right-24 z-50 rounded-2xl shadow-2xl border-2 border-white">
-          <div className="w-full h-[330px] rounded-t-2xl overflow-hidden">
+          <div className="w-full h-[330px] rounded-t-2xl overflow-hidden relative bg-gray-900">
             {playPreview ? (
+              <>
+              
+              <div className="w-full h-full">
               <VideoPlayer
                 videoUrl={
                   courseData?.chapters[0].lectures[0].videoUrl as string
                 }
+                fullHeight={true}
               />
+            </div>
+             <div className="absolute top-0 left-0 w-full h-56 bg-gradient-to-b from-black/70 to-transparent z-10" />
+             <div className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-black/70 to-transparent z-10" />
+             </>
             ) : (
               <img
                 src={courseData?.thumbnail}
@@ -312,7 +320,7 @@ function Coursedetails() {
                         </li>
                         {chapter.position === 1 && lecture.position === 1 && (
                           <p
-                            className="text-green-500"
+                            className="text-green-500 cursor-pointer"
                             onClick={() => setPlayPreview(true)}
                           >
                             Preview

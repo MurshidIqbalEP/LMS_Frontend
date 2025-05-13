@@ -101,7 +101,7 @@ const LoginPage: React.FC = () => {
 
             {/* Submit Button */}
             <button
-              className="bg-[#060050] mt-[13px] w-full h-[35px] text-white rounded-lg"
+              className="bg-[#060050] !mt-[13px] w-full h-[35px] !text-white rounded-lg"
               type="submit"
             >
               Login
