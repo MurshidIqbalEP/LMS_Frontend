@@ -76,7 +76,9 @@ function AddCourse() {
     category: "",
     price: 0,
   });
-  const [uploadingVideos, setUploadingVideos] = useState<{[key: string]: boolean;}>({});
+  const [uploadingVideos, setUploadingVideos] = useState<{
+    [key: string]: boolean;
+  }>({});
   const [errMsg, setErrMsg] = useState<ErrMsg>({});
   const [chapters, setChapters] = useState([
     {
@@ -166,11 +168,10 @@ function AddCourse() {
     const file = e.target.files?.[0];
     if (!file) return;
     const key = `${chapterIndex}-${lectureIndex}`;
-  setUploadingVideos((prev) => ({ ...prev, [key]: true }));
+    setUploadingVideos((prev) => ({ ...prev, [key]: true }));
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", "unsigned_video"); // Create this in Cloudinary settings
-    // formData.append("resource_type", "video");
 
     try {
       const res = await fetch(
@@ -181,10 +182,9 @@ function AddCourse() {
         }
       );
 
-      
-      const data  =await res.json()
+      const data = await res.json();
       const videoUrl = data.secure_url;
-      
+
       // Update the lecture URL with the Cloudinary URL
       setChapters((prev) =>
         prev.map((chapter) =>
@@ -609,65 +609,70 @@ function AddCourse() {
                           )
                         }
                       /> */}
-                    <div className="flex flex-col w-full">
-  {uploadingVideos[`${chapterIndex}-${lectureIndex}`] ? (
-    <div className="flex items-center space-x-2 mt-2 bg-blue-50 px-4 py-2 rounded-md shadow-sm border border-blue-200">
-    <svg
-      className="w-5 h-5 text-blue-500 animate-spin"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      ></circle>
-      <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 11-8 8z"
-      ></path>
-    </svg>
-    <span className="text-sm text-blue-600 font-medium animate-pulse">
-      Uploading...
-    </span>
-  </div>
-  
-  ) : (
-    <>
-      <input
-        id="url"
-        type="file"
-        accept="video/*"
-        onChange={(e) =>
-          handleVideoUpload(
-            e,
-            chapter.id,
-            lecture.id,
-            chapterIndex,
-            lectureIndex
-          )
-        }
-        className={`border rounded p-2.5 ${
-          errMsg[`lecture-${chapterIndex}-${lectureIndex}-url`]
-            ? "border-red-500"
-            : "border-gray-300"
-        }`}
-      />
-      {errMsg[`lecture-${chapterIndex}-${lectureIndex}-url`] && (
-        <p className="text-[#d32f2f] text-xs mt-1 pl-1">
-          {errMsg[`lecture-${chapterIndex}-${lectureIndex}-url`]}
-        </p>
-      )}
-    </>
-  )}
-</div>
-
-
+                      <div className="flex flex-col w-full">
+                        {uploadingVideos[`${chapterIndex}-${lectureIndex}`] ? (
+                          <div className="flex items-center space-x-2 mt-2 bg-blue-50 px-4 py-2 rounded-md shadow-sm border border-blue-200">
+                            <svg
+                              className="w-5 h-5 text-blue-500 animate-spin"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                              ></circle>
+                              <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 11-8 8z"
+                              ></path>
+                            </svg>
+                            <span className="text-sm text-blue-600 font-medium animate-pulse">
+                              Uploading...
+                            </span>
+                          </div>
+                        ) : (
+                          <>
+                            <input
+                              id="url"
+                              type="file"
+                              accept="video/*"
+                              onChange={(e) =>
+                                handleVideoUpload(
+                                  e,
+                                  chapter.id,
+                                  lecture.id,
+                                  chapterIndex,
+                                  lectureIndex
+                                )
+                              }
+                              className={`border rounded p-2.5 ${
+                                errMsg[
+                                  `lecture-${chapterIndex}-${lectureIndex}-url`
+                                ]
+                                  ? "border-red-500"
+                                  : "border-gray-300"
+                              }`}
+                            />
+                            {errMsg[
+                              `lecture-${chapterIndex}-${lectureIndex}-url`
+                            ] && (
+                              <p className="text-[#d32f2f] text-xs mt-1 pl-1">
+                                {
+                                  errMsg[
+                                    `lecture-${chapterIndex}-${lectureIndex}-url`
+                                  ]
+                                }
+                              </p>
+                            )}
+                          </>
+                        )}
+                      </div>
 
                       <button
                         onClick={(e) =>

@@ -115,6 +115,9 @@ function Editcourse() {
   });
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [uploadingVideos, setUploadingVideos] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -262,6 +265,68 @@ function Editcourse() {
     }));
   };
 
+  const handlelectureVideoChange = async(
+    event: React.ChangeEvent<HTMLInputElement>,
+    chapterId: string,
+    lectureId: string,
+    chapterIndex: number,
+    lectureIndex: number
+  ) => {
+    const { id } = event.target;
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const key = `${chapterIndex}-${lectureIndex}`;
+    setUploadingVideos((prev) => ({ ...prev, [key]: true }));
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "unsigned_video");
+
+
+    try {
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/drsh8bkaf/video/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      console.log(res);
+      
+      const data  =await res.json()
+      const videoUrl = data.secure_url;
+      console.log(videoUrl);
+      
+      
+      // Update the lecture URL with the Cloudinary URL
+      setChapters((prevChapters) =>
+        prevChapters?.map((chapter) =>
+          chapter.id === chapterId
+            ? {
+                ...chapter,
+                lectures: chapter.lectures.map((lecture) =>
+                  lecture.id === lectureId ? { ...lecture, [id]: videoUrl } : lecture
+                ),
+              }
+            : chapter
+        )
+      );
+      setErrMsg((prev) => ({
+        ...prev,
+        [`lecture-${chapterIndex}-${lectureIndex}-${id}`]: "",
+      }));
+    } catch (error) {
+      toast.error("uploading Failed")
+    } finally {
+      setUploadingVideos((prev) => {
+        const updated = { ...prev };
+        delete updated[key];
+        return updated;
+      });
+    }
+  };
+
   const addLecture = (
     chapterId: string,
     event: React.MouseEvent<HTMLButtonElement>
@@ -337,8 +402,8 @@ function Editcourse() {
     if (!basicData?.category?.trim()) newErr.category = "Category is required.";
     if (basicData?.price === undefined || basicData.price <= 0)
       newErr.price = "Price must be greater than 0.";
-    // if (!selectedThumbnailFile) newErr.thumbnail = "Course thumbnail image is required.";
-    // if (!selectedResourceFile) newErr.resource = "Resource file is required.";
+    if (!selectedThumbnailFile) newErr.thumbnail = "Course thumbnail image is required.";
+    if (!selectedResourceFile) newErr.resource = "Resource file is required.";
     if (chapters?.length === 0)
       newErr.chapter = "At least one chapter is required.";
 
@@ -582,13 +647,12 @@ function Editcourse() {
                   {chapter.lectures.map((lecture, lectureIndex) => (
                     <div
                       key={lecture.id}
-                      className="grid grid-cols-[1fr_auto_auto] gap-4 items-center ml-[80px] border p-3 rounded-lg bg-gray-50"
+                      className="flex flex-wrap items-center gap-4 ml-20 border p-4 rounded-lg bg-gray-50"
                     >
                       {/* Lecture Name Input */}
-                      <div className="flex flex-col">
+                      <div className="flex flex-col flex-1 min-w-[200px]">
                         <input
                           type="text"
-                          id="name"
                           placeholder="Lecture Name"
                           value={lecture.name}
                           onChange={(event) =>
@@ -605,7 +669,7 @@ function Editcourse() {
                         {errMsg[
                           `lecture-${chapterIndex}-${lectureIndex}-name`
                         ] && (
-                          <p className="text-[#d32f2f] text-xs mt-1 pl-[15px] ">
+                          <p className="text-[#d32f2f] text-xs mt-1 pl-1">
                             {
                               errMsg[
                                 `lecture-${chapterIndex}-${lectureIndex}-name`
@@ -615,66 +679,86 @@ function Editcourse() {
                         )}
                       </div>
 
-                      {/* Lecture URL Input */}
-                      {/* <div className="flex flex-col">
+                      {/* Preview Button */}
+                      {!uploadingVideos[`${chapterIndex}-${lectureIndex}`] && (
+                          <button
+                          type="button"
+                          onClick={() => {
+                            setPreviewUrl(lecture.url);
+                            setShowModal(true);
+                          }}
+                          className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 whitespace-nowrap"
+                        >
+                          Preview Video
+                        </button>
+                      )}
+                      
+
+                      {/* Change Video Input */}
+
+                      {uploadingVideos[`${chapterIndex}-${lectureIndex}`] ?
+                      (
+                        <div className="flex items-center space-x-2 mt-1 bg-blue-50 px-4 py-2 rounded-md shadow-sm border border-blue-200">
+                          <svg
+                            className="w-5 h-5 text-blue-500 animate-spin"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 11-8 8z"
+                            ></path>
+                          </svg>
+                          <span className="text-sm text-blue-600 font-medium animate-pulse">
+                            Uploading...
+                          </span>
+                        </div>
+                      ) : (
+                        <label className="px-4 py-2 text-sm bg-gray-500 text-white rounded-md hover:bg-gray-600 cursor-pointer whitespace-nowrap">
+                        Change Video
                         <input
-                          type="text"
+                          type="file"
+                          accept="video/*"
                           id="url"
-                          placeholder="Lecture URL"
-                          value={lecture.url}
-                          onChange={(event) =>
-                            handleLectureInputChange(
-                              event,
+                          hidden
+                          onChange={(event)=>{
+                            handlelectureVideoChange(  event,
                               chapter.id,
                               lecture.id,
                               chapterIndex,
                               lectureIndex
                             )
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
-                        />
-                        {errMsg[
-                          `lecture-${chapterIndex}-${lectureIndex}-url`
-                        ] && (
-                          <p className="text-[#d32f2f] text-xs mt-1 pl-[15px] ">
-                            {
-                              errMsg[
-                                `lecture-${chapterIndex}-${lectureIndex}-url`
-                              ]
-                            }
-                          </p>
-                        )}
-                      </div> */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setPreviewUrl(lecture.url);
-                          setShowModal(true);
-                        }}
-                        className="px-3 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                      >
-                        Preview Video
-                      </button>
-
-                      <label className="px-3 py-2 text-sm bg-gray-500 text-white rounded-md hover:bg-gray-600 cursor-pointer">
-                        Change Video
-                        <input
-                          type="file"
-                          accept="video/*"
-                          hidden
-                          // onChange={(e) => {
-                          //   const file = e.target.files?.[0];
-                          //   if (file) uploadNewVideo(file, chapter.id, lecture.id, chapterIndex, lectureIndex);
-                          // }}
+                          }}
                         />
                       </label>
+                      )}
+                      
+                      {/* {errMsg[lecture-${chapterIndex}-${lectureIndex}-url] && (
+                          <p className="text-[#d32f2f] text-xs mt-1 pl-[15px] ">
+                            {
+                              errMsg[lecture-${chapterIndex}-${lectureIndex}-url]
+                            }
+                          </p>
+                        )} */}
+
+
                       {/* Remove Button */}
                       <button
                         onClick={(e) =>
                           removeLecture(chapter.id, lecture.id, e)
                         }
                         disabled={chapter.lectures.length === 1}
-                        className="p-2 rounded-md text-red-500 hover:bg-red-100 disabled:opacity-50"
+                        className="p-2 text-red-500 hover:bg-red-100 rounded-md disabled:opacity-50"
                       >
                         <IoTrash size={20} />
                       </button>
@@ -685,7 +769,7 @@ function Editcourse() {
                   <div className="flex justify-end mt-4">
                     <button
                       onClick={(e) => addLecture(chapter.id, e)}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-500 text-white font-medium transition-all"
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition"
                     >
                       <CiCirclePlus size={22} />
                       <span>Add Lecture</span>
@@ -781,31 +865,31 @@ function Editcourse() {
         </div>
       </div>
 
-      
       {showModal && previewUrl && (
-        <Draggable >
-        <div className="fixed bottom-4 right-4 z-50 w-[400px] max-w-full bg-black rounded-lg shadow-lg overflow-hidden cursor-move">
-          <div className="flex justify-between items-center px-4 py-2 border-b border-white">
-            <h2 className="text-sm font-semibold text-white">Video Preview</h2>
-            <button
-              onClick={() => setShowModal(false)}
-              className="!text-white text-sm font-bold"
-            >
-              ×
-            </button>
+        <Draggable>
+          <div className="fixed bottom-4 right-4 z-50 w-[400px] max-w-full bg-black rounded-lg shadow-lg overflow-hidden cursor-move">
+            <div className="flex justify-between items-center px-4 py-2 border-b border-white">
+              <h2 className="text-sm font-semibold text-white">
+                Video Preview
+              </h2>
+              <button
+                onClick={() => setShowModal(false)}
+                className="!text-white text-sm font-bold"
+              >
+                ×
+              </button>
+            </div>
+            <div className="p-2">
+              <ReactPlayer
+                url={previewUrl}
+                controls
+                width="100%"
+                height="225px"
+              />
+            </div>
           </div>
-          <div className="p-2">
-            <ReactPlayer
-              url={previewUrl}
-              controls
-              width="100%"
-              height="225px"
-            />
-          </div>
-        </div>
         </Draggable>
       )}
-      
     </div>
   );
 }
