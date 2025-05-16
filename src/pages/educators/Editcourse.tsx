@@ -421,7 +421,7 @@ function Editcourse() {
         if (!lecture.url.trim())
           newErr[
             `lecture-${chapterIndex}-${lectureIndex}-url` as keyof FormErrors
-          ] = `Lecture URL is required`;
+          ] = `add a lecture video`;
       });
     });
 
@@ -653,6 +653,7 @@ function Editcourse() {
                       <div className="flex flex-col flex-1 min-w-[200px]">
                         <input
                           type="text"
+                          id="name"
                           placeholder="Lecture Name"
                           value={lecture.name}
                           onChange={(event) =>
@@ -680,24 +681,23 @@ function Editcourse() {
                       </div>
 
                       {/* Preview Button */}
-                      {!uploadingVideos[`${chapterIndex}-${lectureIndex}`] && (
+                      {!uploadingVideos[`${chapterIndex}-${lectureIndex}`] &&
+                        lecture.url && (
                           <button
-                          type="button"
-                          onClick={() => {
-                            setPreviewUrl(lecture.url);
-                            setShowModal(true);
-                          }}
-                          className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 whitespace-nowrap"
-                        >
-                          Preview Video
-                        </button>
-                      )}
-                      
+                            type="button"
+                            onClick={() => {
+                              setPreviewUrl(lecture.url);
+                              setShowModal(true);
+                            }}
+                            className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 whitespace-nowrap"
+                          >
+                            Preview Video
+                          </button>
+                        )}
 
                       {/* Change Video Input */}
 
-                      {uploadingVideos[`${chapterIndex}-${lectureIndex}`] ?
-                      (
+                      {uploadingVideos[`${chapterIndex}-${lectureIndex}`] ? (
                         <div className="flex items-center space-x-2 mt-1 bg-blue-50 px-4 py-2 rounded-md shadow-sm border border-blue-200">
                           <svg
                             className="w-5 h-5 text-blue-500 animate-spin"
@@ -724,33 +724,39 @@ function Editcourse() {
                           </span>
                         </div>
                       ) : (
-                        <label className="px-4 py-2 text-sm bg-gray-500 text-white rounded-md hover:bg-gray-600 cursor-pointer whitespace-nowrap">
-                        Change Video
-                        <input
-                          type="file"
-                          accept="video/*"
-                          id="url"
-                          hidden
-                          onChange={(event)=>{
-                            handlelectureVideoChange(  event,
-                              chapter.id,
-                              lecture.id,
-                              chapterIndex,
-                              lectureIndex
-                            )
-                          }}
-                        />
-                      </label>
-                      )}
-                      
-                      {/* {errMsg[lecture-${chapterIndex}-${lectureIndex}-url] && (
-                          <p className="text-[#d32f2f] text-xs mt-1 pl-[15px] ">
-                            {
-                              errMsg[lecture-${chapterIndex}-${lectureIndex}-url]
-                            }
-                          </p>
-                        )} */}
+                        <div className="flex flex-col items-start">
+                          <label className="px-4 py-2 text-sm bg-gray-500 text-white rounded-md hover:bg-gray-600 cursor-pointer whitespace-nowrap">
+                            {lecture.url ? "Change Video" : "Add Video"}
+                            <input
+                              type="file"
+                              accept="video/*"
+                              id="url"
+                              hidden
+                              onChange={(event) => {
+                                handlelectureVideoChange(
+                                  event,
+                                  chapter.id,
+                                  lecture.id,
+                                  chapterIndex,
+                                  lectureIndex
+                                );
+                              }}
+                            />
+                          </label>
 
+                          {errMsg[
+                            `lecture-${chapterIndex}-${lectureIndex}-url`
+                          ] && (
+                            <p className="text-[#d32f2f] text-xs mt-1">
+                              {
+                                errMsg[
+                                  `lecture-${chapterIndex}-${lectureIndex}-url`
+                                ]
+                              }
+                            </p>
+                          )}
+                        </div>
+                      )}
 
                       {/* Remove Button */}
                       <button

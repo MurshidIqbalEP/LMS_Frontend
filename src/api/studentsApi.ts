@@ -188,4 +188,15 @@ export const fetchTopCourses = async ()=>{
   }
 }
 
+// For posting review and rating
+export const postReview = async (userId:string,courseId:string,rating:string|number,review:string)=>{
+  try {
+     const response = await Api.post(studentsRoutes.postReview,{userId,courseId,rating,review});
+     return response;
+  } catch (error) {
+    const err: Error = error as Error;
+    return errorHandle(err);
+  }
+}
+
 

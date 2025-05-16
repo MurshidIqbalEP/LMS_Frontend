@@ -10,7 +10,7 @@ type VideoPlayerProps = {
 const VideoPlayer = ({ videoUrl, onEnded,fullHeight = false }: VideoPlayerProps) => {
   return (
     <div
-      className={`w-full h-full rounded-t-2xl overflow-hidden ${
+      className={`w-full h-full rounded-2xl overflow-hidden ${
         fullHeight ? "" : "aspect-video"
       }`}
     >

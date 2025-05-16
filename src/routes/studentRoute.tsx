@@ -9,6 +9,7 @@ import EnrollmentsPage from "../pages/students/Enrollments";
 import CoursePlayer from "../pages/students/CoursePlayer";
 import Interview from "../pages/students/Interview";
 import Otp from "../pages/students/Otp";
+import StudentProtectedRoute from "./studentProtectedRoute";
 
 
 function studentRoute() {
@@ -17,14 +18,17 @@ function studentRoute() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<Register />} />
       <Route path="/otp" element={<Otp />} />
-      
+
       <Route path="/" element={<Studentslayouts />}>
         <Route index element={<Home />} />
-        <Route path="allcourses" element={<Allcources />} />
-        <Route path="course/:courseId" element={<Coursedetails />} />
-        <Route path="myEntrollments" element={<EnrollmentsPage />} />
-        <Route path="playCourse/:courseId" element={<CoursePlayer />} />
-        <Route path="interview" element={<Interview />} />
+
+        <Route element={<StudentProtectedRoute />}>
+          <Route path="allcourses" element={<Allcources />} />
+          <Route path="course/:courseId" element={<Coursedetails />} />
+          <Route path="myEntrollments" element={<EnrollmentsPage />} />
+          <Route path="playCourse/:courseId" element={<CoursePlayer />} />
+          <Route path="interview" element={<Interview />} />
+        </Route>
       </Route>
 
       <Route path="*" element={<Navigate to="/" />} />

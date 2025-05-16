@@ -1,9 +1,16 @@
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
 import { Link } from "react-router-dom";
+import { clearUser } from "../../redux/slices/authSlice";
+import {persistor} from "../../redux/store"
 
 function Navbar() {
   const user = useSelector((state: RootState) => state.auth.userInfo); 
+  const dispatch = useDispatch();
+   const handlelogout = ()=>{
+      dispatch(clearUser());
+      persistor.purge();
+    }
     return (
       <div className="mt-2 mb-1 w-full h-[45px] border-t-2 border-b-2 border-gray-300 flex items-center justify-between px-4">
         {/* Logo Section */}
@@ -22,7 +29,7 @@ function Navbar() {
         <div className="flex space-x-4">
         {user ? (
           <>
-          <a className="text-gray-500 hover:text-black">Logout</a>
+          <a className="text-gray-500 hover:text-black" onClick={handlelogout}>Logout</a>
           <span className="text-gray-500 flex items-center space-x-2 group">
             Welcome
             <img 

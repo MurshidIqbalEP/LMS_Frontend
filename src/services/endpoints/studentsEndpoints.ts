@@ -16,7 +16,8 @@ const studentsRoutes = {
     fetchCourseProgress:"/students/fetchCourseProgress",
     markLectureViewed:"/students/markLecture",
     fetchQuestions:"/students/fetchQuestionsFromPdf",
-    fetchTopCourses:"/students/fetchTopCourses"
+    fetchTopCourses:"/students/fetchTopCourses",
+    postReview:"/students/postReview"
 }
 
 export default studentsRoutes; 

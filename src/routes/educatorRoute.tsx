@@ -20,17 +20,16 @@ function EducatorRoute() {
       {/* Nested Routes inside EducatorLayout */}
       <Route path="/" element={<Educatorlayouts />}>
         <Route index element={<Home />} />
-         
-         <Route element={<EducatorProtected />}>
-               <Route path="addcourse" element={<Addcourse />} />
-               <Route path="mycourses" element={<Mycourses />} />
-               <Route path="editcourse/:courseId" element={<Editcourse />} />
-         </Route>
-        
+
+        <Route element={<EducatorProtected />}>
+          <Route path="addcourse" element={<Addcourse />} />
+          <Route path="mycourses" element={<Mycourses />} />
+          <Route path="editcourse/:courseId" element={<Editcourse />} />
+        </Route>
       </Route>
 
       {/* Redirect unknown routes */}
-      <Route path="*" element={<Navigate to="/" />} />
+      <Route path="*" element={<Navigate to="/educator" />} />
     </Routes>
   );
 }
