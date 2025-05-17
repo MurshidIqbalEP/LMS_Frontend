@@ -9,6 +9,7 @@ function Navbar() {
   const dispatch = useDispatch();
    const handlelogout = ()=>{
       dispatch(clearUser());
+      localStorage.removeItem("token");
       persistor.purge();
     }
     return (

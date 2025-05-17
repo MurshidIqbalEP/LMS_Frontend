@@ -36,19 +36,16 @@ Api.interceptors.response.use(
       !originalRequest._retry
     ) {
       originalRequest._retry = true; // Prevent infinite retry loop
-      console.log(error.response.status);
       try {
         // Refresh the access token
         console.log("hai api call for reffresh ");
 
-        const res = await Api.get("/user/refresh-token");
+        const res = await Api.get("/students/refresh-token");
         let newAccessToken = res.data.accessToken;
         console.log(newAccessToken);
         localStorage.setItem("accessToken", newAccessToken);
 
         originalRequest.headers.Authorization = `Bearer${newAccessToken}`;
-
-        console.log(originalRequest, 'hhkh');
         
         // Retry the original request with the new access token
         return Api(originalRequest);
