@@ -79,7 +79,7 @@ const CourseCard = ({ course,setCourses,}: {course: Course;setCourses: React.Dis
           <h3 className="font-bold text-gray-900 text-lg mb-1 line-clamp-1">
             {course.title}
           </h3>
-          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+          <p className="text-sm text-gray-600 mb-3 line-clamp-1">
             {course.description}
           </p>
   

@@ -13,25 +13,25 @@ function Navbar() {
       persistor.purge();
     }
     return (
-      <div className="mt-2 mb-1 w-full h-[45px] border-t-2 border-b-2 border-gray-300 flex items-center justify-between px-4">
+      <div className=" mt-2 w-full h-[45px] border-t-2 border-b-2 border-gray-300 flex items-center justify-between px-4">
         {/* Logo Section */}
         <div> 
           <img src="/logo.png" alt="LOGO" className="h-full w-[137px] cursor-pointer" />
         </div>
   
         {/* Navigation Links */}
-        <nav className="hidden md:flex space-x-12">
-          <Link to={"/"} className="text-gray-500 hover:text-black ">Home</Link>
-          <Link to={"/allcourses"} className="text-gray-500 hover:text-black ">Courses</Link>
-          <Link to={"/myEntrollments"} className="text-gray-500 hover:text-black ">My Enrollments</Link>
+        <nav className="hidden  md:flex space-x-12">
+          <Link to={"/"} className=" hover:text-gray-300 ">Home</Link>
+          <Link to={"/allcourses"} className=" hover:text-gray-300 ">Courses</Link>
+          <Link to={"/myEntrollments"} className=" hover:text-gray-300 ">My Enrollments</Link>
         </nav>
   
         {/* Actions Section */}
         <div className="flex space-x-4">
         {user ? (
           <>
-          <a className="text-gray-500 hover:text-black" onClick={handlelogout}>Logout</a>
-          <span className="text-gray-500 flex items-center space-x-2 group">
+          <a className=" hover:text-gray-300" onClick={handlelogout}>Logout</a>
+          <span className=" flex items-center space-x-2 group">
             Welcome
             <img 
               src="/icons8-user.gif" 
@@ -44,8 +44,8 @@ function Navbar() {
         
         ) : (
           <>
-          <Link to="login" className="text-gray-500 hover:text-black">Login</Link>
-          <Link to="register" className="text-gray-500 hover:text-black">Register</Link>
+          <Link to="login" className=" hover:text-gray-300">Login</Link>
+          <Link to="register" className=" hover:text-gray-300">Register</Link>
           </>
 
         )}

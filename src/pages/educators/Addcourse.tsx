@@ -584,31 +584,6 @@ function AddCourse() {
                         }
                       />
 
-                      {/* <TextField
-                        label="Lecture Url"
-                        id="url"
-                        value={lecture.url}
-                        size="small"
-                        variant="outlined"
-                        error={
-                          !!errMsg[
-                            `lecture-${chapterIndex}-${lectureIndex}-url`
-                          ]
-                        }
-                        helperText={
-                          errMsg[`lecture-${chapterIndex}-${lectureIndex}-url`]
-                        }
-                        fullWidth
-                        onChange={(event) =>
-                          handleLectureInputChange(
-                            event,
-                            chapter.id,
-                            lecture.id,
-                            chapterIndex,
-                            lectureIndex
-                          )
-                        }
-                      /> */}
                       <div className="flex flex-col w-full">
                         {uploadingVideos[`${chapterIndex}-${lectureIndex}`] ? (
                           <div className="flex items-center space-x-2 mt-2 bg-blue-50 px-4 py-2 rounded-md shadow-sm border border-blue-200">
@@ -638,8 +613,33 @@ function AddCourse() {
                           </div>
                         ) : (
                           <>
+                            <label
+                              htmlFor={`file-${chapterIndex}-${lectureIndex}`}
+                              className={`cursor-pointer border rounded p-2.5 bg-gray-100 text-sm flex items-center justify-between ${
+                                errMsg[
+                                  `lecture-${chapterIndex}-${lectureIndex}-url`
+                                ]
+                                  ? "border-red-500"
+                                  : "border-gray-300"
+                              }`}
+                            >
+                              <span className="truncate w-full mr-4 text-gray-700">
+                                {chapters[chapterIndex]?.lectures[lectureIndex]
+                                  ?.url
+                                  ? chapters[chapterIndex].lectures[
+                                      lectureIndex
+                                    ].url
+                                      .split("/")
+                                      .pop()
+                                  : "Choose a video..."}
+                              </span>
+                              <span className="text-blue-600 font-semibold">
+                                Change
+                              </span>
+                            </label>
+
                             <input
-                              id="url"
+                              id={`file-${chapterIndex}-${lectureIndex}`}
                               type="file"
                               accept="video/*"
                               onChange={(e) =>
@@ -651,14 +651,9 @@ function AddCourse() {
                                   lectureIndex
                                 )
                               }
-                              className={`border rounded p-2.5 ${
-                                errMsg[
-                                  `lecture-${chapterIndex}-${lectureIndex}-url`
-                                ]
-                                  ? "border-red-500"
-                                  : "border-gray-300"
-                              }`}
+                              className="hidden"
                             />
+
                             {errMsg[
                               `lecture-${chapterIndex}-${lectureIndex}-url`
                             ] && (

@@ -120,7 +120,7 @@ const Topcourses = () => {
     <>
       <section className="stack-cards bg-black relative flex justify-center items-center w-full h-screen overflow-hidden">
         <section className="starting relative bg-black text-white w-full h-[100px] overflow-hidden flex justify-center items-center ">
-          <h1 className="!mb-0 heading-animate text-8xl kode-mono z-50 text-shadow-lean">
+          <h1 className="!mb-0 heading-animate text-8xl   !font-extrabold kode-mono z-50 text-shadow-lean">
             TOP COURSES
           </h1>
         </section>

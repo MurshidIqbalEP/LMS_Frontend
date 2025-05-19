@@ -402,8 +402,6 @@ function Editcourse() {
     if (!basicData?.category?.trim()) newErr.category = "Category is required.";
     if (basicData?.price === undefined || basicData.price <= 0)
       newErr.price = "Price must be greater than 0.";
-    if (!selectedThumbnailFile) newErr.thumbnail = "Course thumbnail image is required.";
-    if (!selectedResourceFile) newErr.resource = "Resource file is required.";
     if (chapters?.length === 0)
       newErr.chapter = "At least one chapter is required.";
 
@@ -445,9 +443,10 @@ function Editcourse() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(chapters);
-
+      alert(" complieted")
     try {
+      console.log(validateForm());
+      
       if (!validateForm()) return;
       setLoading(true);
       const formDataArray = [];
