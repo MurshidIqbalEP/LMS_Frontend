@@ -375,7 +375,7 @@ const CoursePlayer = () => {
           </div>
         </div>
       </div>
-      // Usage in CoursePlayer.tsx
+
       {showModal && (
         <div className="fixed inset-0 bg-transparent bg-opacity-50 flex justify-center items-center z-50">
           

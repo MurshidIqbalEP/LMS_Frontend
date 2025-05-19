@@ -443,9 +443,7 @@ function Editcourse() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-      alert(" complieted")
     try {
-      console.log(validateForm());
       
       if (!validateForm()) return;
       setLoading(true);

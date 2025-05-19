@@ -69,6 +69,7 @@ const VapiAgent: React.FC<Props> = ({ questions }) => {
               Start the conversation with a warm, friendly introduction to make the candidate feel comfortable. For example:
               "Hey there! Welcome to your interview. Let’s get started with a few questions!"
               You will be given a list of interview questions. Ask one question at a time and wait for the candidate to finish their response before moving to the next.
+              After all questions are answered, summarize the candidate’s strengths and weaknesses based on their responses and give friendly, helpful feedback like a real interviewer would.
               Here are the questions you will ask:${questions}`,
           },
         ],
