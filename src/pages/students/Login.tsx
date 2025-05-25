@@ -7,7 +7,7 @@ import axios from "axios";
 const GOOGLE_USERINFO_URL = import.meta.env.VITE_GOOGLE_USERINFO_URL;
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../redux/slices/authslice";
-import { login,googleLogin } from "../../api/studentsApi";
+import { login, googleLogin } from "../../api/studentsApi";
 import { toast } from "sonner";
 
 interface FormData {

@@ -5,24 +5,32 @@ import {
   payment,
   paymentVerification,
 } from "../../api/studentsApi";
-import { IChapter, ICourse, IUserInfo, Rating } from "../../services/types";
+import {
+  IChapter,
+  ICourse,
+  IUserInfo,
+  Rating,
+  IReview,
+} from "../../services/types";
 // @ts-ignore
 import ReactStars from "react-rating-stars-component";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaStar } from "react-icons/fa";
 import VideoPlayer from "../../componets/students/VideoPlayer";
 import { PiBookOpenText } from "react-icons/pi";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import ReviewCarousel from "../../componets/students/ReviewCarousel";
 
 function Coursedetails() {
   const { courseId } = useParams();
   const [loading, setLoading] = useState(false);
   const [courseData, setCourseData] = useState<ICourse>();
+  const [reviews, setReviews] = useState<IReview[]>([]);
   const [isEnrolled, setIsEntrolled] = useState(false);
   const [playPreview, setPlayPreview] = useState(false);
-  const [avgRating, setAvgRating] = useState<number | null>(null);
+  const [avgRating, setAvgRating] = useState<number>(0);
   const [totalLectures, setTotalLectures] = useState<number | null>(null);
   const navigate = useNavigate();
   const [expandedChapters, setExpandedChapters] = useState<{
@@ -49,16 +57,20 @@ function Coursedetails() {
         );
         setCourseData(res?.data.courseData);
         setIsEntrolled(res?.data.isEnrolled);
-        console.log(res?.data.courseData);
+        setReviews(res?.data.reviews);
+        console.log(res?.data.reviews);
 
         let avgRating = 0;
-        if (res?.data.courseData.rating.length) {
-          const sum = res.data.courseData.rating.reduce(
-            (acc: number, obj: Rating) => acc + obj.rating,
+        if (res?.data.reviews.length) {
+          const sum = res.data.reviews.reduce(
+            (acc: number, review: { rating: number }) => acc + review.rating,
             0
           );
-          avgRating = sum / res.data.courseData.rating.length;
-          setAvgRating(avgRating);
+
+          const avgRating =
+            res.data.reviews.length > 0 ? sum / res.data.reviews.length : 0;
+
+          setAvgRating(Number(avgRating));
         }
         const totalLectures = res?.data.courseData.chapters.reduce(
           (acc: number, chapter: IChapter) =>
@@ -106,7 +118,6 @@ function Coursedetails() {
         image: "/logo.png",
         order_id: order.id,
         handler: async function (response: any) {
-          // Verify Payment
           const verifyData = await paymentVerification(
             response,
             courseId as string,
@@ -173,16 +184,18 @@ function Coursedetails() {
 
             {/* Rating */}
             <div className="flex items-center ml-auto">
-              <ReactStars
-                count={5}
-                value={avgRating}
-                size={30}
-                edit={false}
-                isHalf={true}
-                activeColor="#facc15"
-              />
+              {Array(5)
+                .fill(0)
+                .map((_, i) => (
+                  <FaStar
+                    className={`${
+                      i < avgRating ? "text-yellow-400" : "text-gray-100"
+                    } text-xl`}
+                  />
+                ))}
+
               <span className="text-gray-500 text-sm ml-1">
-                ({courseData?.rating?.length || 0} reviews)
+                ({reviews?.length || 0} reviews)
               </span>
             </div>
           </div>
@@ -193,18 +206,17 @@ function Coursedetails() {
           <div className="w-full h-[330px] rounded-t-2xl overflow-hidden relative bg-gray-900">
             {playPreview ? (
               <>
-              
-              <div className="w-full h-full">
-              <VideoPlayer
-                videoUrl={
-                  courseData?.chapters[0].lectures[0].videoUrl as string
-                }
-                fullHeight={true}
-              />
-            </div>
-             <div className="absolute top-0 left-0 w-full h-56 bg-gradient-to-b from-black/70 to-transparent z-10" />
-             <div className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-black/70 to-transparent z-10" />
-             </>
+                <div className="w-full h-full">
+                  <VideoPlayer
+                    videoUrl={
+                      courseData?.chapters[0].lectures[0].videoUrl as string
+                    }
+                    fullHeight={true}
+                  />
+                </div>
+                <div className="absolute top-0 left-0 w-full h-56 bg-gradient-to-b from-black/70 to-transparent z-10" />
+                <div className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-black/70 to-transparent z-10" />
+              </>
             ) : (
               <img
                 src={courseData?.thumbnail}
@@ -264,7 +276,7 @@ function Coursedetails() {
       </div>
 
       {/* Chapters Section */}
-      <div className="flex flex-col w-[60%] h-[600px]">
+      <div className="flex  flex-col w-[60%] h-[600px]">
         <div className="flex m-2 justify-between p-4 w-full border-b-2">
           <div className="flex flex-col">
             <h1 className="text-2xl font-bold">Course Content</h1>
@@ -281,7 +293,7 @@ function Coursedetails() {
         </div>
 
         {/* Chapters List */}
-        <div className="max-w-4xl m-3 border border-gray-200 rounded-lg overflow-hidden mb-8">
+        <div className="max-w-4xl m-3 border shadow-md shadow-gray-500 border-gray-200 rounded-lg overflow-hidden mb-8">
           {/* Chapters & Lectures */}
           {courseData?.chapters.map((chapter) => (
             <div
@@ -333,6 +345,10 @@ function Coursedetails() {
               )}
             </div>
           ))}
+        </div>
+
+        <div className=" w-full  h-auto  p-2">
+          <ReviewCarousel reviews={reviews} />
         </div>
       </div>
     </div>

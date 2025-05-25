@@ -41,6 +41,18 @@ export interface ICourse{
     rating?:{userId:string,rating:number}[];
     enrolledStudents:string[]
 }
+export interface IReview {
+  _id: string;
+  user: {
+    _id: string;
+    name: string;
+  };
+  course: string; 
+  rating: number;
+  comment: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export interface Rating {
     userId: string;

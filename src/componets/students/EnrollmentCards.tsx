@@ -7,7 +7,6 @@ function EntrollmentCards({ course }: { course: ICourse }) {
   return (
     <div className="course-card bg-white rounded-xl shadow-md overflow-hidden w-full h-[320px] max-w-sm transition-all duration-300 hover:shadow-xl border cursor-pointer border-gray-300 hover:scale-[1.05]"
           onClick={()=>navigate(`/playCourse/${course?._id}`)}>
-          {/* Card content */}
           <div className="relative">
             <div className="absolute top-0 left-0 w-full h-full">
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10"></div>
@@ -19,8 +18,7 @@ function EntrollmentCards({ course }: { course: ICourse }) {
             />
     
           </div>
-    
-          {/* Content section */}
+
           <div className="p-4">
             <h3 className="font-bold text-gray-900 text-lg  line-clamp-1">
               {course.title}
@@ -28,11 +26,8 @@ function EntrollmentCards({ course }: { course: ICourse }) {
             <p className="text-sm text-gray-600  line-clamp-1">
               {course.description}
             </p>
-    
-            {/* Display Average Rating */}
-            <div className="flex justify-between items-center">
 
-              {/* Category */}
+            <div className="flex justify-between items-center">
               <span className="bg-gray-100 text-gray-700 text-xs font-semibold px-3 py-1 rounded-full">
                 {course.category}
               </span>

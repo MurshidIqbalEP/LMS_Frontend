@@ -1,16 +1,22 @@
 import { useRef } from "react";
 import certificateImg from "../../assets/certificate.png";
 
-export default function CertificateGenerator({ name,course,}: {name: string;course: string;}) {
-  const canvasRef = useRef(null); 
-  const words1 = `This is to certify that ${name} has successfully completed the `
-  const words2 = `${course} course,demonstrating exceptional understanding and skill.`
+export default function CertificateGenerator({
+  name,
+  course,
+}: {
+  name: string;
+  course: string;
+}) {
+  const canvasRef = useRef(null);
+  const words1 = `This is to certify that ${name} has successfully completed the `;
+  const words2 = `${course} course,demonstrating exceptional understanding and skill.`;
 
   const drawCertificate = (): Promise<void> => {
     return new Promise((resolve) => {
-      const canvas = canvasRef.current ;
+      const canvas = canvasRef.current;
       const ctx = canvas.getContext("2d");
-  
+
       const img = new Image();
       img.src = certificateImg;
       img.onload = () => {
@@ -29,16 +35,16 @@ export default function CertificateGenerator({ name,course,}: {name: string;cour
         ctx.textAlign = "center";
         ctx.fillText(words1, canvas.width / 2, 850);
         ctx.fillText(words2, canvas.width / 2, 900);
-  
-        resolve(); 
+
+        resolve();
       };
     });
   };
 
   // Trigger download
-  const handleDownload = async() => {
+  const handleDownload = async () => {
     const canvas = canvasRef.current;
-    await drawCertificate(); 
+    await drawCertificate();
     const link = document.createElement("a");
     link.download = "certificate.png";
     link.href = canvas.toDataURL("image/png");
@@ -50,7 +56,7 @@ export default function CertificateGenerator({ name,course,}: {name: string;cour
       <canvas ref={canvasRef} style={{ display: "none" }} />
       <button
         onClick={handleDownload}
-        className="bg-green-600 w-full text-white px-4 py-3 rounded-lg hover:bg-green-700 transition duration-200 cursor-pointer"
+        className="bg-[#d62828] w-full text-white px-4 py-3 rounded-lg hover:bg-[#d81520] transition duration-200 cursor-pointer"
       >
         Download Certificate
       </button>

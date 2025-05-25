@@ -7,12 +7,9 @@ export default function educatorlayouts() {
   return (
     <div>
      <Navbar />
-     
        <main>
          <Outlet /> 
        </main>
-
-      
     </div>
   )
 }

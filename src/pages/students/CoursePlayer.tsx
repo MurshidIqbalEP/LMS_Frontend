@@ -4,7 +4,7 @@ import {
   fetchCoursePlayerData,
   fetchCourseProgress,
   markLectureViewed,
-} from "../../api/studentsApi"; 
+} from "../../api/studentsApi";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import {
@@ -34,8 +34,8 @@ const CoursePlayer = () => {
   const [progressData, setProgressData] = useState<IProgressData>();
   const [selectedLecture, setSelectedLecture] = useState<ILecture | null>(null);
   const [openChapters, setOpenChapters] = useState<Record<string, boolean>>({});
-  const [progress, setProgress] = useState<number>(0); 
-  const [showModal,setShowModal] = useState(false);
+  const [progress, setProgress] = useState<number>(0);
+  const [showModal, setShowModal] = useState(false);
 
   const studentInfo = useSelector(
     (state: RootState) => state.auth.userInfo
@@ -169,16 +169,16 @@ const CoursePlayer = () => {
     navigate("/interview", { state: { pdfUrl: courseData?.resources } });
   };
 
-  const handleCloseModal = ()=>{
-    setShowModal(false)
-  }
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
 
   return (
     <>
       <div className="flex flex-col lg:flex-row h-screen px-12 py-3 gap-5">
         {/* Left Side: Video Player */}
         <div className="w-[922px] h-screen flex flex-col gap-1  rounded-lg">
-          <div className="h-[523px] w-full rounded-2xl border-[0.5px] shadow-2xl">
+          <div className="h-[523px] w-full rounded-2xl border-[0.5px] shadow-2xl bg-black">
             <VideoPlayer
               videoUrl={selectedLecture?.videoUrl as string}
               onEnded={handleLectureEnd}
@@ -215,7 +215,7 @@ const CoursePlayer = () => {
             {progressData?.isCompleted && (
               <div className="w-full mt-4 flex flex-col sm:flex-row gap-4">
                 <button
-                  className="bg-blue-600 flex-1 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition duration-200 cursor-pointer"
+                  className="bg-[#f77f00] flex-1 text-white px-4 py-3 rounded-lg hover:bg-[#f88f00] transition duration-200 cursor-pointer"
                   onClick={handleInterviewClick}
                 >
                   AI Interview
@@ -232,7 +232,6 @@ const CoursePlayer = () => {
 
         {/* Right Side: Chapters & Progress */}
         <div className="flex-1  shadow-2xl rounded-lg overflow-hidden flex flex-col">
-          {/* Header */}
           <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-5 flex justify-between items-center rounded-t-lg">
             <div>
               <h2 className="font-bold text-lg">{courseData?.title}</h2>
@@ -251,26 +250,20 @@ const CoursePlayer = () => {
             </div>
           </div>
 
-          {/* Chapters List */}
           <ul className="p-4 space-y-4 flex-1 overflow-y-auto">
             {courseData?.chapters.map((chapter, index) => (
               <li
                 key={chapter._id}
                 className="bg-gray-200 rounded-lg shadow-sm"
               >
-                {/* Chapter Header */}
                 <div
                   className="flex items-center justify-between p-4 rounded-lg cursor-pointer transition bg-white shadow-sm hover:shadow-md hover:bg-gray-50"
                   onClick={() => toggleChapter(chapter._id)}
                 >
-                  {/* Chapter Title */}
                   <h3 className="text-base font-medium text-gray-900 tracking-wide">
                     {chapter.title}
                   </h3>
-
-                  {/* Right Section: Status + Chevron */}
                   <div className="flex items-center gap-4">
-                    {/* Completion Status */}
                     <button
                       className={`px-3 py-1 text-xs font-medium rounded-full transition flex items-center gap-1 
                 ${
@@ -368,7 +361,10 @@ const CoursePlayer = () => {
 
           {/* Footer */}
           <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-5 flex justify-between items-center rounded-b-lg">
-            <div className="flex gap-1 justify-center items-center cursor-pointer" onClick={()=>setShowModal(true)}>
+            <div
+              className="flex gap-1 justify-center items-center cursor-pointer"
+              onClick={() => setShowModal(true)}
+            >
               <span className="text-sm ">Post a Review</span>{" "}
               <GiStarsStack size={20} />
             </div>
@@ -378,9 +374,10 @@ const CoursePlayer = () => {
 
       {showModal && (
         <div className="fixed inset-0 bg-transparent bg-opacity-50 flex justify-center items-center z-50">
-          
-            <Review  courseId={courseData?._id as string} onClose={handleCloseModal} />
-         
+          <Review
+            courseId={courseData?._id as string}
+            onClose={handleCloseModal}
+          />
         </div>
       )}
     </>

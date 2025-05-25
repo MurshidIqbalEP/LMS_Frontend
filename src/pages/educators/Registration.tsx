@@ -184,7 +184,6 @@ const Register = () => {
         <div className="w-[55%] rounded-r-2xl flex flex-col bg-white justify-center items-center">
           {loading ? (
             <div className="flex justify-center items-center">
-              {/* <span className="animate-spin border-4 border-gray-300 border-t-blue-500 rounded-full h-8 w-8"></span> */}
               <Lottie
                 animationData={animationData}
                 loop={true}

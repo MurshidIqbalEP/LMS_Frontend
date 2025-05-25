@@ -6,7 +6,6 @@ import Typewriter from "../ui/text-generate-effect";
 export default function Hero() {
   return (
     <div className="md:flex  mt-[10px] w-full h-[670px] gap-4">
-      {/* left side */}
       <div className="w-full md:w-[55%] flex flex-col md:justify-end">
         <div className="h-[60%]">
           <Typewriter text="Teach" speed={200} />
@@ -44,7 +43,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* right side */}
 
       <div className="container w-full md:w-[45%] ">
         <div className="card_Wrapper">

@@ -30,14 +30,16 @@ function Review({courseId,onClose}:{courseId:string,onClose:() => void}) {
 
   return (
     <div className="flex relative flex-col  bg-stone-100 w-[450px] p-6 rounded-lg shadow-xl justify-center items-center space-y-4">
-         <button
-    onClick={onClose}
-    className="absolute top-3 right-3 text-gray-500 hover:text-black text-xl font-bold"
-    aria-label="Close"
-  >
-   <MdClose  size={25} className="cursor-pointer"/>
-  </button>
-      <h1 className="text-2xl font-semibold text-gray-800">Review and Rating</h1>
+      <button
+        onClick={onClose}
+        className="absolute top-3 right-3 text-gray-500 hover:text-black text-xl font-bold"
+        aria-label="Close"
+      >
+        <MdClose size={25} className="cursor-pointer" />
+      </button>
+      <h1 className="text-2xl font-semibold text-gray-800">
+        Review and Rating
+      </h1>
 
       <div className="flex gap-2 justify-center">
         {new Array(5).fill(0).map((_, index) => (
@@ -59,9 +61,7 @@ function Review({courseId,onClose}:{courseId:string,onClose:() => void}) {
         value={reviewText}
         onChange={(e) => setReviewText(e.target.value)}
       />
-      {err&&(
-        <p className="text-sm text-red-500">{err}</p>
-      )}
+      {err && <p className="text-sm text-red-500">{err}</p>}
 
       <button
         onClick={handleSubmit}

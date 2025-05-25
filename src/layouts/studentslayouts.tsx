@@ -9,7 +9,6 @@ function studentslayouts() {
       <main>
         <Outlet />
       </main>
-      
       <Footer/>
     </div>
   );

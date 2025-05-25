@@ -265,7 +265,7 @@ function Editcourse() {
     }));
   };
 
-  const handlelectureVideoChange = async(
+  const handlelectureVideoChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
     chapterId: string,
     lectureId: string,
@@ -282,7 +282,6 @@ function Editcourse() {
     formData.append("file", file);
     formData.append("upload_preset", "unsigned_video");
 
-
     try {
       const res = await fetch(
         `https://api.cloudinary.com/v1_1/drsh8bkaf/video/upload`,
@@ -293,12 +292,11 @@ function Editcourse() {
       );
 
       console.log(res);
-      
-      const data  =await res.json()
+
+      const data = await res.json();
       const videoUrl = data.secure_url;
       console.log(videoUrl);
-      
-      
+
       // Update the lecture URL with the Cloudinary URL
       setChapters((prevChapters) =>
         prevChapters?.map((chapter) =>
@@ -306,7 +304,9 @@ function Editcourse() {
             ? {
                 ...chapter,
                 lectures: chapter.lectures.map((lecture) =>
-                  lecture.id === lectureId ? { ...lecture, [id]: videoUrl } : lecture
+                  lecture.id === lectureId
+                    ? { ...lecture, [id]: videoUrl }
+                    : lecture
                 ),
               }
             : chapter
@@ -317,7 +317,7 @@ function Editcourse() {
         [`lecture-${chapterIndex}-${lectureIndex}-${id}`]: "",
       }));
     } catch (error) {
-      toast.error("uploading Failed")
+      toast.error("uploading Failed");
     } finally {
       setUploadingVideos((prev) => {
         const updated = { ...prev };
@@ -444,7 +444,6 @@ function Editcourse() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      
       if (!validateForm()) return;
       setLoading(true);
       const formDataArray = [];

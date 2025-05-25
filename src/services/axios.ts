@@ -29,15 +29,13 @@ Api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Check for unauthorized errors (401)
     if (
       error.response &&
       error.response.status === 401 &&
       !originalRequest._retry
     ) {
-      originalRequest._retry = true; // Prevent infinite retry loop
+      originalRequest._retry = true; 
       try {
-        // Refresh the access token
         console.log("hai api call for reffresh ");
 
         const res = await Api.get("/students/refresh-token");
@@ -46,8 +44,6 @@ Api.interceptors.response.use(
         localStorage.setItem("accessToken", newAccessToken);
 
         originalRequest.headers.Authorization = `Bearer${newAccessToken}`;
-        
-        // Retry the original request with the new access token
         return Api(originalRequest);
       } catch (refreshError) {
         console.error("Failed to refresh token:", refreshError);
@@ -58,7 +54,6 @@ Api.interceptors.response.use(
       }
     }
 
-    
     return Promise.reject(error);
   }
 );

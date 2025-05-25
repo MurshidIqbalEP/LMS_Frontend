@@ -14,7 +14,6 @@ function Navbar() {
     }
     return (
       <div className=" mt-2 w-full h-[45px] border-t-2 border-b-2 border-gray-300 flex items-center justify-between px-4">
-        {/* Logo Section */}
         <div>
           <img
             src="/logo.png"
@@ -23,7 +22,6 @@ function Navbar() {
           />
         </div>
 
-        {/* Navigation Links */}
         <nav className="hidden md:flex space-x-12">
           <NavLink
             to="/"
@@ -52,7 +50,6 @@ function Navbar() {
           </NavLink>
         </nav>
 
-        {/* Actions Section */}
         <div className="flex space-x-4">
           {user ? (
             <>

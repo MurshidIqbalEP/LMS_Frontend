@@ -156,7 +156,7 @@ function AddCourse() {
     setBasicData({ ...basicData, category: value });
     setErrMsg((prev) => ({ ...prev, category: "" }));
   };
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   const handleVideoUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
     chapterId: string,
@@ -171,7 +171,7 @@ function AddCourse() {
     setUploadingVideos((prev) => ({ ...prev, [key]: true }));
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "unsigned_video"); // Create this in Cloudinary settings
+    formData.append("upload_preset", "unsigned_video"); 
 
     try {
       const res = await fetch(
@@ -185,7 +185,6 @@ function AddCourse() {
       const data = await res.json();
       const videoUrl = data.secure_url;
 
-      // Update the lecture URL with the Cloudinary URL
       setChapters((prev) =>
         prev.map((chapter) =>
           chapter.id === chapterId
@@ -280,7 +279,7 @@ function AddCourse() {
                 .filter((lecture) => lecture.id !== lectureId)
                 .map((lecture, index) => ({
                   ...lecture,
-                  id: (index + 1).toString(), // Reassigning IDs in order
+                  id: (index + 1).toString(),
                 })),
             }
           : chapter
@@ -788,7 +787,6 @@ function AddCourse() {
         </button>
       </div>
 
-      {/* Modal for fullscreen preview */}
       {isOpenModal &&
         previewResourceUrl &&
         selectedResourceFile &&

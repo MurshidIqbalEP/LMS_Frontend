@@ -1,4 +1,3 @@
-import { payment } from "../../api/studentsApi";
 
 const studentsRoutes = {
     register:'/students/register',

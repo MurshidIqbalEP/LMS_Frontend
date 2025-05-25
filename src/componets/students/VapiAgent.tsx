@@ -4,18 +4,19 @@ import Vapi from "@vapi-ai/web";
 import { toast } from "sonner";
 import Lottie from "lottie-react";
 import speakingWave from "../../assets/talking animation.json";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export const vapi = new Vapi(import.meta.env.VITE_VAPI_KEY);
 
 interface Props {
-  questions: string[]
+  questions: string[];
 }
 
 const VapiAgent: React.FC<Props> = ({ questions }) => {
-  
   const navigate = useNavigate();
-  const [interviewStatus, setInterviewStatus] = useState<"preparing" | "started" | "ended">("preparing");
+  const [interviewStatus, setInterviewStatus] = useState<
+    "preparing" | "started" | "ended"
+  >("preparing");
   const [aiText, setAiText] = useState("Say Hai");
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [aiSpeaking, setAispeeking] = useState(false);
@@ -29,7 +30,7 @@ const VapiAgent: React.FC<Props> = ({ questions }) => {
       ) {
         setAiText(message.transcript);
       }
-  
+
       if (
         message.type === "transcript" &&
         message.role === "user" &&
@@ -40,7 +41,7 @@ const VapiAgent: React.FC<Props> = ({ questions }) => {
         setIsSpeaking(false);
       }
     };
-  
+
     const handleSpeechStart = () => setAispeeking(true);
     const handleSpeechEnd = () => setAispeeking(false);
     const handleCallStart = () => {
@@ -51,7 +52,7 @@ const VapiAgent: React.FC<Props> = ({ questions }) => {
       setInterviewStatus("ended");
       console.log("Call has ended.");
     };
-  
+
     vapi.start({
       transcriber: {
         provider: "deepgram",
@@ -80,13 +81,13 @@ const VapiAgent: React.FC<Props> = ({ questions }) => {
       },
       name: "My Inline Assistant",
     });
-  
+
     vapi.on("message", handleMessage);
     vapi.on("speech-start", handleSpeechStart);
     vapi.on("speech-end", handleSpeechEnd);
     vapi.on("call-start", handleCallStart);
     vapi.on("call-end", handleCallEnd);
-  
+
     return () => {
       vapi.stop();
       vapi.off("message", handleMessage);
@@ -96,7 +97,6 @@ const VapiAgent: React.FC<Props> = ({ questions }) => {
       vapi.off("call-end", handleCallEnd);
     };
   }, [questions]);
-  
 
   const handleCallStart = () => {
     alert("saaaaaaaaaaaaaaa");
@@ -134,9 +134,9 @@ const VapiAgent: React.FC<Props> = ({ questions }) => {
     setIsSpeaking(false);
     setInterviewStatus("ended");
     setAiText("Call ended. Thank you!");
-    setTimeout(()=>{
-      navigate('myEnrollments');
-    },3000)
+    setTimeout(() => {
+      navigate("myEnrollments");
+    }, 3000);
   };
 
   return (
@@ -191,20 +191,17 @@ const VapiAgent: React.FC<Props> = ({ questions }) => {
             </div>
           </div>
 
-          {/* AI Text Display */}
           <div className="bg-white px-6 py-4 rounded-xl shadow border max-w-xl text-center text-gray-700 text-lg mb-4">
             {aiText}
           </div>
 
-          {/* End Call Button */}
-
           {interviewStatus === "started" && (
-           <button
-           onClick={handleEndCall}
-           className="bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-red-700 transition"
-         >
-           End Call
-         </button>
+            <button
+              onClick={handleEndCall}
+              className="bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-red-700 transition"
+            >
+              End Call
+            </button>
           )}
         </div>
       )}

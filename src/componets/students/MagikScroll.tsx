@@ -38,37 +38,30 @@ function StickyCard() {
 
   useGSAP(
     () => {
+      gsap.from(".intro h1", {
+        scrollTrigger: {
+          trigger: ".intro",
+          start: "top 50%",
+          toggleActions: "play none play reverse",
+        },
+        x: -100,
+        opacity: 0,
+        duration: 1.5,
+        ease: "power2.out",
+      });
 
-      gsap.fromTo(
-        ".intro h1",
-        {
-          x: -100,
-          opacity: 0,
+      gsap.from(".intro span", {
+        scrollTrigger: {
+          trigger: ".intro",
+          start: "top 70%",
+          toggleActions: "play none play reverse",
         },
-        {
-          x: 0,
-          opacity: 1,
-          duration: 1.5,
-          ease: "power2.out",
-          stagger: 0.1,
-        }
-      );
-  
-      // Animation for the span emphasis
-      gsap.fromTo(
-        ".intro span",
-        {
-          scale: 0.8,
-          color: "#ffffff",
-        },
-        {
-          scale: 1.2,
-          color: "#f8ad40",
-          duration: 1,
-          delay: 1.2,
-          ease: "elastic.out(1, 0.5)",
-        }
-      );
+        scale: 0.8,
+        color: "#ffffff",
+        duration: 1.2,
+        ease: "elastic.out(1, 0.4)",
+        delay: 0.5,
+      });
 
       const cards = gsap.utils.toArray(".card");
 
@@ -119,9 +112,11 @@ function StickyCard() {
   return (
     <ReactLenis root>
       <div className="con" ref={container}>
-
         <section className="intro">
-        <h1 className="text-white font-medium uppercase text-6xl  md:text-9xl   -tracking-normal md:leading-28">Learn Today, Lead Tomorrow, <span className="text-[#f8ad40]">Succeed</span> Forever.</h1>
+          <h1 className="text-white font-medium uppercase text-6xl  md:text-9xl   -tracking-normal md:leading-28">
+            Learn Today, Lead Tomorrow,{" "}
+            <span className="text-[#f8ad40]">Succeed</span> Forever.
+          </h1>
         </section>
 
         <section className="cards">
@@ -130,9 +125,7 @@ function StickyCard() {
           ))}
         </section>
 
-        <section className="outro">
-          
-        </section>
+        <section className="outro"></section>
       </div>
     </ReactLenis>
   );

@@ -23,7 +23,9 @@ interface Course {
 }
 
 function Mycourses() {
-  const educatorInfo = useSelector((state: RootState) => state.educator.educatorInfo) as Educator | null;
+  const educatorInfo = useSelector(
+    (state: RootState) => state.educator.educatorInfo
+  ) as Educator | null;
   const [courses, setCourses] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -42,18 +44,16 @@ function Mycourses() {
       }
     };
     fetchCourses();
-  }, [educatorInfo?._id]); // Add educatorInfo._id as dependency
+  }, [educatorInfo?._id]); 
 
   useGSAP(() => {
     if (!isLoading && courses.length > 0) {
-      // Reset all cards to initial state
-      gsap.set(".course-card", { 
+      gsap.set(".course-card", {
         opacity: 0,
         y: 15,
-        scale: 0.95
+        scale: 0.95,
       });
-      
-      // Simple, smooth staggered animation
+
       gsap.to(".course-card", {
         opacity: 1,
         y: 0,
@@ -61,17 +61,23 @@ function Mycourses() {
         duration: 0.4,
         stagger: 0.08,
         ease: "power1.out",
-        clearProps: "all" // Ensures clean state after animation
+        clearProps: "all", 
       });
     }
   }, [courses, isLoading]);
   return (
     <div ref={containerRef} className="w-full min-h-screen bg-[#F2F0EF] p-4">
-      <h1 className="text-2xl ml-[10px] font-bold text-black mb-4">My Courses</h1>
+      <h1 className="text-2xl ml-[10px] font-bold text-black mb-4">
+        My Courses
+      </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 min-h-screen">
         {courses.map((course) => (
-          <CourseCard key={course._id} course={course} setCourses={setCourses}/>
+          <CourseCard
+            key={course._id}
+            course={course}
+            setCourses={setCourses}
+          />
         ))}
       </div>
     </div>

@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState } from "react";
 
-import { Modal, Popover } from "antd";
+import {  Popover } from "antd";
 import {
   FaEdit,
-  FaExclamationTriangle,
   FaTrashAlt,
   FaUsers,
 } from "react-icons/fa";
@@ -41,7 +39,6 @@ const CourseCard = ({ course,setCourses,}: {course: Course;setCourses: React.Dis
       <div
         className="course-card bg-white rounded-xl shadow-md overflow-hidden w-full h-[320px] max-w-sm transition-all duration-300 hover:shadow-xl border border-gray-300 hover:scale-[1.05]"
       >
-        {/* Card content */}
         <div className="relative">
           <div className="absolute top-0 left-0 w-full h-full">
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10"></div>
@@ -51,8 +48,6 @@ const CourseCard = ({ course,setCourses,}: {course: Course;setCourses: React.Dis
             alt={course.title}
             className="w-full h-48 object-cover"
           />
-  
-          {/* Status badge */}
           <span
             className={`absolute top-3 right-3 z-20 text-xs font-medium px-3 py-1 rounded-full ${
               course.isPublished
@@ -62,8 +57,7 @@ const CourseCard = ({ course,setCourses,}: {course: Course;setCourses: React.Dis
           >
             {course.isPublished ? "Published" : "Draft"}
           </span>
-  
-          {/* Course metrics */}
+
           <div className="absolute bottom-3 left-3 right-3 flex justify-between z-20">
             <div className="flex items-center space-x-3">
               <div className="flex items-center bg-black/40 backdrop-blur-sm text-white px-2 py-1 rounded-full">
@@ -74,7 +68,6 @@ const CourseCard = ({ course,setCourses,}: {course: Course;setCourses: React.Dis
           </div>
         </div>
   
-        {/* Content section */}
         <div className="p-4">
           <h3 className="font-bold text-gray-900 text-lg mb-1 line-clamp-1">
             {course.title}
@@ -83,7 +76,6 @@ const CourseCard = ({ course,setCourses,}: {course: Course;setCourses: React.Dis
             {course.description}
           </p>
   
-          {/* Actions */}
           <div className="flex justify-between items-center">
             <Popover
               content={

@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { fetchAllCategory, fetchAllCourse } from "../../api/studentsApi";
 import CourseCard from "../../componets/students/Coursecard";
 import { Pagination } from "antd";
@@ -16,7 +16,7 @@ interface Rating {
   rating: number;
 }
 interface Course {
-  _id:string;
+  _id: string;
   title: string;
   description: string;
   category: string;
@@ -48,13 +48,13 @@ const AllCourses = () => {
 
         // Fetch categories
         const categoriesResponse = await fetchAllCategory();
-
+        console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",coursesResponse?.data);
+        
         setCourses(coursesResponse?.data);
         setCategories(categoriesResponse?.data);
         setError(null);
       } catch (err) {
-       console.log(err);
-       
+        console.log(err);
       } finally {
         setLoading(false);
       }
@@ -68,7 +68,7 @@ const AllCourses = () => {
     setCurrentPage(1);
   }, [search, selectedCategories, sortBy]);
 
-  const toggleCategory = (category:string) => {
+  const toggleCategory = (category: string) => {
     if (selectedCategories.includes(category)) {
       setSelectedCategories(selectedCategories.filter((c) => c !== category));
     } else {
@@ -78,8 +78,12 @@ const AllCourses = () => {
 
   // Filter courses based on search and selected categories
   const filteredCourses = courses.filter((course) => {
-    const matchesSearch = course.title.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory =selectedCategories.length === 0 || selectedCategories.includes(course.category);
+    const matchesSearch = course.title
+      .toLowerCase()
+      .includes(search.toLowerCase());
+    const matchesCategory =
+      selectedCategories.length === 0 ||
+      selectedCategories.includes(course.category);
     return matchesSearch && matchesCategory;
   });
 

@@ -27,7 +27,6 @@ function Otp() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-    //   console.log('Submitting OTP:', otp);
     
     if(otp.length  === 6){
         let res = await verifyOtp(otp,email)

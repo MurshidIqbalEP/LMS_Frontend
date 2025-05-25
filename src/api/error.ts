@@ -45,7 +45,6 @@ const errorHandle = (error: Error | AxiosError) => {
           hasShownToast = true;
           break;
         default:
-          // Handle unexpected errors
           toast.error(
             errorResponse.message ||
               "An unexpected error occurred. Please try again."
@@ -53,26 +52,21 @@ const errorHandle = (error: Error | AxiosError) => {
           hasShownToast = true;
       }
 
-      // Additional handling based on errorResponse properties
       if (errorResponse.accountType) {
-        // You can implement specific logic based on accountType if needed
         console.log("Account Type:", errorResponse.accountType);
       }
 
       if (errorResponse.status === false && !hasShownToast) {
-        // Only show toast if one hasn't been shown yet
         toast.error(
           errorResponse.message || "An error occurred. Please try again."
         );
         hasShownToast = true;
       }
     } else {
-      // No response from the server
       toast.error("No response from the server. Please check your connection.");
       console.log("Axios Error:", axiosError.message);
     }
   } else {
-    // Non-Axios error
     toast.error("An unexpected error occurred. Please try again.");
     console.log("Error:", error.message);
   }

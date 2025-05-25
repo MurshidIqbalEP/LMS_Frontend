@@ -103,7 +103,7 @@ export const payment = async(amount:number,courseId:string)=>{
 
 // For Razorpay Payment Verification
 export const paymentVerification = async (
-  response: any, // Contains Razorpay response
+  response: any, 
   courseId: string,
   educatorId: string,
   studentId:string
