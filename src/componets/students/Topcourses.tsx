@@ -1,20 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import TopcoursesCard from "./TopcoursesCard";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
 import Lenis from "@studio-freight/lenis";
-import { fetchTopCourses } from "../../api/studentsApi";
+
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface Course {
-  _id: string;
-  title: string;
-  thumbnail: string;
-}
 
 const Topcourses = () => {
-  let data = [
+  const data = [
     { name: "Node", image: "https://res.cloudinary.com/drsh8bkaf/image/upload/v1743753749/o31elnauxplbwqbyo2dy.webp" },
     { name: "PostgreSQL", image: "https://res.cloudinary.com/drsh8bkaf/image/upload/v1741972816/nmqqk9tiziv0vti1ikvc.jpg" },
     { name: "React", image: "https://res.cloudinary.com/drsh8bkaf/image/upload/v1744382775/xax2p1m3ws2eyhffsbun.webp" },

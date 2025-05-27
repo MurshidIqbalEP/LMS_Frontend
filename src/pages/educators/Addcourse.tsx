@@ -57,6 +57,12 @@ interface ErrMsg {
   [key: string]: string | undefined;
 }
 
+interface EducatorInfo {
+  _id: string;
+  name: string;
+  email?: string;
+}
+type EducatorInfoState = EducatorInfo | null;
 function AddCourse() {
   useEffect(() => {
     const fetchAllCategory = async () => {
@@ -67,9 +73,7 @@ function AddCourse() {
   }, []);
 
   const navigate = useNavigate();
-  const educatorInfo = useSelector(
-    (state: RootState) => state.educator.educatorInfo
-  );
+  const educatorInfo = useSelector<RootState, EducatorInfoState>((state) => state.educator.educatorInfo);
   const [basicData, setBasicData] = useState<BasicData>({
     title: "",
     description: "",
@@ -409,7 +413,7 @@ function AddCourse() {
         thumbnailUrl,
         resourceUrl,
         chapters,
-        educatorId: educatorInfo._id,
+        educatorId: educatorInfo?._id,
       };
 
       const res = await postCourse(payload);

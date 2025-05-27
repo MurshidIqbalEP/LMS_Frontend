@@ -96,3 +96,15 @@ export interface Rating {
     __v: number;
   }
   
+  export interface PaymentResponse {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+}
+
+interface EducatorInfo {
+  _id: string;
+  name: string;
+  email?: string;
+}
+export type EducatorInfoState = EducatorInfo | null;

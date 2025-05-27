@@ -6,7 +6,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 const GOOGLE_USERINFO_URL = import.meta.env.VITE_GOOGLE_USERINFO_URL;
 import { useDispatch } from "react-redux";
-import { setCredentials } from "../../redux/slices/authslice";
+import { setCredentials } from "../../redux/slices/authSlice";
 import { login, googleLogin } from "../../api/studentsApi";
 import { toast } from "sonner";
 
@@ -36,7 +36,7 @@ const LoginPage: React.FC = () => {
   };
 
   const validate = (): boolean => {
-    let newErrors: FormErrors = {};
+    const newErrors: FormErrors = {};
 
     if (!formData.email) {
       newErrors.email = "Email is required";
@@ -59,7 +59,7 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validate()) {
-      let res = await login(formData.email, formData.password);
+      const res = await login(formData.email, formData.password);
       if (res?.data) {
         dispatch(setCredentials(res?.data));
         localStorage.setItem("token", res.data.token);
@@ -75,7 +75,7 @@ const LoginPage: React.FC = () => {
         const userInfo = await axios.get(
           `${GOOGLE_USERINFO_URL}?access_token=${tokenResponse.access_token}`
         );
-        let res = await googleLogin(userInfo.data.email);
+        const res = await googleLogin(userInfo.data.email);
         if (res?.data) {
           dispatch(setCredentials(res?.data));
           toast.success(res.data.message);

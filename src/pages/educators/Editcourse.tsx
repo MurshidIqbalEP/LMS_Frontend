@@ -26,13 +26,10 @@ import animationData from "../../assets/loading.json";
 import {
   FormControl,
   FormHelperText,
-  InputLabel,
-  MenuItem,
   NativeSelect,
-  Select,
-  SelectChangeEvent,
 } from "@mui/material";
 import ReactPlayer from "react-player";
+import { EducatorInfoState } from "../../services/types";
 
 interface BasicData {
   id?: string;
@@ -50,13 +47,13 @@ interface Lecture {
 }
 
 interface CoursePayload {
-  id?: string; // ✅ Make it optional
-  title: string;
+  id?: string; 
+  title?: string;
   description?: string;
   category?: string;
   price?: number;
   chapters?: Chapter[];
-  educatorId: any;
+  educatorId?: string;
   thumbnailUrl?: string;
   resourceUrl?: string;
 }
@@ -92,13 +89,11 @@ interface ErrMsg {
 
 function Editcourse() {
   const { courseId } = useParams();
-  const educatorInfo = useSelector(
-    (state: RootState) => state.educator.educatorInfo
-  );
+  const educatorInfo = useSelector<RootState, EducatorInfoState>((state) => state.educator.educatorInfo);
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [basicData, setBasicData] = useState<BasicData>();
-  const [chapters, setChapters] = useState<Chapter[]>();
+  const [chapters, setChapters] = useState<Chapter[]>([]);
   const [img, setImg] = useState();
   const [loading, setLoading] = useState(false);
   const [resourse, setResourse] = useState();
@@ -122,7 +117,7 @@ function Editcourse() {
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
-        let res = await fetchCourseByCourseId(courseId as string);
+        const res = await fetchCourseByCourseId(courseId as string);
         const course = res?.data.course;
         console.log(course);
 
@@ -196,7 +191,7 @@ function Editcourse() {
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.preventDefault();
-    if (chapters.length > 1) {
+    if (chapters!.length > 1) {
       const filteredChapters = chapters?.filter(
         (chapter) => chapter.id !== chapterId
       );
@@ -317,6 +312,7 @@ function Editcourse() {
         [`lecture-${chapterIndex}-${lectureIndex}-${id}`]: "",
       }));
     } catch (error) {
+      console.log(error);
       toast.error("uploading Failed");
     } finally {
       setUploadingVideos((prev) => {
@@ -354,8 +350,7 @@ function Editcourse() {
 
   const addChapter = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    const lastChapterId =
-      chapters.length > 0 ? parseInt(chapters[chapters.length - 1].id) : 0;
+    const lastChapterId = chapters!.length > 0 ? parseInt(chapters[chapters!.length - 1].id) : 0;
     const newChapter = {
       id: (lastChapterId + 1).toString(),
       name: "",
@@ -478,7 +473,7 @@ function Editcourse() {
       const payload: CoursePayload = {
         ...basicData,
         chapters,
-        educatorId: educatorInfo._id,
+        educatorId: educatorInfo?._id,
       };
 
       if (updatedThumbnailUrl) payload.thumbnailUrl = updatedThumbnailUrl;

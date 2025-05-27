@@ -1,4 +1,5 @@
-// @ts-ignore
+
+
 import ReactStars from "react-rating-stars-component";
 import { useNavigate } from "react-router-dom";
 

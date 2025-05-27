@@ -29,7 +29,7 @@ interface CoursePayload {
 // For registration of Educator
 export const register = async(name:string,email: string, password: string,subjectExpertise:string,qualification:string,profilePicture:string,governmentId:string)=>{
     try {
-        let response = await Api.post(educatorRoutes.register, { name,email, password ,subjectExpertise,qualification,profilePicture,governmentId});
+        const response = await Api.post(educatorRoutes.register, { name,email, password ,subjectExpertise,qualification,profilePicture,governmentId});
         return response;
       } catch (error) {
         const err: Error = error as Error;
@@ -40,7 +40,7 @@ export const register = async(name:string,email: string, password: string,subjec
 // verify otp
 export const otpVerify = async(otp:string,email: string)=>{
   try {
-      let response = await Api.post(educatorRoutes.verifyOtp, {otp,email});
+      const response = await Api.post(educatorRoutes.verifyOtp, {otp,email});
       return response;
     } catch (error) {
       const err: Error = error as Error;
@@ -51,7 +51,7 @@ export const otpVerify = async(otp:string,email: string)=>{
 // For login of Educator
 export const login = async(email: string, password: string,)=>{
     try {
-        let response = await Api.post(educatorRoutes.login, {email,password});
+        const response = await Api.post(educatorRoutes.login, {email,password});
         return response;
       } catch (error) {
         const err: Error = error as Error;
@@ -62,7 +62,7 @@ export const login = async(email: string, password: string,)=>{
 // For fetch all Category
 export const fetchCategory = async ()=>{
   try {
-    let response = await Api.get(educatorRoutes.fetchCategory);
+    const response = await Api.get(educatorRoutes.fetchCategory);
     return response;
   } catch (error) {
     const err: Error = error as Error;
@@ -73,7 +73,7 @@ export const fetchCategory = async ()=>{
 // For Course poste
 export const postCourse = async(payload: CoursePayload)=>{
   try {
-      let response = await Api.post(educatorRoutes.postCourse,payload );
+      const response = await Api.post(educatorRoutes.postCourse,payload );
       return response;
     } catch (error) {
       const err: Error = error as Error;
@@ -84,7 +84,7 @@ export const postCourse = async(payload: CoursePayload)=>{
 // For fetching courses by educatorId
 export const fetchCoursesById = async(educatorId:string)=>{
   try {
-      let response = await Api.get(`${educatorRoutes.fetchCourses}?educatorId=${educatorId}`);
+      const response = await Api.get(`${educatorRoutes.fetchCourses}?educatorId=${educatorId}`);
       return response;
     } catch (error) {
       const err: Error = error as Error;
@@ -95,7 +95,7 @@ export const fetchCoursesById = async(educatorId:string)=>{
 // For Delete Course by educator ID
 export const deleteCourse = async(courseId:string)=>{
   try {
-      let response = await Api.delete(`${educatorRoutes.deleteCourse}?courseId=${courseId}`);
+      const response = await Api.delete(`${educatorRoutes.deleteCourse}?courseId=${courseId}`);
       return response;
     } catch (error) {
       const err: Error = error as Error;
@@ -106,7 +106,7 @@ export const deleteCourse = async(courseId:string)=>{
 // For fetching Course Data
 export const fetchCourseByCourseId = async (courseId:string)=>{
   try {
-    let response = await Api.get(`${educatorRoutes.fetchCourseById}/${courseId}`);
+    const response = await Api.get(`${educatorRoutes.fetchCourseById}/${courseId}`);
     return response;
   } catch (error) {
     const err: Error = error as Error;
@@ -117,7 +117,7 @@ export const fetchCourseByCourseId = async (courseId:string)=>{
 // For updating course 
 export const updateCourse = async (payload: unknown)=>{
   try {
-    let response = await Api.patch(educatorRoutes.updateCourse,payload);
+    const response = await Api.patch(educatorRoutes.updateCourse,payload);
     return response;
   } catch (error) {
     const err: Error = error as Error;

@@ -22,7 +22,7 @@ interface Course {
   category: string;
   price: number;
   thumbnail: string;
-  rating: Rating[];
+  reviews: Rating[];
 }
 
 const AllCourses = () => {
@@ -48,7 +48,7 @@ const AllCourses = () => {
 
         // Fetch categories
         const categoriesResponse = await fetchAllCategory();
-        console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",coursesResponse?.data);
+        console.log(coursesResponse?.data);
         
         setCourses(coursesResponse?.data);
         setCategories(categoriesResponse?.data);
@@ -98,16 +98,17 @@ const AllCourses = () => {
         return a.price - b.price;
       case "priceDesc":
         return b.price - a.price;
-      case "ratingDesc":
+      case "ratingDesc": {
         const aAvgRating =
-          a.rating.length > 0
-            ? a.rating.reduce((sum, r) => sum + r.rating, 0) / a.rating.length
+          a.reviews.length > 0
+            ? a.reviews.reduce((sum, r) => sum + r.rating, 0) / a.reviews.length
             : 0;
         const bAvgRating =
-          b.rating.length > 0
-            ? b.rating.reduce((sum, r) => sum + r.rating, 0) / b.rating.length
+          b.reviews.length > 0
+            ? b.reviews.reduce((sum, r) => sum + r.rating, 0) / b.reviews.length
             : 0;
         return bAvgRating - aAvgRating;
+      }
       default:
         return 0;
     }

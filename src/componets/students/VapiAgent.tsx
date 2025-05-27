@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { startAssistant } from "../../services/voiceAgent";
 import Vapi from "@vapi-ai/web";
 import { toast } from "sonner";
 import Lottie from "lottie-react";
@@ -54,33 +53,39 @@ const VapiAgent: React.FC<Props> = ({ questions }) => {
     };
 
     vapi.start({
-      transcriber: {
-        provider: "deepgram",
-        model: "nova-2",
-        language: "en-US",
+  transcriber: {
+    provider: "deepgram",
+    model: "nova-2",
+    language: "en-US",
+  },
+  model: {
+    provider: "openai",
+    model: "gpt-3.5-turbo",
+    messages: [
+      {
+        role: "system",
+        content: `
+          You are an AI voice assistant responsible for conducting spoken job interviews.
+          Start the conversation with a warm, friendly introduction to make the candidate feel comfortable. For example:
+          "Hey there! Welcome to your interview. Let’s get started with a few questions!"
+          You will be given a list of interview questions. Ask one question at a time and wait for the candidate to finish their response before moving to the next.
+          After all questions are answered, summarize the candidate’s strengths and weaknesses based on their responses and give friendly, helpful feedback like a real interviewer would.
+          Here are the questions you will ask: ${questions}
+        `,
       },
-      model: {
-        provider: "openai",
-        model: "gpt-3.5-turbo",
-        messages: [
-          {
-            role: "system",
-            content: `
-              You are an AI voice assistant responsible for conducting spoken job interviews.
-              Start the conversation with a warm, friendly introduction to make the candidate feel comfortable. For example:
-              "Hey there! Welcome to your interview. Let’s get started with a few questions!"
-              You will be given a list of interview questions. Ask one question at a time and wait for the candidate to finish their response before moving to the next.
-              After all questions are answered, summarize the candidate’s strengths and weaknesses based on their responses and give friendly, helpful feedback like a real interviewer would.
-              Here are the questions you will ask:${questions}`,
-          },
-        ],
-      },
-      voice: {
-        provider: "playht",
-        voiceId: "jennifer",
-      },
-      name: "My Inline Assistant",
-    });
+    ],
+  },
+  voice: {
+    provider: "playht",
+    voiceId: "jennifer",
+  },
+  name: "My Inline Assistant",
+
+  // ✅ Add these missing properties
+  clientMessages: [],
+  serverMessages: [],
+});
+
 
     vapi.on("message", handleMessage);
     vapi.on("speech-start", handleSpeechStart);
@@ -90,44 +95,15 @@ const VapiAgent: React.FC<Props> = ({ questions }) => {
 
     return () => {
       vapi.stop();
-      vapi.off("message", handleMessage);
-      vapi.off("speech-start", handleSpeechStart);
-      vapi.off("speech-end", handleSpeechEnd);
-      vapi.off("call-start", handleCallStart);
-      vapi.off("call-end", handleCallEnd);
+      (vapi as any).off("message", handleMessage);
+      (vapi as any).off("speech-start", handleSpeechStart);
+      (vapi as any).off("speech-end", handleSpeechEnd);
+      (vapi as any).off("call-start", handleCallStart);
+      (vapi as any).off("call-end", handleCallEnd);
     };
   }, [questions]);
 
-  const handleCallStart = () => {
-    alert("saaaaaaaaaaaaaaa");
-    vapi.start({
-      transcriber: {
-        provider: "deepgram",
-        model: "nova-2",
-        language: "en-US",
-      },
-      model: {
-        provider: "openai",
-        model: "gpt-3.5-turbo",
-        messages: [
-          {
-            role: "system",
-            content: `
-                  You are an AI voice assistant responsible for conducting spoken job interviews.
-                  Start the conversation with a warm, friendly introduction to make the candidate feel comfortable. For example:
-                  "Hey there! Welcome to your interview. Let’s get started with a few questions!"
-                   You will be given a list of interview questions. Ask one question at a time and wait for the candidate to finish their response before moving to the next.
-                   Here are the questions you will ask:${questions}`,
-          },
-        ],
-      },
-      voice: {
-        provider: "playht",
-        voiceId: "jennifer",
-      },
-      name: "My Inline Assistant",
-    });
-  };
+  
 
   const handleEndCall = () => {
     vapi.stop();

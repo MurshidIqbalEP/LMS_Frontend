@@ -40,7 +40,7 @@ const Register = () => {
   };
 
   const validate = (): boolean => {
-    let newErrors: FormErrors = {};
+    const newErrors: FormErrors = {};
     if (!formData.name) newErrors.name = "Name is required";
     if (!formData.email) {
       newErrors.email = "Email is required";
@@ -58,7 +58,7 @@ const Register = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validate()) {
-      let res = await register(
+      const res = await register(
         formData.name,
         formData.email,
         formData.password
@@ -77,7 +77,7 @@ const Register = () => {
           `${GOOGLE_USERINFO_URL}?access_token=${tokenResponse.access_token}`
         );
 
-        let res = await googleRegistratiion(
+        const res = await googleRegistratiion(
           userInfo.data.name,
           userInfo.data.email
         );

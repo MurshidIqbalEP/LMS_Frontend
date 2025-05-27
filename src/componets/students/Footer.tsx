@@ -1,6 +1,4 @@
-import  { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
 import { FaArrowUp, FaInstagram, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import { IoMailOpenOutline } from 'react-icons/io5';
 

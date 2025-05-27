@@ -32,7 +32,7 @@ const LoginPage: React.FC = () => {
   };
 
   const validate = (): boolean => {
-    let newErrors: FormErrors = {};
+    const newErrors: FormErrors = {};
 
     if (!formData.email) {
       newErrors.email = "Email is required";
@@ -55,7 +55,7 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validate()) {
-      let res = await login(formData.email, formData.password);
+      const res = await login(formData.email, formData.password);
       if (res?.data) {
         dispatch(setCredentials(res?.data));
         localStorage.setItem("token", res.data.token);

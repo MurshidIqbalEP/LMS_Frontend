@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   fetchCourse,
@@ -6,14 +6,12 @@ import {
   paymentVerification,
 } from "../../api/studentsApi";
 import {
-  IChapter,
   ICourse,
   IUserInfo,
-  Rating,
   IReview,
 } from "../../services/types";
-// @ts-ignore
-import ReactStars from "react-rating-stars-component";
+
+
 import { FaChevronDown, FaChevronUp, FaStar } from "react-icons/fa";
 import VideoPlayer from "../../componets/students/VideoPlayer";
 import { PiBookOpenText } from "react-icons/pi";
@@ -25,13 +23,13 @@ import ReviewCarousel from "../../componets/students/ReviewCarousel";
 
 function Coursedetails() {
   const { courseId } = useParams();
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [courseData, setCourseData] = useState<ICourse>();
   const [reviews, setReviews] = useState<IReview[]>([]);
   const [isEnrolled, setIsEntrolled] = useState(false);
   const [playPreview, setPlayPreview] = useState(false);
   const [avgRating, setAvgRating] = useState<number>(0);
-  const [totalLectures, setTotalLectures] = useState<number | null>(null);
+  // const [totalLectures, setTotalLectures] = useState<number | null>(null);
   const navigate = useNavigate();
   const [expandedChapters, setExpandedChapters] = useState<{
     [key: string]: boolean;
@@ -49,9 +47,9 @@ function Coursedetails() {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
+      // setLoading(true);
       try {
-        let res = await fetchCourse(
+        const res = await fetchCourse(
           courseId as string,
           studentInfo?._id as string
         );
@@ -60,7 +58,7 @@ function Coursedetails() {
         setReviews(res?.data.reviews);
         console.log(res?.data.reviews);
 
-        let avgRating = 0;
+      
         if (res?.data.reviews.length) {
           const sum = res.data.reviews.reduce(
             (acc: number, review: { rating: number }) => acc + review.rating,
@@ -72,17 +70,17 @@ function Coursedetails() {
 
           setAvgRating(Number(avgRating));
         }
-        const totalLectures = res?.data.courseData.chapters.reduce(
-          (acc: number, chapter: IChapter) =>
-            acc + (chapter.lectures?.length || 0),
-          0
-        );
+        // const totalLectures = res?.data.courseData.chapters.reduce(
+        //   (acc: number, chapter: IChapter) =>
+        //     acc + (chapter.lectures?.length || 0),
+        //   0
+        // );
 
-        setTotalLectures(totalLectures);
+        // setTotalLectures(totalLectures);
       } catch (err) {
         console.log(err);
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     };
 

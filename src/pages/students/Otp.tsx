@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { Button, Flex, Input, Typography, message } from 'antd';
 import type { GetProps } from 'antd';
 import { verifyOtp } from '../../api/studentsApi';
@@ -29,7 +29,7 @@ function Otp() {
     try {
     
     if(otp.length  === 6){
-        let res = await verifyOtp(otp,email)
+        const res = await verifyOtp(otp,email)
         if(res?.data.success){
             toast.message(res?.data.message)
             navigate("/login");
@@ -40,6 +40,7 @@ function Otp() {
       
     
     } catch (err) {
+      console.log(err);
       message.error('Invalid OTP');
     } finally {
       setLoading(false);

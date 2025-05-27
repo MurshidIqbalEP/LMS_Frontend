@@ -6,6 +6,7 @@ import { postReview } from "../../api/studentsApi";
 import { toast } from "sonner";
 import { MdClose } from "react-icons/md";
 
+
 function Review({courseId,onClose}:{courseId:string,onClose:() => void}) {
   const user = useSelector((state: RootState) => state.auth.userInfo); 
   
@@ -18,7 +19,8 @@ function Review({courseId,onClose}:{courseId:string,onClose:() => void}) {
         setErr("Please write a review before submitting.")
         return;
       }
-    let res = await postReview((user as any)?._id ,courseId,rating,reviewText)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- user type unknown from external source
+    const res = await postReview((user as any)?._id ,courseId,rating,reviewText)
     if (res?.data.success){
         toast.message(res.data.message);
         setTimeout(()=>{

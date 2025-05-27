@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+
 import Slider from 'react-slick';
 import ReviewCard from './ReviewCard';
 import { IReview } from '../../services/types';

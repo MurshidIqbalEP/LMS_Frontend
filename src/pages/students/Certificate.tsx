@@ -8,13 +8,13 @@ export default function CertificateGenerator({
   name: string;
   course: string;
 }) {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const words1 = `This is to certify that ${name} has successfully completed the `;
   const words2 = `${course} course,demonstrating exceptional understanding and skill.`;
 
   const drawCertificate = (): Promise<void> => {
     return new Promise((resolve) => {
-      const canvas = canvasRef.current;
+      const canvas = canvasRef.current!;
       const ctx = canvas.getContext("2d");
 
       const img = new Image();
@@ -22,8 +22,10 @@ export default function CertificateGenerator({
       img.onload = () => {
         canvas.width = img.width;
         canvas.height = img.height;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0);
+
+        if(ctx){
+            ctx?.clearRect(0, 0, canvas.width, canvas.height);
+        ctx?.drawImage(img, 0, 0);
 
         ctx.font = "italic 120px Times New Roman";
         ctx.fillStyle = "#000";
@@ -35,7 +37,7 @@ export default function CertificateGenerator({
         ctx.textAlign = "center";
         ctx.fillText(words1, canvas.width / 2, 850);
         ctx.fillText(words2, canvas.width / 2, 900);
-
+        }
         resolve();
       };
     });
@@ -47,7 +49,7 @@ export default function CertificateGenerator({
     await drawCertificate();
     const link = document.createElement("a");
     link.download = "certificate.png";
-    link.href = canvas.toDataURL("image/png");
+    link.href = canvas!.toDataURL("image/png");
     link.click();
   };
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import VapiAgent from "../../componets/students/VapiAgent";
 import { useLocation } from "react-router-dom";
 import { fetchQuestionsFromPdf } from "../../api/studentsApi";
@@ -10,11 +10,11 @@ function Interview() {
 
   useEffect(() => {
     const fetchQuestion = async () => {
-      let res = await fetchQuestionsFromPdf(pdfUrl);
+      const res = await fetchQuestionsFromPdf(pdfUrl);
       setQuestions(res?.data.questions);
     };
     fetchQuestion();
-  }, []);
+  }, [pdfUrl]);
 
   return (
     <div>

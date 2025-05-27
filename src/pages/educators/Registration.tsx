@@ -83,7 +83,7 @@ const Register = () => {
   };
 
   const validateFirstStep = (): boolean => {
-    let newErrors: FormErrors = {};
+    const newErrors: FormErrors = {};
     if (!formData.name) newErrors.name = "Name is required";
     if (!formData.email) {
       newErrors.email = "Email is required";
@@ -99,7 +99,7 @@ const Register = () => {
   };
 
   const validateSecondStep = (): boolean => {
-    let newErrors: FormErrors = {};
+    const newErrors: FormErrors = {};
     if (!formData.subjectExpertise)
       newErrors.subjectExpertise = "Subject expertise is required";
     if (!formData.qualification)
@@ -159,6 +159,7 @@ const Register = () => {
           navigate('/educator/otp', { state: { email: formData?.email } });
         }
       } catch (error) {
+        console.log(error);
         toast.error("Registration failed. Please try again.");
       }
     }

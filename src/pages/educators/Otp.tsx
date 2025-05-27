@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { Button, Flex, Input, Typography, message } from "antd";
 import type { GetProps } from "antd";
-import { verifyOtp } from "../../api/studentsApi";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { otpVerify } from "../../api/educatorApi";
@@ -30,7 +29,7 @@ function Otp() {
     try {
 
       if (otp.length === 6) {
-        let res = await otpVerify(otp, email);
+        const res = await otpVerify(otp, email);
         if (res?.data.success) {
           toast.message(res?.data.message);
           navigate("/educator/login");
@@ -39,6 +38,8 @@ function Otp() {
         message.warning("Enter 6 Digit OTP");
       }
     } catch (err) {
+      console.log(err);
+      
       message.error("Invalid OTP");
     } finally {
       setLoading(false);

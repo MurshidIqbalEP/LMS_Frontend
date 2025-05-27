@@ -22,14 +22,11 @@ import {
 import { GiBullseye, GiNotebook, GiStarsStack } from "react-icons/gi";
 import { LuGoal } from "react-icons/lu";
 import CertificateGenerator from "./Certificate";
-import { FaArrowRightLong } from "react-icons/fa6";
 import Review from "../../componets/students/Review";
 
 const CoursePlayer = () => {
   const navigate = useNavigate();
   const { courseId } = useParams();
-  const [loading, setLoading] = useState(false);
-  const [showInterview, setShowInterview] = useState(false);
   const [courseData, setCourseData] = useState<ICourse>();
   const [progressData, setProgressData] = useState<IProgressData>();
   const [selectedLecture, setSelectedLecture] = useState<ILecture | null>(null);
@@ -52,10 +49,9 @@ const CoursePlayer = () => {
   // Fetch course data and progress
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
       try {
         // Fetch Course Data
-        let res = await fetchCoursePlayerData(
+        const res = await fetchCoursePlayerData(
           studentInfo?._id as string,
           courseId as string
         );
@@ -66,7 +62,7 @@ const CoursePlayer = () => {
         setOpenChapters({ [res?.data.courseData.chapters[0]._id]: true });
 
         // Fetch P  rogress
-        let progressRes = await fetchCourseProgress(
+        const progressRes = await fetchCourseProgress(
           studentInfo?._id as string,
           courseId as string
         );
@@ -74,9 +70,7 @@ const CoursePlayer = () => {
         setProgress(progressRes?.data.completionPercentage);
       } catch (error) {
         console.log(error);
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
     fetchData();
   }, [courseId, studentInfo]);
@@ -94,7 +88,7 @@ const CoursePlayer = () => {
       );
 
       // Refresh Progress
-      let progressRes = await fetchCourseProgress(
+      const progressRes = await fetchCourseProgress(
         studentInfo?._id as string,
         courseId as string
       );
@@ -156,9 +150,7 @@ const CoursePlayer = () => {
           toggleChapter(currentChapter!._id);
           toggleChapter(nextChapter._id);
           handleLectureClick(firstLectureOfNextChapter, nextChapter._id);
-        } else {
-          setShowInterview(true);
-        }
+        } 
       }
     } catch (error) {
       console.log("Error updating progress", error);

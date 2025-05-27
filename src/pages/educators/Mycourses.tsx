@@ -19,7 +19,7 @@ interface Course {
   category: string;
   thumbnail: string;
   isPublished: boolean;
-  enrolledStudents: number;
+  enrolledStudents: string[];
 }
 
 function Mycourses() {
@@ -36,6 +36,8 @@ function Mycourses() {
       try {
         setIsLoading(true);
         const response = await fetchCoursesById(educatorInfo._id);
+        console.log(response?.data?.courses);
+        
         setCourses(response?.data?.courses);
       } catch (error) {
         console.error("Error fetching courses:", error);

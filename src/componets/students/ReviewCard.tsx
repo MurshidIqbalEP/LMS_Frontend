@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import { IReview } from '../../services/types';
 import ReactStars from "react-rating-stars-component";
 

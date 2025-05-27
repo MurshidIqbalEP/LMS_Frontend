@@ -39,7 +39,7 @@ Api.interceptors.response.use(
         console.log("hai api call for reffresh ");
 
         const res = await Api.get("/students/refresh-token");
-        let newAccessToken = res.data.accessToken;
+        const newAccessToken = res.data.accessToken;
         console.log(newAccessToken);
         localStorage.setItem("accessToken", newAccessToken);
 

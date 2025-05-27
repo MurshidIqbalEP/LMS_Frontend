@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { Link } from "react-router-dom";
 import { ICourse, IUserInfo } from "../../services/types";
 import { myEntrollments } from "../../api/studentsApi";
 import EntrollmentCards from "../../componets/students/EnrollmentCards";

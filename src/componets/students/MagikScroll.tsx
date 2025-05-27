@@ -34,7 +34,7 @@ function StickyCard() {
    
   ];
 
-  const container = useRef();
+  const container = useRef<HTMLDivElement | null>(null);
 
   useGSAP(
     () => {
@@ -66,9 +66,9 @@ function StickyCard() {
       const cards = gsap.utils.toArray(".card");
 
       ScrollTrigger.create({
-        trigger: cards[0],
+        trigger: cards[0] as HTMLElement,
         start: "top 35%",
-        endTrigger: cards[cards.length - 1],
+        endTrigger: cards[cards.length - 1] as HTMLElement,
         end: "top 30%",
         pin: ".intro",
         pinSpacing: false,
@@ -76,11 +76,11 @@ function StickyCard() {
 
       cards.forEach((card, index) => {
         const isLastCard = index === cards.length - 1;
-        const cardInner = card.querySelector(".card-inner");
+        const cardInner = (card as HTMLElement).querySelector(".card-inner");
 
         if (!isLastCard) {
           ScrollTrigger.create({
-            trigger: card,
+            trigger: card as HTMLElement,
             start: "top 35%",
             endTrigger: ".outro",
             end: "top 65%",
@@ -92,7 +92,7 @@ function StickyCard() {
             y: `-${(cards.length - index) * 14}vh`,
             ease: "none",
             scrollTrigger: {
-              trigger: card,
+              trigger: card as HTMLElement,
               start: "top 35%",
               endTrigger: ".outro",
               end: "top 65%",
