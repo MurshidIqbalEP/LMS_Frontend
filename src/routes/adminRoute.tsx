@@ -8,6 +8,7 @@ import NewCourses from "@/pages/admins/NewCourses";
 import EditedCourses from "@/pages/admins/EditedCourses";
 import CoursePage from "@/pages/admins/CoursePage";
 import ViewCourse from "@/pages/admins/ViewCourse";
+import AdminProtected from "./adminprotectedRoute";
 
 function AdminRoute() {
   return (
@@ -17,13 +18,15 @@ function AdminRoute() {
       <Route path="/login" element={<LoginPage />} />
 
       <Route path="/" element={<Adminlayout />}>
-        <Route path="Dashboard" element={<Dashboard />} />
-        <Route path="Students" element={<StudentsPage />} />
-        <Route path="Educators" element={<EducatorsPage />} />
-        <Route path="NewCourses" element={<NewCourses />} />
-        <Route path="EditedCourses" element={<EditedCourses />} />
-        <Route path="Courses" element={<CoursePage />} />
-        <Route path="/course/:id" element={<ViewCourse />} />
+        <Route element={<AdminProtected />}>
+          <Route path="Dashboard" element={<Dashboard />} />
+          <Route path="Students" element={<StudentsPage />} />
+          <Route path="Educators" element={<EducatorsPage />} />
+          <Route path="NewCourses" element={<NewCourses />} />
+          <Route path="EditedCourses" element={<EditedCourses />} />
+          <Route path="Courses" element={<CoursePage />} />
+          <Route path="/course/:id" element={<ViewCourse />} />
+        </Route>
         <Route index element={<Navigate to="Dashboard" replace />} />
       </Route>
 

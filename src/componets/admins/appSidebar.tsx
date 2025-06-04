@@ -6,7 +6,7 @@ import {
   BadgePlus,
   FilePenLine,
   LogIn,
-  Speech
+  Speech,
 } from "lucide-react";
 
 import { useSelector } from "react-redux";
@@ -68,8 +68,8 @@ const items = [
 ];
 
 export function AppSidebar() {
-     const adminInfo = useSelector((state: RootState) => state.admin.adminInfo);
-     const location = useLocation();
+  const adminInfo = useSelector((state: RootState) => state.admin.adminInfo);
+  const location = useLocation();
   return (
     <Sidebar>
       <SidebarHeader>
@@ -91,24 +91,27 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1 px-1">
               {items.map((item) => {
-  const isActive = location.pathname === item.url;
+                const isActive = location.pathname === item.url;
 
-  return (
-    <SidebarMenuItem key={item.title}>
-      <SidebarMenuButton asChild>
-        <Link
-          to={item.url}
-          className={`flex items-center gap-3 p-3 rounded-lg font-medium transition-all duration-200
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <Link
+                        to={item.url}
+                        className={`flex items-center gap-3 p-3 rounded-lg font-medium transition-all duration-200
             ${isActive ? "bg-gray-200 " : "text-gray-700 hover:bg-gray-200"}`}
-        >
-          <item.icon className={`w-5 h-5 ${isActive ? "text-gray-600" : "text-gray-500"}`} />
-          <span>{item.title}</span>
-        </Link>
-      </SidebarMenuButton>
-    </SidebarMenuItem>
-  );
-})}
-
+                      >
+                        <item.icon
+                          className={`w-5 h-5 ${
+                            isActive ? "text-gray-600" : "text-gray-500"
+                          }`}
+                        />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -132,17 +135,20 @@ export function AppSidebar() {
 
               <DropdownMenuContent side="top" className="w-[200px]">
                 {adminInfo ? (
-                    <DropdownMenuItem onClick={() => console.log("Logout clicked")}>
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Logout
-                </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => console.log("Logout clicked")}
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </DropdownMenuItem>
                 ) : (
-                    <DropdownMenuItem onClick={() => console.log("Logout clicked")}>
-                  <LogIn className="w-4 h-4 mr-2" />
-                  Login
-                </DropdownMenuItem> 
-                ) }
-                
+                  <DropdownMenuItem
+                    onClick={() => console.log("Logout clicked")}
+                  >
+                    <LogIn className="w-4 h-4 mr-2" />
+                    Login
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>
