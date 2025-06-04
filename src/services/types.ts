@@ -1,6 +1,7 @@
 
 
 export interface IUser {
+    _id:string;
     name: string;
     email: string;
     phone: string;
@@ -100,6 +101,13 @@ export interface Rating {
   razorpay_order_id: string;
   razorpay_payment_id: string;
   razorpay_signature: string;
+}
+
+export interface IEducator{
+ _id: string;
+  name: string;
+  email?: string;
+  courses?:number
 }
 
 interface EducatorInfo {

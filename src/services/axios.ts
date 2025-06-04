@@ -36,7 +36,6 @@ Api.interceptors.response.use(
     ) {
       originalRequest._retry = true; 
       try {
-        console.log("hai api call for reffresh ");
 
         const res = await Api.get("/students/refresh-token");
         const newAccessToken = res.data.accessToken;

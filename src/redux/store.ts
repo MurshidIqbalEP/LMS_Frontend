@@ -1,14 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authSlice from "./slices/authSlice";
 import educatorSlice from "./slices/educatorSlice";
+import adminSlice from "./slices/adminSlice"
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import { combineReducers } from "redux";
 
-// ✅ Ensure imports come first
 const rootReducer = combineReducers({
   auth: authSlice,
   educator: educatorSlice,
+  admin:adminSlice,
 });
 
 const persistConfig = {
@@ -22,7 +23,7 @@ const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, // ✅ Avoid Redux Persist serialization warnings
+      serializableCheck: false, 
     }),
 });
 
