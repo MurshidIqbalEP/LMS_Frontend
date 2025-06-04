@@ -17,7 +17,8 @@
     fetchCourses:"/admin/fetchAllCourses",
     listCourse:"/admin/listCourse",
     unlistCourse:"/admin/unlistCourse",
-    courseData:"/admin/fetchCourseData"
+    courseData:"/admin/fetchCourseData",
+    chartData:"/admin/chartData",
 }
 
 export default adminRoutes; 

@@ -116,3 +116,13 @@ interface EducatorInfo {
   email?: string;
 }
 export type EducatorInfoState = EducatorInfo | null;
+
+export interface MonthlyUserData {
+  month: string;      
+  students: number;   
+}
+
+export interface CourseCategoryData {
+  name: string;   
+  value: number;  
+}

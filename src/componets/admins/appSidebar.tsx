@@ -9,8 +9,8 @@ import {
   Speech,
 } from "lucide-react";
 
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { persistor, RootState } from "@/redux/store";
 
 import {
   Sidebar,
@@ -20,7 +20,6 @@ import {
   SidebarGroupContent,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
@@ -32,6 +31,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { User2, LogOut, ChevronDown } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { clearAdmin } from "@/redux/slices/adminSlice";
+import { IUser } from "@/services/types";
 
 // Menu items.
 const items = [
@@ -68,8 +69,14 @@ const items = [
 ];
 
 export function AppSidebar() {
-  const adminInfo = useSelector((state: RootState) => state.admin.adminInfo);
+  const adminInfo = useSelector((state: RootState) => state.admin.adminInfo)as IUser | null;  
   const location = useLocation();
+  const dispatch = useDispatch();
+  const handlelogout = ()=>{
+    dispatch(clearAdmin());
+    localStorage.removeItem("token");
+    persistor.purge();
+  }
   return (
     <Sidebar>
       <SidebarHeader>
@@ -127,7 +134,7 @@ export function AppSidebar() {
                     <div className="bg-black w-9 h-9 rounded-md flex justify-center items-center">
                       <User2 className="text-white w-5 h-5" />
                     </div>
-                    <span className="font-medium text-gray-800">John Doe</span>
+                    <span className="font-medium text-gray-800">{adminInfo?.name}</span>
                   </div>
                   <ChevronDown className="text-gray-600 w-4 h-4" />
                 </div>
@@ -136,7 +143,7 @@ export function AppSidebar() {
               <DropdownMenuContent side="top" className="w-[200px]">
                 {adminInfo ? (
                   <DropdownMenuItem
-                    onClick={() => console.log("Logout clicked")}
+                    onClick={handlelogout}
                   >
                     <LogOut className="w-4 h-4 mr-2" />
                     Logout

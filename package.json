@@ -53,6 +53,7 @@
     "react-simple-star-rating": "^5.1.7",
     "react-slick": "^0.30.3",
     "react-stars": "^2.2.5",
+    "recharts": "^2.15.3",
     "redux-persist": "^6.0.0",
     "slick-carousel": "^1.8.1",
     "sonner": "^1.7.4",

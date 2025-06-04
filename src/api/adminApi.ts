@@ -201,3 +201,14 @@ export const fetchCourseData = async(id:string)=>{
     }
 }
 
+// For fetch chartdata
+export const fetchChartdata = async()=>{
+  try {
+      const response = await Api.get(adminRoutes.chartData);
+      return response;
+    } catch (error) {
+      const err: Error = error as Error;
+      return errorHandle(err);
+    }
+}
+
