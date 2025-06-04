@@ -2,11 +2,13 @@ import { approveEdit, editedCourses, rejectCourse } from "@/api/adminApi";
 import CourseTable from "@/componets/admins/courseTable";
 import { ICourse } from "@/services/types";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 
 const EditedCourses = () => {
     const [editedcourses, setEditedcourses] = useState<ICourse[]>([]);
+      const navigate = useNavigate();
     useEffect(() => {
         const fetchCourse = async () => {
           try {
@@ -36,6 +38,10 @@ const EditedCourses = () => {
                   }
                 };
 
+                     const handleView = (course: ICourse) => {
+    navigate(`/admin/course/${course._id}`);
+  };
+
   return (
      <CourseTable
   data={editedcourses}
@@ -43,7 +49,7 @@ const EditedCourses = () => {
   onReject={handleReject}
   title="Edited Courses"
   searchable={true}
-//   onView={(course) => openCourseDetailModal(course)}
+  onView={handleView}
 />
   )
 }

@@ -7,6 +7,7 @@ import EducatorsPage from "@/pages/admins/EducatorsPage";
 import NewCourses from "@/pages/admins/NewCourses";
 import EditedCourses from "@/pages/admins/EditedCourses";
 import CoursePage from "@/pages/admins/CoursePage";
+import ViewCourse from "@/pages/admins/ViewCourse";
 
 function AdminRoute() {
   return (
@@ -22,6 +23,7 @@ function AdminRoute() {
         <Route path="NewCourses" element={<NewCourses />} />
         <Route path="EditedCourses" element={<EditedCourses />} />
         <Route path="Courses" element={<CoursePage />} />
+        <Route path="/course/:id" element={<ViewCourse />} />
         <Route index element={<Navigate to="Dashboard" replace />} />
       </Route>
 

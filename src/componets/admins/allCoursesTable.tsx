@@ -7,7 +7,7 @@ interface CourseTableProps {
   data: ICourse[];
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
-//   onView: (course: ICourse) => void;
+  onView: (course: ICourse) => void;
   title?: string;
   searchable?: boolean;
 }
@@ -16,7 +16,7 @@ const AllCourseTable: React.FC<CourseTableProps> = ({
   data,
   onApprove,
   onReject,
-//   onView,
+  onView,
   title = "Courses",
   searchable = true,
 }) => {
@@ -88,7 +88,7 @@ const AllCourseTable: React.FC<CourseTableProps> = ({
                       </Popconfirm>
                     )}
 
-          <Button type="link">View</Button>
+          <Button type="link" onClick={() => onView(record)}>View</Button>
         </Space>
       ),
     },

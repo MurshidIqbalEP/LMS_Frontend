@@ -190,3 +190,14 @@ export const unlistCourse = async(id:string)=>{
     }
 }
 
+// For View Course
+export const fetchCourseData = async(id:string)=>{
+  try {
+      const response = await Api.get(adminRoutes.courseData,{ params: { id } });
+      return response;
+    } catch (error) {
+      const err: Error = error as Error;
+      return errorHandle(err);
+    }
+}
+

@@ -1,12 +1,13 @@
 import { fetchCourses, listCourse, unlistCourse } from "@/api/adminApi";
 import AllCourseTable from "@/componets/admins/allCoursesTable";
-import CourseTable from "@/componets/admins/courseTable";
 import { ICourse } from "@/services/types";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const CoursePage = () => {
   const [courses, setCourses] = useState<ICourse[]>([]);
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -41,6 +42,10 @@ const CoursePage = () => {
       toast.success("course unlisted");
     }
   };
+
+   const handleView = (course: ICourse) => {
+    navigate(`/admin/course/${course._id}`);
+  };
   return (
     <AllCourseTable
       data={courses}
@@ -48,7 +53,7 @@ const CoursePage = () => {
       onReject={handleUnlist}
       title="Courses"
       searchable={true}
-      //   onView={(course) => openCourseDetailModal(course)}
+      onView={handleView}
     />
   );
 };
