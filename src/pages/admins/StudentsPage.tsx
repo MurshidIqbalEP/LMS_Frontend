@@ -42,7 +42,7 @@ function StudentsPage() {
   };
 
   return (
-    <StudentsTable
+    <StudentsTable<IUser>
       data={users}
       onBlock={handleBlock}
       onUnblock={handleUnblock}

@@ -1,7 +1,7 @@
 import { blockEducator, fetchEducators, unblockEducator } from '@/api/adminApi';
 import StudentsTable from '@/componets/admins/studentsTable';
 import { IEducator } from '@/services/types';
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner';
 
 function EducatorsPage() {
@@ -12,7 +12,7 @@ function EducatorsPage() {
         const response = await fetchEducators();   
         setEducatore(response?.data.educators);
       } catch (error) {
-        toast.error("Failed to fetch users");
+        toast.error("Failed to fetch Educator");
       }
     };
 
@@ -25,7 +25,7 @@ function EducatorsPage() {
         setEducatore((prev) =>
           prev.map((u) => (u._id === id ? { ...u, isBlocked: true } : u))
         );
-        toast.success("User blocked successfully");
+        toast.success("Educator blocked successfully");
       }
     };
   
@@ -35,12 +35,12 @@ function EducatorsPage() {
         setEducatore((prev) =>
           prev.map((u) => (u._id === id ? { ...u, isBlocked: false } : u))
         );
-        toast.success("User unblocked successfully");
+        toast.success("Educator unblocked successfully");
       }
     };
     
   return (
-    <StudentsTable
+    <StudentsTable<IEducator>
       data={educatore}
       onBlock={handleBlock}
       onUnblock={handleUnblock}

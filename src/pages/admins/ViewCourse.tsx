@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import { ICourse, ILecture } from "../../services/types";
 import VideoPlayer from "../../componets/students/VideoPlayer";
 import {
@@ -12,7 +12,6 @@ import { GiNotebook } from "react-icons/gi";
 
 const ViewCourse = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { courseId } = useParams();
   const [courseData, setCourseData] = useState<ICourse>();
   const [selectedLecture, setSelectedLecture] = useState<ILecture | null>(null);
@@ -42,7 +41,7 @@ const ViewCourse = () => {
     fetchData();
   }, [courseId]);
 
-  const handleLectureClick = async (lecture: ILecture, chapterId: string) => {
+  const handleLectureClick = async (lecture: ILecture) => {
     setSelectedLecture(lecture);
   };
 
@@ -69,7 +68,7 @@ const ViewCourse = () => {
 
       if (nextLecture) {
         // Go to next lecture in current chapter
-        handleLectureClick(nextLecture, currentChapter._id);
+        handleLectureClick(nextLecture);
       } else {
         // Move to first lecture of next chapter
         const nextChapter = courseData?.chapters[currentChapterIndex + 1];
@@ -78,7 +77,7 @@ const ViewCourse = () => {
           const firstLectureOfNextChapter = nextChapter.lectures[0];
           toggleChapter(currentChapter!._id);
           toggleChapter(nextChapter._id);
-          handleLectureClick(firstLectureOfNextChapter, nextChapter._id);
+          handleLectureClick(firstLectureOfNextChapter);
         }
       }
     } catch (error) {
@@ -140,7 +139,7 @@ const ViewCourse = () => {
           </div>
 
           <ul className="p-4 space-y-4 flex-1 overflow-y-auto">
-            {courseData?.chapters.map((chapter, index) => (
+            {courseData?.chapters.map((chapter) => (
               <li
                 key={chapter._id}
                 className="bg-gray-200 rounded-lg shadow-sm"
@@ -174,7 +173,7 @@ const ViewCourse = () => {
               ? "bg-blue-100 border-l-4 border-blue-500"
               : "bg-white hover:bg-gray-100"
           }`}
-                        onClick={() => handleLectureClick(lecture, chapter._id)}
+                        onClick={() => handleLectureClick(lecture)}
                       >
                         <div className="flex items-center space-x-3">
                           <BsPlayCircleFill

@@ -1,13 +1,12 @@
 import { useSelector,useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
-import { Link,NavLink, useNavigate } from "react-router-dom";
+import { Link,NavLink } from "react-router-dom";
 import { clearUser } from "../../redux/slices/authSlice";
 import {persistor} from "../../redux/store"
 
 function Navbar() {
   const user = useSelector((state: RootState) => state.auth.userInfo); 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
    const handlelogout = ()=>{
       dispatch(clearUser());
       localStorage.removeItem("token");

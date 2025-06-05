@@ -107,7 +107,8 @@ export interface IEducator{
  _id: string;
   name: string;
   email?: string;
-  courses?:number
+  courses?:number;
+  isBlocked:boolean
 }
 
 interface EducatorInfo {

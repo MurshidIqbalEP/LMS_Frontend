@@ -26,7 +26,7 @@ const AllCourseTable: React.FC<CourseTableProps> = ({
   const [sortedInfo, setSortedInfo] = useState({});
   const [searchText, setSearchText] = useState("");
 
-  const handleChange: TableProps<ICourse>["onChange"] = (pagination, filters, sorter) => {
+  const handleChange: TableProps<ICourse>["onChange"] = ( filters, sorter) => {
     setFilteredInfo(filters);
     setSortedInfo(sorter);
   };
@@ -52,6 +52,7 @@ const AllCourseTable: React.FC<CourseTableProps> = ({
       key: "title",
       sorter: (a, b) => a.title.localeCompare(b.title),
       sortOrder: (sortedInfo as any)?.columnKey === "title" ? (sortedInfo as any)?.order : null,
+      filteredValue: (filteredInfo as any)?.title || null,
       ellipsis: true,
       align: "center",
     },
@@ -62,6 +63,7 @@ const AllCourseTable: React.FC<CourseTableProps> = ({
       sorter: (a, b) => a.educatorId?.name.localeCompare(b.educatorId?.name),
       sortOrder: (sortedInfo as any)?.columnKey === "educator" ? (sortedInfo as any)?.order : null,
       ellipsis: true,
+      filteredValue: (filteredInfo as any)?.educator || null,
       align: "center",
     },
     {

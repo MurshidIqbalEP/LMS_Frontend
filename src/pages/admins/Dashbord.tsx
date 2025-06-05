@@ -12,8 +12,6 @@ import { CourseCategoryData, MonthlyUserData } from "@/services/types";
 import {
   Activity,
   CreditCard,
-  TrendingDown,
-  TrendingUp,
   Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
