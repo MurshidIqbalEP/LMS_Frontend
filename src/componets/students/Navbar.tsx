@@ -1,12 +1,13 @@
 import { useSelector,useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
-import { Link,NavLink } from "react-router-dom";
+import { Link,NavLink, useNavigate } from "react-router-dom";
 import { clearUser } from "../../redux/slices/authSlice";
 import {persistor} from "../../redux/store"
 
 function Navbar() {
   const user = useSelector((state: RootState) => state.auth.userInfo); 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
    const handlelogout = ()=>{
       dispatch(clearUser());
       localStorage.removeItem("token");
@@ -67,12 +68,16 @@ function Navbar() {
             </>
           ) : (
             <>
+              <Link to="/educator" className=" hover:text-gray-300">
+                 I am an Educator
+              </Link>
               <Link to="login" className=" hover:text-gray-300">
                 Login
               </Link>
               <Link to="register" className=" hover:text-gray-300">
                 Register
               </Link>
+               
             </>
           )}
         </div>
