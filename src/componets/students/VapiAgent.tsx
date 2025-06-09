@@ -21,7 +21,10 @@ const VapiAgent: React.FC<Props> = ({ questions }) => {
   const [aiSpeaking, setAispeeking] = useState(false);
 
   useEffect(() => {
+    // Define all handlers first
     const handleMessage = (message: any) => {
+      console.log("Message received:", message);
+
       if (
         message.type === "transcript" &&
         message.role === "assistant" &&
@@ -45,47 +48,12 @@ const VapiAgent: React.FC<Props> = ({ questions }) => {
     const handleSpeechEnd = () => setAispeeking(false);
     const handleCallStart = () => {
       setInterviewStatus("started");
-      toast.message("call started..................");
+      toast.message("Call started");
     };
     const handleCallEnd = () => {
       setInterviewStatus("ended");
       console.log("Call has ended.");
     };
-
-    vapi.start({
-  transcriber: {
-    provider: "deepgram",
-    model: "nova-2",
-    language: "en-US",
-  },
-  model: {
-    provider: "openai",
-    model: "gpt-3.5-turbo",
-    messages: [
-      {
-        role: "system",
-        content: `
-          You are an AI voice assistant responsible for conducting spoken job interviews.
-          Start the conversation with a warm, friendly introduction to make the candidate feel comfortable. For example:
-          "Hey there! Welcome to your interview. Let’s get started with a few questions!"
-          You will be given a list of interview questions. Ask one question at a time and wait for the candidate to finish their response before moving to the next.
-          After all questions are answered, summarize the candidate’s strengths and weaknesses based on their responses and give friendly, helpful feedback like a real interviewer would.
-          Here are the questions you will ask: ${questions}
-        `,
-      },
-    ],
-  },
-  voice: {
-    provider: "playht",
-    voiceId: "jennifer",
-  },
-  name: "My Inline Assistant",
-
-  // ✅ Add these missing properties
-  clientMessages: [],
-  serverMessages: [],
-});
-
 
     vapi.on("message", handleMessage);
     vapi.on("speech-start", handleSpeechStart);
@@ -93,17 +61,50 @@ const VapiAgent: React.FC<Props> = ({ questions }) => {
     vapi.on("call-start", handleCallStart);
     vapi.on("call-end", handleCallEnd);
 
-    return () => {
-      vapi.stop();
-      (vapi as any).off("message", handleMessage);
-      (vapi as any).off("speech-start", handleSpeechStart);
-      (vapi as any).off("speech-end", handleSpeechEnd);
-      (vapi as any).off("call-start", handleCallStart);
-      (vapi as any).off("call-end", handleCallEnd);
-    };
-  }, [questions]);
+    vapi.start({
+      transcriber: {
+        provider: "deepgram",
+        model: "nova-2",
+        language: "en-US",
+      },
+      model: {
+        provider: "openai",
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content: `
+              You are an AI voice assistant responsible for conducting spoken job interviews.
+              Start the conversation with a warm, friendly introduction to make the candidate feel comfortable. For example:
+              "Hey there! Welcome to your interview. Let's get started with a few questions!"
+              You will be given a list of interview questions. Ask one question at a time and wait for the candidate to finish their response before moving to the next.
+              After all questions are answered, summarize the candidate's strengths and weaknesses based on their responses and give friendly, helpful feedback like a real interviewer would.
+              Here are the questions you will ask: ${questions.join("\n")}
+            `,
+          },
+        ],
+      },
+      voice: {
+        provider: "playht",
+        voiceId: "jennifer",
+      },
+      name: "Interview Assistant",
+      
+    }as any);
 
-  
+    return () => {
+      // Clean up event listeners
+      vapi.off("message", handleMessage);
+      vapi.off("speech-start", handleSpeechStart);
+      vapi.off("speech-end", handleSpeechEnd);
+      vapi.off("call-start", handleCallStart);
+      vapi.off("call-end", handleCallEnd);
+
+      if (interviewStatus === "started") {
+        vapi.stop();
+      }
+    };
+  }, [questions, interviewStatus]);
 
   const handleEndCall = () => {
     vapi.stop();
@@ -127,7 +128,7 @@ const VapiAgent: React.FC<Props> = ({ questions }) => {
         <div className="w-full h-screen bg-gradient-to-br from-gray-100 to-gray-300 flex flex-col items-center justify-center px-4 py-8">
           <div className="flex flex-wrap justify-center items-center gap-10 mb-8">
             {/* AI Assistant Card */}
-            <div className="relative w-[300px] h-[350px] bg-white rounded-3xl shadow-lg border-4 border-amber-600 flex flex-col justify-center items-center">
+            <div className="relative w-[300px] h-[350px] bg-white rounded-3xl shadow-lg border-4 border-black flex flex-col justify-center items-center">
               <div className="relative w-full h-full mb-4 flex items-center justify-center">
                 {aiSpeaking && (
                   <Lottie
@@ -138,7 +139,7 @@ const VapiAgent: React.FC<Props> = ({ questions }) => {
                   />
                 )}
                 <img
-                  src="card2.jpg"
+                  src="left-human.jpg"
                   alt="AI Avatar"
                   className="w-40 h-40 rounded-full object-cover z-10"
                 />
@@ -147,7 +148,7 @@ const VapiAgent: React.FC<Props> = ({ questions }) => {
             </div>
 
             {/* User Card */}
-            <div className="relative w-[300px] h-[350px] bg-white rounded-3xl shadow-lg border-4 border-amber-600 flex flex-col justify-center items-center">
+            <div className="relative w-[300px] h-[350px] bg-white rounded-3xl shadow-lg border-4 border-black flex flex-col justify-center items-center">
               <div className="relative w-full h-full mb-4 flex items-center justify-center">
                 {isSpeaking && (
                   <Lottie
@@ -158,7 +159,7 @@ const VapiAgent: React.FC<Props> = ({ questions }) => {
                   />
                 )}
                 <img
-                  src="card2.jpg"
+                  src="right-human.jpg"
                   alt="User Avatar"
                   className="w-40 h-40 rounded-full object-cover z-10"
                 />
@@ -167,7 +168,7 @@ const VapiAgent: React.FC<Props> = ({ questions }) => {
             </div>
           </div>
 
-          <div className="bg-white px-6 py-4 rounded-xl shadow border max-w-xl text-center text-gray-700 text-lg mb-4">
+          <div className="bg-white px-6 py-4 rounded-xl shadow-xl border max-w-xl text-center text-gray-700 text-lg mb-4">
             {aiText}
           </div>
 
